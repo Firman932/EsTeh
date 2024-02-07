@@ -1,0 +1,42 @@
+name: lji
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+
+dependencies:
+  flutter: 
+    sdk: flutter
+  curved_navigation_bar: ^1.0.3
+  intl: ^0.19.0
+  
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter    
+  flutter_lints: ^3.0.1
+  google_fonts: ^6.1.0
+
+flutter:
+  assets:
+    - assets/Logoes.png
+    - assets/logo.png
+    - assets/Facebook.png
+    - assets/Google_Logo.png
+    - assets/X.jpg
+    - assets/red.png
+    - assets/qrcode.png
+    - assets/japan.png
+    - assets/5g.png
+    - assets/poster3.jpg
+    - assets/petav1.png
+    - assets/pekerja.png
+
+    
+
+  uses-material-design: true
+  
+    

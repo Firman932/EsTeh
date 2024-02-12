@@ -30,6 +30,12 @@ flutter:
     - assets/keranjang.png
     - assets/buttonkeranjang.png
     - assets/search.png
+    - assets/makan.png
+    - assets/minum.png
+    - assets/produk.png
+    - assets/stok.png
+    - assets/teh taro.jpg
+    - assets/uang.png
 
 
     

@@ -23,17 +23,14 @@ dev_dependencies:
 flutter:
   assets:
     - assets/Logoes.png
-    - assets/logo.png
-    - assets/Facebook.png
-    - assets/Google_Logo.png
-    - assets/X.jpg
-    - assets/red.png
-    - assets/qrcode.png
-    - assets/japan.png
-    - assets/5g.png
-    - assets/poster3.jpg
-    - assets/petav1.png
-    - assets/pekerja.png
+    - assets/menu1.png
+    - assets/menu2.png
+    - assets/notif.png
+    - assets/log.png
+    - assets/keranjang.png
+    - assets/buttonkeranjang.png
+    - assets/search.png
+
 
     
 

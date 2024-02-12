@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lji/Admin/Dashboard/dashboard.dart';
 import 'package:lji/BagianDashboard.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
 
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +16,7 @@ class LoginScreen extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: Container(
-            padding: EdgeInsets.fromLTRB(30, 139, 23, 130),
+            padding: EdgeInsets.symmetric(horizontal: 30),
             width: 100,
             height: 100,
             decoration: BoxDecoration(
@@ -25,25 +28,17 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                SizedBox(height: 30),
                 Container(
-                  margin: EdgeInsets.fromLTRB(0, 8, 0, 74),
                   width: double.infinity,
                   height: 155,
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: SizedBox(
-                      width: 300,
-                      height: 144,
-                      child:
-                          Image.asset("assets/Logoes.png", fit: BoxFit.cover),
-                    ),
-                  ),
+                  child: Image.asset("assets/Logoes.png", fit: BoxFit.cover),
                 ),
                 Container(
-                  margin: EdgeInsets.fromLTRB(8, 0, 15, 0),
-                  padding: EdgeInsets.fromLTRB(21, 17, 21, 38),
+                  padding: EdgeInsets.all(20),
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -52,7 +47,7 @@ class LoginScreen extends StatelessWidget {
                       BoxShadow(
                         color: Color(0x499c9c9c),
                         offset: Offset(0, 0),
-                        blurRadius: 27.7000007629,
+                        blurRadius: 27.7,
                       ),
                     ],
                   ),
@@ -87,6 +82,7 @@ class LoginScreen extends StatelessWidget {
                       ),
 
                       TextField(
+                        controller: emailController,
                         decoration: InputDecoration(
                           contentPadding: EdgeInsetsDirectional.symmetric(
                               vertical: 15, horizontal: 17),
@@ -130,6 +126,7 @@ class LoginScreen extends StatelessWidget {
                         height: 15,
                       ),
                       TextField(
+                        controller: passwordController,
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.symmetric(
                               horizontal: 15, vertical: 17),
@@ -175,7 +172,6 @@ class LoginScreen extends StatelessWidget {
                         height: 40,
                       ),
                       Container(
-                        margin: EdgeInsets.fromLTRB(2, 0, 1, 0),
                         width: MediaQuery.of(context).size.width,
                         height: 60,
                         decoration: BoxDecoration(
@@ -185,11 +181,22 @@ class LoginScreen extends StatelessWidget {
                         ),
                         child: InkWell(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MenuUser()),
-                            );
+                            // Check if the email is 'admin'
+                            if (emailController.text.toLowerCase() == 'admin') {
+                              // If the email is 'admin', navigate to admin dashboard
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Dashboard()),
+                              );
+                            } else {
+                              // For other emails, navigate to user dashboard
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MenuUser()),
+                              );
+                            }
                           },
                           child: Center(
                             child: Text(
@@ -208,6 +215,7 @@ class LoginScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                SizedBox(height: 10,)
               ],
             ),
           ),

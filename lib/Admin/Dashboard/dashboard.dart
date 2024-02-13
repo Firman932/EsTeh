@@ -363,7 +363,7 @@ class Dashboard extends StatelessWidget {
                                         color: Color.fromRGBO(73, 160, 19, 1),
                                       ),
                                       child: Icon(
-                                        Icons.edit,
+                                        Icons.edit_square,
                                         color: Colors.white,
                                       ))
                                 ],
@@ -460,7 +460,7 @@ class Dashboard extends StatelessWidget {
                                           color: Color.fromRGBO(73, 160, 19, 1),
                                         ),
                                         child: Icon(
-                                          Icons.edit,
+                                          Icons.edit_square,
                                           color: Colors.white,
                                         ))
                                   ],
@@ -556,7 +556,7 @@ class Dashboard extends StatelessWidget {
                                           color: Color.fromRGBO(73, 160, 19, 1),
                                         ),
                                         child: Icon(
-                                          Icons.edit,
+                                          Icons.edit_square,
                                           color: Colors.white,
                                         ))
                                   ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Dashboard/dashboard.dart';
 import 'package:lji/BagianDashboard.dart';
+import 'package:lji/Halaman%20Utama%20User.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -33,13 +34,18 @@ class LoginScreen extends StatelessWidget {
               children: [
                 SizedBox(height: 30),
                 Container(
-                  width: double.infinity,
-                  height: 155,
-                  child: Image.asset("assets/Logoes.png", fit: BoxFit.cover),
+                  padding: EdgeInsets.fromLTRB(22, 0, 22, 0),
+                  width: MediaQuery.of(context).size.width,
+                  height: 170 + MediaQuery.of(context).padding.horizontal,
+                  child: Image.asset(
+                    "assets/Logoes.png",
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(20),
-                  width: double.infinity,
+                  margin: EdgeInsets.fromLTRB(15, 20, 15, 13),
+                  padding: EdgeInsets.fromLTRB(28, 20, 28, 50),
+                  width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
@@ -68,7 +74,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.fromLTRB(5, 0, 0, 24),
+                        margin: EdgeInsets.fromLTRB(5, 5, 0, 35),
                         child: Text(
                           'Masukan email dan password',
                           textAlign: TextAlign.center,
@@ -123,7 +129,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(
-                        height: 15,
+                        height: 17,
                       ),
                       TextField(
                         controller: passwordController,
@@ -169,7 +175,7 @@ class LoginScreen extends StatelessWidget {
                       // Add your email and password input fields here
                       // ...
                       SizedBox(
-                        height: 40,
+                        height: 29,
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width,
@@ -215,7 +221,9 @@ class LoginScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 10,)
+                SizedBox(
+                  height: 10,
+                )
               ],
             ),
           ),

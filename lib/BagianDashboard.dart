@@ -7,6 +7,61 @@ class MenuUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor:
+            Colors.transparent, // Hapus warna latar belakang AppBar
+        elevation: 0, // Hilangkan bayangan AppBar
+        centerTitle: true, // Pusatkan judul AppBar
+        title: Padding(
+          padding: EdgeInsets.all(10),
+          child: Text(
+            'Menu',
+            style: GoogleFonts.poppins(
+              fontSize: 25,
+              fontWeight: FontWeight.w500,
+              height: 3,
+              color: Color(0xff000000),
+            ),
+          ),
+        ),
+        leading: Container(
+          padding: EdgeInsets.all(10),
+          // Container ini berfungsi untuk menempatkan logo di sebelah kiri
+          margin: EdgeInsets.only(
+            left: 10 + MediaQuery.of(context).padding.left,
+          ),
+
+          child: Image.asset(
+            "assets/log.png",
+            width: 24,
+          ),
+        ),
+
+        actions: [
+          IconButton(
+            icon: Image.asset(
+              "assets/notif.png",
+              width: 24,
+            ),
+            onPressed: () {
+              // Tambahkan fungsi ketika ikon notifikasi ditekan
+            },
+          ),
+          // Tambahkan jarak antara ikon notifikasi dan ikon keranjang
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: IconButton(
+              icon: Image.asset(
+                "assets/keranjang.png",
+                width: 24,
+              ),
+              onPressed: () {
+                // Tambahkan fungsi ketika ikon keranjang ditekan
+              },
+            ),
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Container(
           // group7083fxY (183:87)
@@ -16,70 +71,20 @@ class MenuUser extends StatelessWidget {
             // group7082o3A (183:90)
             padding: EdgeInsets.fromLTRB(17, 19.73, 17, 40),
             width: MediaQuery.of(context).size.width,
-            height: 800.15,
+            height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
               color: Color(0xffffffff),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
-                  // autogroupbeaqfLG (YaTXafxDvknZFYH9pubEaQ)
-                  margin: EdgeInsets.all(17),
-                  width: MediaQuery.of(context).size.width,
-                  child: Row(
-                    // crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                          // vector
-                          //BpQ (183:137)
-                          margin: EdgeInsets.fromLTRB(0, 0, 100, 0),
-                          //left, top, right, buttom
-                          width: 20,
-                          child: Image.asset("assets/log.png")),
-
-                      // Menambahkan jarak antara logo dan teks menu
-                      Container(
-                        margin: EdgeInsets.fromLTRB(38, 0, 0, 0),
-                        // menuhGx (183:118)
-                        //left, top, right, bottom
-
-                        child: Text(
-                          'Menu',
-                          style: GoogleFonts.poppins(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                            height: 1.5,
-                            color: Color(0xff000000),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                          child:
-                              SizedBox()), // Menambahkan jarak fleksibel antara teks menu dan ikon notifikasi
-                      Container(
-                        // autogroupb78qPQg (YaTXnkSS5HzYHQLxgob78Q)
-                        width: 20,
-                        child: Image.asset("assets/notif.png"),
-                      ),
-                      SizedBox(
-                          width:
-                              17), // Menambahkan jarak antara ikon notifikasi dan ikon keranjang
-                      Container(
-                        // vectorJXe (183:119)
-                        width: 20,
-                        child: Image.asset(
-                          "assets/keranjang.png",
-                          width: 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
                   // autogroupbqacDPi (YaTXuARQvdN6yC8amhbqaC)
-                  margin: EdgeInsets.fromLTRB(7, 0, 6, 17),
-                  padding: EdgeInsets.fromLTRB(13, 15.79, 219.5, 14.53),
+                  // margin: EdgeInsets.fromLTRB(7, 0, 6, ),
+                  // padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+                  margin: EdgeInsets.fromLTRB(0, 5, 0, 19),
+                  padding: EdgeInsets.fromLTRB(13, 15, 13, 15),
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     color: Color(0xffffffff),
@@ -124,7 +129,7 @@ class MenuUser extends StatelessWidget {
                   // autogroupz8jqACU (YaTY5f7vgSt7jDEh6Fz8JQ)
                   margin: EdgeInsets.fromLTRB(0, 0, 0, 17),
                   width: MediaQuery.of(context).size.width,
-                  height: 35,
+                  height: 38,
                   child: Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -194,12 +199,12 @@ class MenuUser extends StatelessWidget {
                 ),
                 Container(
                   // autogroupelquBmn (YaTYPebwyZmZtPRAVneLQU)
-                  margin: EdgeInsets.fromLTRB(0, 0, 0, 6.91),
-                  padding: EdgeInsets.fromLTRB(17, 14.8, 19, 18.75),
+
+                  padding: EdgeInsets.fromLTRB(27, 8, 27, 8),
                   width: MediaQuery.of(context).size.width,
-                  height: 116,
+                  height: 130,
                   decoration: BoxDecoration(
-                    color: Color(0xffffffff),
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
@@ -211,6 +216,7 @@ class MenuUser extends StatelessWidget {
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
                         // 4Kn (183:102)
@@ -220,15 +226,17 @@ class MenuUser extends StatelessWidget {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.asset(
-                            "assets/keranjang.png",
+                            "assets/buttonkeranjang.png",
                             fit: BoxFit.cover,
                           ),
                         ),
                       ),
                       Container(
                         // autogroup7q6laov (YaTYZZV6kAyoVWuVMY7q6L)
-                        margin: EdgeInsets.fromLTRB(0, 2.96, 79, 8.64),
-                        width: 64,
+                        padding: EdgeInsets.fromLTRB(0, 17, 0, 17),
+                        margin: EdgeInsets.only(
+                            right: 130 + MediaQuery.of(context).padding.right),
+                        width: 100,
                         height: MediaQuery.of(context).size.width,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,

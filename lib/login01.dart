@@ -39,7 +39,7 @@ class LoginScreen extends StatelessWidget {
                   height: 170 + MediaQuery.of(context).padding.horizontal,
                   child: Image.asset(
                     "assets/Logoes.png",
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                   ),
                 ),
                 Container(

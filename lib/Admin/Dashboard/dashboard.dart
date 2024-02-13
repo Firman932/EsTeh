@@ -234,60 +234,56 @@ class Dashboard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                          
-                          boxShadow: [
-                            BoxShadow(
-                                color: Color.fromRGBO(
-                                    156, 156, 156, 0.28999999165534973),
-                                offset: Offset(0, 0),
-                                blurRadius: 55.5)
-                          ],
-                          borderRadius: BorderRadius.circular(10),
-                          color: Color.fromRGBO(73, 160, 19, 1)),
-                          child: Image.asset("assets/minum.png")
-                    ),
+                        padding: EdgeInsets.symmetric(vertical: 5),
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Color.fromRGBO(
+                                      156, 156, 156, 0.28999999165534973),
+                                  offset: Offset(0, 0),
+                                  blurRadius: 55.5)
+                            ],
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color.fromRGBO(73, 160, 19, 1)),
+                        child: Image.asset("assets/minum.png")),
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                                color: Color.fromRGBO(
-                                    156, 156, 156, 0.28999999165534973),
-                                offset: Offset(0, 0),
-                                blurRadius: 55.5)
-                          ],
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white),
-                          child: Image.asset("assets/makan.png")
-                    ),
+                        padding: EdgeInsets.symmetric(vertical: 5),
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Color.fromRGBO(
+                                      156, 156, 156, 0.28999999165534973),
+                                  offset: Offset(0, 0),
+                                  blurRadius: 55.5)
+                            ],
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white),
+                        child: Image.asset("assets/makan.png")),
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                                color: Color.fromRGBO(
-                                    156, 156, 156, 0.28999999165534973),
-                                offset: Offset(0, 0),
-                                blurRadius: 55.5)
-                          ],
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white),
-                          child: Image.asset("assets/stok.png")
-                    ),
+                        padding: EdgeInsets.symmetric(vertical: 5),
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Color.fromRGBO(
+                                      156, 156, 156, 0.28999999165534973),
+                                  offset: Offset(0, 0),
+                                  blurRadius: 55.5)
+                            ],
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white),
+                        child: Image.asset("assets/stok.png")),
                   ],
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 15),
                   height: 116,
-                  width: 326,
+                  width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
@@ -382,7 +378,7 @@ class Dashboard extends StatelessWidget {
                 Container(
                     margin: EdgeInsets.only(top: 15),
                     height: 116,
-                    width: 326,
+                    width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
@@ -478,7 +474,7 @@ class Dashboard extends StatelessWidget {
                 Container(
                     margin: EdgeInsets.only(top: 15),
                     height: 116,
-                    width: 326,
+                    width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(

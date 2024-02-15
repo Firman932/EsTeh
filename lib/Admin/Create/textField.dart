@@ -52,7 +52,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             padding: EdgeInsets.symmetric(horizontal: 20),
             decoration: fieldCreate,
             height: 50,
-            width: 140,
+            width: 160,
             child: TextField(
               style: text,
               controller: _controller,
@@ -116,7 +116,7 @@ class CustomDropdownField extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 20),
             decoration: fieldCreate,
             height: 50,
-            width: 140,
+            width: 160,
             child: DropdownButtonFormField(
               isExpanded: true,
               value: controller.text.isNotEmpty ? controller.text : null,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Dashboard/dashboard.dart';
 import 'package:lji/BagianDashboard.dart';
-import 'package:lji/Halaman%20Utama%20User.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -65,7 +64,7 @@ class LoginScreen extends StatelessWidget {
                         child: Text(
                           'Login',
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.inter(
+                          style: GoogleFonts.poppins(
                             fontSize: 35,
                             fontWeight: FontWeight.w900,
                             height: 1.2125,
@@ -78,7 +77,7 @@ class LoginScreen extends StatelessWidget {
                         child: Text(
                           'Masukan email dan password',
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.inter(
+                          style: GoogleFonts.poppins(
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             height: 1.2125,
@@ -93,7 +92,7 @@ class LoginScreen extends StatelessWidget {
                           contentPadding: EdgeInsetsDirectional.symmetric(
                               vertical: 15, horizontal: 17),
                           labelText: "Email",
-                          labelStyle: TextStyle(
+                          labelStyle: GoogleFonts.poppins(
                             fontSize: 13,
                             fontWeight: FontWeight.w300,
                             height: 1.3718750293,
@@ -137,7 +136,7 @@ class LoginScreen extends StatelessWidget {
                           contentPadding: EdgeInsets.symmetric(
                               horizontal: 15, vertical: 17),
                           labelText: "Password",
-                          labelStyle: TextStyle(
+                          labelStyle: GoogleFonts.poppins(
                             fontSize: 13,
                             fontWeight: FontWeight.w300,
                             height: 1.3718750293,
@@ -208,7 +207,7 @@ class LoginScreen extends StatelessWidget {
                             child: Text(
                               'Login',
                               textAlign: TextAlign.center,
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w800,
                                 height: 1.2125,

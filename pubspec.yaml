@@ -41,7 +41,10 @@ flutter:
     - assets/makan_white.png
     - assets/stok_white.png
     - assets/picture.png
-
+    - assets/jurnal.png
+    - assets/minus.png
+    - assets/plus.png
+    - assets/esteh.png
 
     
 

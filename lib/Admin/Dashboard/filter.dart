@@ -24,13 +24,15 @@ class _FilterState extends State<Filter> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    return Wrap(
-                  spacing: 8.0,
-                  children: List.generate(
-                    assetPaths.length,
-                    (index) => buildFilterChip(index, screenWidth),
+    return Center(
+      child: Wrap(
+                    spacing: 8.0,
+                    children: List.generate(
+                      assetPaths.length,
+                      (index) => buildFilterChip(index, screenWidth),
+                    ),
                   ),
-                );
+    );
   }
     Widget buildFilterChip(int index, double screenWidth) {
     return FilterChip(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lji/Admin/Create/create_produk.dart';
 import 'package:lji/Admin/Dashboard/analisis.dart';
 import 'package:lji/Admin/Dashboard/filter.dart';
 import 'package:lji/Admin/Dashboard/header.dart';
@@ -49,13 +50,23 @@ class _DashboardState extends State<Dashboard> {
                       style: GoogleFonts.inter(
                           fontSize: 22, fontWeight: FontWeight.bold),
                     ),
-                    Text(
-                      "Tambahkan produk",
-                      style: GoogleFonts.inter(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                          decorationThickness: 2),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TambahProduk(),
+              ),
+            );
+                      },
+                      child: Text(
+                        "Tambahkan produk",
+                        style: GoogleFonts.inter(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                            decorationThickness: 2),
+                      ),
                     )
                   ],
                 ),
@@ -66,7 +77,7 @@ class _DashboardState extends State<Dashboard> {
                 ListMenu(),
                 ListMenu(),
                 ListMenu(),
-                ListMenu()
+                ListMenu(),
               ],
             ),
           ),

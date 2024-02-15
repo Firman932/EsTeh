@@ -11,6 +11,7 @@ dependencies:
     sdk: flutter
   curved_navigation_bar: ^1.0.3
   intl: ^0.19.0
+  image_picker: ^1.0.7
   
 
 
@@ -39,6 +40,7 @@ flutter:
     - assets/minum_black.png
     - assets/makan_white.png
     - assets/stok_white.png
+    - assets/picture.png
 
 
     

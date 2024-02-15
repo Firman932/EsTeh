@@ -104,7 +104,7 @@ class _TambahProdukState extends State<TambahProduk> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Tambahkan Gambar",
+                            image != null ? "Ganti Gambar" : "Tambahkan Gambar",
                             style: text,
                           ),
                           Icon(

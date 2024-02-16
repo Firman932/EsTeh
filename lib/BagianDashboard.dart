@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Keranjang.dart';
-import 'package:lji/tampilan%20keranjang.dart';
+import 'package:lji/TampilanUserKeranjang.dart';
+import 'package:lji/login01.dart';
 
 class MenuUser extends StatelessWidget {
   const MenuUser({Key? key});
@@ -10,6 +11,7 @@ class MenuUser extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
@@ -25,40 +27,46 @@ class MenuUser extends StatelessWidget {
             ),
           ),
         ),
-        leading: Container(
-          padding: EdgeInsets.all(10),
-          margin: EdgeInsets.only(
-            left: 10 + MediaQuery.of(context).padding.left,
-          ),
-          child: Image.asset(
-            "assets/log.png",
-            width: 24,
+        leading: GestureDetector(
+          onTap: () {
+            // Tambahkan fungsi yang ingin dijalankan saat ikon leading ditekan
+          },
+          child: Container(
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.only(
+              left: 10 + MediaQuery.of(context).padding.left,
+            ),
+            child: Image.asset(
+              "assets/log.png",
+              width: 24,
+            ),
           ),
         ),
         actions: [
-          IconButton(
-            icon: Image.asset(
-              "assets/notif.png",
-              width: 24,
+          InkWell(
+            onTap: () {},
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Image.asset(
+                "assets/notif.png",
+                width: 24,
+              ),
             ),
-            onPressed: () {
-              // Handle notification icon press
-            },
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: IconButton(
-              icon: Image.asset(
-                "assets/keranjang.png",
-                width: 24,
-              ),
-              onPressed: () {
+            child: GestureDetector(
+              onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => KeranjangPage()),
+                  MaterialPageRoute(builder: (context) => KeranjangPage02()),
                 );
                 // Handle cart icon press
               },
+              child: Image.asset(
+                "assets/keranjang.png",
+                width: 24,
+              ),
             ),
           ),
         ],
@@ -133,7 +141,7 @@ class MenuUser extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Center(
-                          child: SizedBox(
+                          child: Container(
                             width: 20,
                             height: 21,
                             child: Image.asset(
@@ -162,7 +170,7 @@ class MenuUser extends StatelessWidget {
                           ],
                         ),
                         child: Center(
-                          child: SizedBox(
+                          child: Container(
                             width: 22,
                             height: 22,
                             child: Image.asset(
@@ -181,141 +189,102 @@ class MenuUser extends StatelessWidget {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: 200, // specify your itemCount
+                shrinkWrap: true,
+                itemCount: 20, // specify your itemCount
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 3, 0, 3),
-                    child: Card(
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(27, 8, 27, 8),
-                        width: MediaQuery.of(context).size.width,
-                        height: 130,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color(0x499c9c9c),
-                              offset: Offset(0, 0),
-                              blurRadius: 27.7000007629,
+                    padding: const EdgeInsets.fromLTRB(10, 3, 10, 3),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 130,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0x499c9c9c),
+                            offset: Offset(0, 0),
+                            blurRadius: 27.7000007629,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          
+                          Container(
+                            margin: EdgeInsets.,
+                            width: 97,
+                            height: 80.9,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.asset(
+                                "assets/esteh.png",
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          ],
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.fromLTRB(0, 0, 13, 0),
-                              width: 97,
-                              height: 80.9,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.asset(
-                                  "assets/esteh.png",
-                                  fit: BoxFit.cover,
+                          ),
+                          Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 30,
+                                  child: Text(
+                                    'Es Teh',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                      height: 1.5,
+                                      color: Color(0xff000000),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.fromLTRB(0, 20, 0, 17),
-                              margin: EdgeInsets.only(
-                                right:
-                                    120 + MediaQuery.of(context).padding.right,
-                              ),
-                              width: 100,
-                              height: MediaQuery.of(context).size.width,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(0, 0, 0, 6.71),
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 44.6,
-                                    child: Column(
-                                      children: [
-                                        Positioned(
-                                          child: Align(
-                                            child: SizedBox(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              height: 30,
-                                              child: Text(
-                                                'Es Teh',
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w600,
-                                                  height: 1.5,
-                                                  color: Color(0xff000000),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          left: 2,
-                                          top: 29.5985412598,
-                                          child: Align(
-                                            child: SizedBox(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              height: 12,
-                                              child: Text(
-                                                'Rasa Taro',
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.w500,
-                                                  height: 1.5,
-                                                  color: Color(0xff000000),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                Container(
+                                  height: 20,
+                                  child: Text(
+                                    'Rasa Taro',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w500,
+                                      height: 1.5,
+                                      color: Color(0xff000000),
                                     ),
                                   ),
-                                  Container(
-                                    padding: EdgeInsets.fromLTRB(0, 2, 1, 0),
-                                    // margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Text(
-                                      'Rp. 8.000',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        height: 1.5,
-                                        color: Color(0xff000000),
-                                      ),
-                                    ),
+                                ),
+                                Text(
+                                  'Rp. 8.000',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xff000000),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            InkWell(
-                              onTap: () {
-                                // Navigate to the "Keranjang" screen when tapped.
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Keranjang()),
-                                );
-                              },
-                              child: Container(
-                                margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              // Navigate to the "Keranjang" screen when tapped.
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Keranjang(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: 33,
+                              height: 33,
+                              child: Image.asset(
+                                "assets/buttonkeranjang.png",
                                 width: 33,
                                 height: 33,
-                                child: Image.asset(
-                                  "assets/buttonkeranjang.png",
-                                  width: 33,
-                                  height: 33,
-                                ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   );

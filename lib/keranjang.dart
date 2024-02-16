@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -38,8 +40,7 @@ class _KeranjangState extends State<Keranjang> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
+        forceMaterialTransparency: true,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -88,42 +89,31 @@ class _KeranjangState extends State<Keranjang> {
                 Container(
                   margin: EdgeInsets.fromLTRB(10, 0, 0, 26),
                   width: MediaQuery.of(context).size.width,
-                  height: 72,
-                  child: Stack(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: SizedBox(
-                          width: 400,
-                          height: 50,
-                          child: Text(
-                            'Es Teh',
-                            style: GoogleFonts.poppins(
-                              fontSize: 36,
-                              fontWeight: FontWeight.w600,
-                              height: 1.5,
-                              color: Color(0xff030303),
-                            ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: EdgeInsets.only(top: 3),
+                        child: Text(
+                          'Es Teh',
+                          style: GoogleFonts.poppins(
+                            fontSize: 36,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff030303),
                           ),
                         ),
                       ),
-                      Positioned(
-                        left: 2,
-                        top: 48,
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: SizedBox(
-                            width: 400,
-                            height: 24,
-                            child: Text(
-                              'Rasa Taro',
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                height: 1.5,
-                                color: Color(0xff000000),
-                              ),
-                            ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: EdgeInsets.only(
+                            left: 2 + MediaQuery.of(context).padding.left),
+                        child: Text(
+                          'Rasa Taro',
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xff000000),
                           ),
                         ),
                       ),
@@ -132,7 +122,7 @@ class _KeranjangState extends State<Keranjang> {
                 ),
                 Container(
                   margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  width: MediaQuery.of(context).size.width,
+                  width: 800,
                   height: 49,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment
@@ -150,6 +140,9 @@ class _KeranjangState extends State<Keranjang> {
                                   .grey // Ubah warna teks saat batas maksimum tercapai
                               : Color(0xff49a013),
                         ),
+                      ),
+                      SizedBox(
+                        height: 9 + MediaQuery.of(context).padding.left,
                       ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -169,10 +162,11 @@ class _KeranjangState extends State<Keranjang> {
                               }
                             },
                           ),
-                          Container(
-                            width:
-                                60, // Ubah lebar TextField sesuai kebutuhan Anda
+                          SizedBox(width: 5),
+                          IntrinsicWidth(
+                            // Ubah lebar TextField sesuai kebutuhan Anda
                             child: TextField(
+                              autofocus: false,
                               controller: _controller,
                               textAlign: TextAlign.center,
                               keyboardType: TextInputType.number,
@@ -189,24 +183,17 @@ class _KeranjangState extends State<Keranjang> {
                               decoration: InputDecoration(
                                 contentPadding:
                                     EdgeInsets.zero, // Hapus padding bawaan
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    width: 0, // Ketebalan garis
-                                    color: Colors.grey, // Warna garis
-                                  ),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    width: 0, // Ketebalan garis saat fokus
-                                    color:
-                                        Colors.black, // Warna garis saat fokus
-                                  ),
-                                ),
                               ),
                             ),
                           ),
+                          SizedBox(
+                            width: 5,
+                          ),
                           IconButton(
-                            icon: Image.asset("assets/plus.png"),
+                            icon: Image.asset(
+                              "assets/plus.png",
+                              width: 30,
+                            ),
                             onPressed: () {
                               if (!_isMaxReached) {
                                 setState(() {
@@ -227,28 +214,30 @@ class _KeranjangState extends State<Keranjang> {
                     Navigator.pop(context);
                     // Tambahkan logika navigasi ke layar berikutnya di sini
                   },
-                  child: Container(
-                    margin: EdgeInsets.symmetric(
-                      // Menggunakan 10% lebar layar sebagai margin horizontal
-                      vertical: 30 +
-                          MediaQuery.of(context)
-                              .padding
-                              .vertical, // Menggunakan 10% tinggi layar sebagai margin vertikal
-                    ),
-                    width: MediaQuery.of(context).size.width,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      color: Color(0xff4fb60e),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Masukkan Keranjang',
-                        style: GoogleFonts.poppins(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500,
-                          height: 1.5,
-                          color: Color(0xffffffff),
+                  child: Center(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(
+                        // Menggunakan 10% lebar layar sebagai margin horizontal
+                        vertical: 30 +
+                            MediaQuery.of(context)
+                                .padding
+                                .vertical, // Menggunakan 10% tinggi layar sebagai margin vertikal
+                      ),
+                      width: MediaQuery.of(context).size.width,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        color: Color(0xff4fb60e),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Masukkan Keranjang',
+                          style: GoogleFonts.poppins(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w500,
+                            height: 1.5,
+                            color: Color(0xffffffff),
+                          ),
                         ),
                       ),
                     ),

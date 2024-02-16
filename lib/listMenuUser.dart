@@ -27,19 +27,23 @@ class ListUser extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              width: 97,
-              height: 82,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  image: AssetImage("assets/esteh.png"),
-                  fit: BoxFit.cover,
+            Row(
+              children: [
+                Container(
+                  width: 97,
+                  height: 82,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      image: AssetImage("assets/esteh.png"),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              ),
+                SizedBox(width: 10,),
+                _buildTextInfo(),
+              ],
             ),
-            _buildTextInfo(),
-            SizedBox(width: 25),
             _buildActions(context),
           ],
         ),

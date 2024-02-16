@@ -13,6 +13,8 @@ class TambahProduk extends StatefulWidget {
 }
 
 class _TambahProdukState extends State<TambahProduk> {
+  TextEditingController variationController = TextEditingController();
+  TextEditingController stockController = TextEditingController();
   File? image;
   Future getImage() async {
     final ImagePicker picker = ImagePicker();
@@ -48,6 +50,7 @@ class _TambahProdukState extends State<TambahProduk> {
       home: Scaffold(
           appBar: AppBar(
             elevation: 0,
+            centerTitle: true,
             title: Text(
               "Tambah Produk",
               style: GoogleFonts.poppins(
@@ -79,7 +82,10 @@ class _TambahProdukState extends State<TambahProduk> {
                         )
                       : Container(
                           padding: EdgeInsets.all(20),
-                          decoration: fieldCreate,
+                          decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(10),
+            ),
                           height: 325,
                           width: screenWidth,
                           child: Opacity(
@@ -120,7 +126,10 @@ class _TambahProdukState extends State<TambahProduk> {
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       height: 50,
                       width: screenWidth,
-                      decoration: fieldCreate,
+                      decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(10),
+            ),
                       child: TextField(
                         style: text,
                         decoration: InputDecoration(
@@ -134,6 +143,7 @@ class _TambahProdukState extends State<TambahProduk> {
                   CustomTextField(
                     labelText: "Variasi",
                     hintText: "Leci",
+                    controller: variationController
                   ),
                   SizedBox(
                     height: 10,
@@ -149,6 +159,7 @@ class _TambahProdukState extends State<TambahProduk> {
                   CustomTextField(
                     labelText: "Stok",
                     hintText: "100",
+                    controller: stockController,
                   ),
                   SizedBox(
                     height: 20,

@@ -15,22 +15,18 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
+        appBar: PreferredSize(preferredSize: Size.fromHeight(70), child: Header()),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: 35,
-                ),
-                Header(),
                 SizedBox(
                   height: 45,
                 ),
@@ -53,11 +49,11 @@ class _DashboardState extends State<Dashboard> {
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => TambahProduk(),
-              ),
-            );
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TambahProduk(),
+                          ),
+                        );
                       },
                       child: Text(
                         "Tambahkan produk",
@@ -85,8 +81,4 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
-
-
-
-  
 }

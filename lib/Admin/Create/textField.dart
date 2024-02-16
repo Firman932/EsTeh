@@ -1,27 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CustomTextField extends StatefulWidget {
+class CustomTextField extends StatelessWidget {
   final String labelText;
   final String hintText;
+  final TextEditingController controller;
 
   const CustomTextField({
     Key? key,
     required this.labelText,
     required this.hintText,
+    required this.controller,
   }) : super(key: key);
-
-  @override
-  State<CustomTextField> createState() => _CustomTextFieldState();
-}
-
-class _CustomTextFieldState extends State<CustomTextField> {
-  TextEditingController _controller = TextEditingController();
-
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +25,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
       fontWeight: FontWeight.w500,
       color: Colors.black,
     );
-    final fieldCreate = BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Color.fromARGB(255, 240, 240, 240));
     return Container(
       height: 50,
       width: MediaQuery.of(context).size.width,
@@ -45,23 +32,21 @@ class _CustomTextFieldState extends State<CustomTextField> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            '     ${widget.labelText}',
+            '     $labelText',
             style: text,
           ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
-            decoration: fieldCreate,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(10),
+            ),
             height: 50,
             width: 160,
             child: TextField(
-              style: text,
-              controller: _controller,
-              onChanged: (value) {
-                // This ensures the value is updated in the parent widget
-                setState(() {});
-              },
+              controller: controller,
               decoration: InputDecoration(
-                hintText: widget.hintText,
+                hintText: hintText,
                 border: InputBorder.none,
                 hintStyle: textField,
               ),
@@ -114,7 +99,10 @@ class CustomDropdownField extends StatelessWidget {
           ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
-            decoration: fieldCreate,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(10),
+            ),
             height: 50,
             width: 160,
             child: DropdownButtonFormField(

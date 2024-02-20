@@ -18,10 +18,10 @@ class Header extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Hi Radit",
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.poppins(
                                   fontSize: 22, fontWeight: FontWeight.bold)),
                           Text("Kamu adalah admin",
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.poppins(
                                   fontSize: 11, fontWeight: FontWeight.bold))
                         ],
                       ),

@@ -38,7 +38,7 @@ class _FilterState extends State<Filter> {
     return FilterChip(
       label: Container(
         height: 20,
-        width: screenWidth * 0.187, // Set the width as a fraction of the screen width
+        width: MediaQuery.of(context).size.width , // Set the width as a fraction of the screen width
         child: Image.asset(
           index == selectedIndex
               ? selectedAssetPaths[index]

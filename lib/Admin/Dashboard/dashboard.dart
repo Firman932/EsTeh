@@ -6,6 +6,8 @@ import 'package:lji/Admin/Dashboard/filter.dart';
 import 'package:lji/Admin/Dashboard/header.dart';
 import 'package:lji/Admin/Dashboard/list_menu.dart';
 import 'package:lji/Admin/Dashboard/search.dart';
+import 'package:lji/Admin/Stok/stok_produk.dart';
+import 'package:lji/filterUser.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -20,7 +22,8 @@ class _DashboardState extends State<Dashboard> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: PreferredSize(preferredSize: Size.fromHeight(70), child: Header()),
+        appBar:
+            PreferredSize(preferredSize: Size.fromHeight(70), child: Header()),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -34,32 +37,28 @@ class _DashboardState extends State<Dashboard> {
                 SizedBox(
                   height: 30,
                 ),
-                Search(),
-                SizedBox(
-                  height: 20,
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Produk",
-                      style: GoogleFonts.inter(
-                          fontSize: 22, fontWeight: FontWeight.bold),
+                      "Stok",
+                      style: GoogleFonts.poppins(
+                          fontSize: 22, fontWeight: FontWeight.w600),
                     ),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => TambahProduk(),
+                            builder: (context) => StokProduk(),
                           ),
                         );
                       },
                       child: Text(
-                        "Tambahkan produk",
-                        style: GoogleFonts.inter(
+                        "Tampilkan Semua",
+                        style: GoogleFonts.poppins(
                             fontSize: 13,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             decoration: TextDecoration.underline,
                             decorationThickness: 2),
                       ),
@@ -69,7 +68,7 @@ class _DashboardState extends State<Dashboard> {
                 SizedBox(
                   height: 10,
                 ),
-                Filter(),
+                FilterUser(),
                 ListMenu(),
                 ListMenu(),
                 ListMenu(),

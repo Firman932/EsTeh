@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Analisis extends StatelessWidget {
   const Analisis({super.key});
@@ -33,7 +34,7 @@ class Analisis extends StatelessWidget {
                                   child: Align(
                                     alignment: Alignment.bottomCenter,
                                     child: Text("Rp 1.349.324.439",
-                                        style: TextStyle(
+                                        style: GoogleFonts.poppins(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12)),
                                   ),
@@ -60,7 +61,7 @@ class Analisis extends StatelessWidget {
                                     Image.asset("assets/uang.png"),
                                     Text(
                                       "Uang",
-                                      style: TextStyle(color: Colors.white),
+                                      style: GoogleFonts.poppins(color: Colors.white),
                                     )
                                   ],
                                 ),
@@ -91,7 +92,7 @@ class Analisis extends StatelessWidget {
                                   alignment: Alignment.bottomCenter,
                                   child: Text(
                                     "30",
-                                    style: TextStyle(
+                                    style: GoogleFonts.poppins(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 12),
                                   ),
@@ -120,7 +121,7 @@ class Analisis extends StatelessWidget {
                                     Image.asset("assets/produk.png"),
                                     Text(
                                       "Total Produk",
-                                      style: TextStyle(color: Colors.white),
+                                      style: GoogleFonts.poppins(color: Colors.white),
                                     )
                                   ],
                                 ),

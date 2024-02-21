@@ -21,27 +21,29 @@ class _FilterUserState extends State<FilterUser> {
   ];
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    double screenWidth = MediaQuery.of(context).size.width * 0.37;
     return Center(
       child: Wrap(
-                    spacing: 8.0,
-                    children: List.generate(
-                      assetPaths.length,
-                      (index) => buildFilterChip(index, screenWidth),
-                    ),
-                  ),
+        direction: Axis.horizontal,
+        spacing: 8.0,
+        children: List.generate(
+          assetPaths.length,
+          (index) => buildFilterChip(index, screenWidth),
+        ),
+      ),
     );
   }
-    Widget buildFilterChip(int index, double screenWidth) {
+
+  Widget buildFilterChip(int index, double screenWidth) {
     return FilterChip(
       label: Container(
-        height: 20,
-        width: screenWidth * 0.338, // Set the width as a fraction of the screen width
+        height: 23,
+        width: screenWidth,
+        // Set the width as a fraction of the screen width
         child: Image.asset(
           index == selectedIndex
               ? selectedAssetPaths[index]
               : assetPaths[index],
-          
         ),
       ),
       shape: RoundedRectangleBorder(

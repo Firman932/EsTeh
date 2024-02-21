@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Dashboard/search.dart';
 import 'package:lji/Keranjang.dart';
+import 'package:lji/NotifikasiUser.dart';
 import 'package:lji/TampilanUserKeranjang.dart';
 import 'package:lji/filterUser.dart';
 import 'package:lji/listMenuUser.dart';
@@ -47,7 +48,12 @@ class MenuUser extends StatelessWidget {
         ),
         actions: [
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotifUser()),
+              );
+            },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Image.asset(
@@ -56,8 +62,10 @@ class MenuUser extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            margin: EdgeInsets.only(
+                right: 10 + MediaQuery.of(context).padding.right),
             child: GestureDetector(
               onTap: () {
                 Navigator.push(

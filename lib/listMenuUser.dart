@@ -23,7 +23,7 @@ class ListUser extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -40,7 +40,9 @@ class ListUser extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 _buildTextInfo(),
               ],
             ),
@@ -53,7 +55,7 @@ class ListUser extends StatelessWidget {
 
   Widget _buildTextInfo() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -71,25 +73,28 @@ class ListUser extends StatelessWidget {
   }
 
   Widget _buildActions(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Stack(
-        alignment: Alignment.center,
-        children:[ 
-          Container(height: 37,width: 37,decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Color.fromRGBO(73, 160, 19, 1),
-          ),),
-          IconButton(onPressed: () {
-          Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Keranjang(),
-                                  ),
-                                );
-        }, icon: Icon(Icons.shopping_cart,color: Colors.white,)),
-        ]
+    return Stack(alignment: Alignment.center, children: [
+      Container(
+        height: 37,
+        width: 37,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Color.fromRGBO(73, 160, 19, 1),
+        ),
       ),
-    );
+      IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Keranjang(),
+              ),
+            );
+          },
+          icon: Icon(
+            Icons.shopping_cart,
+            color: Colors.white,
+          )),
+    ]);
   }
 }

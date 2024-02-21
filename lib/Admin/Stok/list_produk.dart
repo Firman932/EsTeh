@@ -106,12 +106,15 @@ class ListProduk extends StatelessWidget {
                 style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
           if (isChecklistMode)
             Checkbox(
+               
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
               activeColor: Color.fromRGBO(73, 160, 19, 1),
               value: isChecked,
               onChanged: (value) {
                 onToggleCheck();
               },
             ),
+            SizedBox(height: 14),
           if (!isChecklistMode)
             _deleteActionButton(
                 Icons.delete_outline_outlined, Colors.red, context),

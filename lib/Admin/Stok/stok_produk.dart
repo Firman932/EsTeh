@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lji/Admin/Create/create_produk.dart';
 import 'package:lji/Admin/Dashboard/filter.dart';
-import 'package:lji/Admin/Dashboard/list_menu.dart';
-import 'package:lji/Admin/Dashboard/search.dart';
-import 'package:lji/Admin/Dashboard/search_filter.dart';
 import 'package:lji/Admin/History/history.dart';
 import 'package:lji/Admin/Notifikasi/notifikasi.dart';
 import 'package:lji/Admin/Stok/list_produk.dart';
@@ -21,8 +19,37 @@ class StokProduk extends StatefulWidget {
 class _StokProdukState extends State<StokProduk> {
   bool isChecklistMode = false;
   bool isAllChecked = false;
+  bool checkAll = false;
   List<bool> isCheckedList =
       List.generate(6, (index) => false); // Ganti jumlah item sesuai kebutuhan
+
+  bool isAnyItemChecked() {
+    return isCheckedList.contains(true);
+  }
+
+  void ubahItem() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row()
+            ],
+          ),
+        );
+      },
+    );
+  
+  }
+
+  void hapusItem() {
+    showDialog(
+            context: context,
+            builder: (context) => DeleteDialog(),
+          );
+  }
 
   void activateChecklistMode() {
     setState(() {
@@ -34,25 +61,26 @@ class _StokProdukState extends State<StokProduk> {
   void deactivateChecklistMode() {
     setState(() {
       isChecklistMode = false;
-       isAllChecked = false;
+      toggleCheckAll(false);
+      print("Fungsi ini dipanggil");
     });
   }
 
   void toggleCheckAll(bool value) {
     setState(() {
       isCheckedList = List.generate(isCheckedList.length, (index) => value);
+      isAllChecked = value;
     });
   }
 
   void toggleItemCheck(int index) {
     setState(() {
       isCheckedList[index] = !isCheckedList[index];
-    });
-  }
+      // Cek apakah semua item sudah terpilih
+      bool allChecked = isCheckedList.every((isChecked) => isChecked);
 
-  void toggleAllChecks(bool value) {
-    setState(() {
-      isAllChecked = value;
+      // Set nilai checkAll berdasarkan kondisi
+      checkAll = allChecked;
     });
   }
 
@@ -60,6 +88,26 @@ class _StokProdukState extends State<StokProduk> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+          bottomNavigationBar: isAnyItemChecked()
+              ? BottomAppBar(
+                elevation: 1,
+                shadowColor: Colors.black,
+                surfaceTintColor: Colors.white,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        onPressed: ubahItem,
+                        child: Text('Ubah'),
+                      ),
+                      ElevatedButton(
+                        onPressed: hapusItem,
+                        child: Text('Hapus'),
+                      ),
+                    ],
+                  ),
+                )
+              : null,
           appBar: AppBar(
             actions: [
               GestureDetector(
@@ -116,15 +164,117 @@ class _StokProdukState extends State<StokProduk> {
                 SizedBox(
                   height: 15,
                 ),
-                FilterUser(),
+                Filter(),
                 SizedBox(
                   height: 10,
                 ),
-                SearchFilter(
-                  isChecklistMode: isChecklistMode,
-                  onCheckAll: toggleCheckAll,
-                  onCancel: deactivateChecklistMode,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    isChecklistMode
+                        ? Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    checkAll = false;
+                                  });
+                                  deactivateChecklistMode();
+                                },
+                                icon: Icon(Icons.close),
+                              ),
+                              Text("Batal")
+                            ],
+                          )
+                        : Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.0),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color.fromRGBO(
+                                        156, 156, 156, 0.28999999165534973),
+                                    offset: Offset(0, 0),
+                                    blurRadius: 55.5,
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        decoration: InputDecoration(
+                                          hintText: 'Search',
+                                          border: InputBorder.none,
+                                          icon: Icon(Icons.search),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                    isChecklistMode
+                        ? Row(
+                            children: [
+                              Checkbox(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5)),
+                                activeColor: Color.fromRGBO(73, 160, 19, 1),
+                                value: checkAll,
+                                onChanged: (value) {
+                                  setState(() {
+                                    checkAll = value!;
+                                  });
+                                  toggleCheckAll(value!);
+                                },
+                              ),
+                              SizedBox(
+                                width: 15,
+                              )
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.filter_list_rounded),
+                              ),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => TambahProduk(),
+                                      ),
+                                    );
+                                  },
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          Color.fromRGBO(73, 160, 19, 1),
+                                      minimumSize: Size(30, 30),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10))))
+                            ],
+                          ),
+                  ],
                 ),
+                // SearchFilter(
+                //   isChecklistMode: isChecklistMode,
+                //   onCheckAll: toggleCheckAll,
+                //   onCancel: deactivateChecklistMode,
+                //   a: false,
+                // ),
                 SizedBox(
                   height: 10,
                 ),

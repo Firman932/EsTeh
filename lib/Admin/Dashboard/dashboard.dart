@@ -68,7 +68,7 @@ class _DashboardState extends State<Dashboard> {
                 SizedBox(
                   height: 10,
                 ),
-                FilterUser(),
+                Filter(),
                 ListMenu(),
                 ListMenu(),
                 ListMenu(),

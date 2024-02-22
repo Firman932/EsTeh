@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Dashboard/dashboard.dart';
 import 'package:lji/BagianDashboard.dart';
+import 'package:lji/styles/color.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -87,6 +88,7 @@ class LoginScreen extends StatelessWidget {
                       ),
 
                       TextField(
+                        cursorColor: greenPrimary,
                         controller: emailController,
                         decoration: InputDecoration(
                           contentPadding: EdgeInsetsDirectional.symmetric(
@@ -131,6 +133,7 @@ class LoginScreen extends StatelessWidget {
                         height: 17,
                       ),
                       TextField(
+                        cursorColor: greenPrimary,
                         controller: passwordController,
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.symmetric(

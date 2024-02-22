@@ -9,9 +9,14 @@ import 'package:lji/filterUser.dart';
 import 'package:lji/listMenuUser.dart';
 import 'package:lji/login01.dart';
 
-class MenuUser extends StatelessWidget {
-  const MenuUser({Key? key});
+class MenuUser extends StatefulWidget {
+  const MenuUser({Key? key}) : super(key: key);
 
+  @override
+  _MenuUserState createState() => _MenuUserState();
+}
+
+class _MenuUserState extends State<MenuUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

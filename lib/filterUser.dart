@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FilterUser extends StatefulWidget {
-  const FilterUser({super.key});
+  const FilterUser({Key? key}) : super(key: key);
 
   @override
   State<FilterUser> createState() => _FilterUserState();
@@ -10,60 +10,50 @@ class FilterUser extends StatefulWidget {
 class _FilterUserState extends State<FilterUser> {
   int selectedIndex = 0;
 
-  List<String> assetPaths = [
-    "assets/minum_black.png",
-    "assets/makan.png",
-  ];
-
-  List<String> selectedAssetPaths = [
-    "assets/minum.png",
-    "assets/makan_white.png",
-  ];
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width * 0.37;
-    return Center(
-      child: Wrap(
-        direction: Axis.horizontal,
-        spacing: 8.0,
-        children: List.generate(
-          assetPaths.length,
-          (index) => buildFilterChip(index, screenWidth),
+    return Row(
+      children: [
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedIndex = 0;
+              });
+            },
+            child: Container(
+              color: selectedIndex == 0 ? Colors.grey : Colors.transparent,
+              height: 40,
+              padding: EdgeInsets.all(8.0), // Adjust padding as needed
+              child: Image.asset(
+                "assets/minum.png",
+                height: 25,
+                width: 25,
+              ),
+            ),
+          ),
         ),
-      ),
-    );
-  }
-
-  Widget buildFilterChip(int index, double screenWidth) {
-    return FilterChip(
-      label: Container(
-        height: 23,
-        width: screenWidth,
-        // Set the width as a fraction of the screen width
-        child: Image.asset(
-          index == selectedIndex
-              ? selectedAssetPaths[index]
-              : assetPaths[index],
+        SizedBox(width: 10),
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedIndex = 1;
+              });
+            },
+            child: Container(
+              color: selectedIndex == 1 ? Colors.grey : Colors.transparent,
+              height: 40,
+              padding: EdgeInsets.all(8.0), // Adjust padding as needed
+              child: Image.asset(
+                "assets/makan.png",
+                height: 25,
+                width: 25,
+              ),
+            ),
+          ),
         ),
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-        side: BorderSide(
-          color: index == selectedIndex
-              ? Color.fromRGBO(73, 160, 19, 1)
-              : Colors.white,
-        ),
-      ),
-      backgroundColor: index == selectedIndex
-          ? Color.fromRGBO(73, 160, 19, 1)
-          : Colors.white,
-      onSelected: (bool selected) {
-        setState(() {
-          selectedIndex = selected ? index : -1;
-        });
-      },
-      shadowColor: Color.fromRGBO(156, 156, 156, 0.29),
-      elevation: 5.0,
+      ],
     );
   }
 }

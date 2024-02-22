@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lji/Admin/Create/create_produk.dart';
 import 'package:lji/Admin/Stok/stok_produk.dart';
 
 class ListProduk extends StatelessWidget {
@@ -17,6 +18,19 @@ class ListProduk extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () {
+    if (isChecklistMode) {
+      onToggleCheck();
+    } else {
+      // Navigate to another page or perform an action
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TambahProduk(),
+        ),
+      );
+    }
+  },
       onLongPress: () {
         if (!isChecklistMode) {
           // Aktifkan mode checklist di StokProduk

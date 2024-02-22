@@ -5,6 +5,7 @@ import 'package:lji/Admin/Dashboard/filter.dart';
 import 'package:lji/Admin/History/history.dart';
 import 'package:lji/Admin/Notifikasi/notifikasi.dart';
 import 'package:lji/Admin/Stok/list_produk.dart';
+import 'package:lji/Admin/dialog.dart';
 import 'package:lji/filterUser.dart';
 
 class StokProduk extends StatefulWidget {
@@ -17,14 +18,45 @@ class StokProduk extends StatefulWidget {
 }
 
 class _StokProdukState extends State<StokProduk> {
+  TextEditingController _numberController = TextEditingController();
+  int _number = 0;
+  int _max = 3;
   bool isChecklistMode = false;
   bool isAllChecked = false;
   bool checkAll = false;
   List<bool> isCheckedList =
       List.generate(6, (index) => false); // Ganti jumlah item sesuai kebutuhan
 
+  @override
+  void initState() {
+    super.initState();
+    _numberController.text = '$_number';
+  }
+
+  void _updateNumber() {
+    setState(() {
+      _number = int.tryParse(_numberController.text) ?? 0;
+    });
+  }
+
   bool isAnyItemChecked() {
     return isCheckedList.contains(true);
+  }
+
+  void _increment() {
+    setState(() {
+      _number++;
+      _numberController.text = '$_number';
+    });
+  }
+
+  void _decrement() {
+    setState(() {
+      if (_number > 0) {
+        _number--;
+        _numberController.text = '$_number';
+      }
+    });
   }
 
   void ubahItem() {
@@ -32,23 +64,73 @@ class _StokProdukState extends State<StokProduk> {
       context: context,
       builder: (BuildContext context) {
         return Container(
+          padding: EdgeInsets.all(10),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row()
+              Text("Tambah Produk",
+                  style: GoogleFonts.poppins(
+                      fontSize: 14, fontWeight: FontWeight.w500)),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.remove),
+                    onPressed: _decrement,
+                  ),
+                  Container(
+                    width: 60,
+                    height: 30,
+                    decoration: BoxDecoration(
+                        border: Border.all(width: 1),
+                        borderRadius: BorderRadius.circular(5)),
+                    child: TextField(
+                      decoration: InputDecoration(border: InputBorder.none),
+                      controller: _numberController,
+                      keyboardType: TextInputType.number,
+                      textAlign: TextAlign.center,
+                      onChanged: (value) => _updateNumber(),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.add),
+                    onPressed: _increment,
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text("Batal")),
+
+                      ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        showDialog(
+            context: context,
+            builder: (context) => SucessDialog(),
+          );
+                      },
+                      child: Text("Konfirmasi"))
+                ],
+              )
             ],
           ),
         );
       },
     );
-  
   }
 
   void hapusItem() {
     showDialog(
-            context: context,
-            builder: (context) => DeleteDialog(),
-          );
+      context: context,
+      builder: (context) => DeleteDialog(),
+    );
   }
 
   void activateChecklistMode() {
@@ -90,9 +172,9 @@ class _StokProdukState extends State<StokProduk> {
       home: Scaffold(
           bottomNavigationBar: isAnyItemChecked()
               ? BottomAppBar(
-                elevation: 1,
-                shadowColor: Colors.black,
-                surfaceTintColor: Colors.white,
+                  elevation: 1,
+                  shadowColor: Colors.black,
+                  surfaceTintColor: Colors.white,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [

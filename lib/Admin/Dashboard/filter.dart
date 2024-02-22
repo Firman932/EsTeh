@@ -21,7 +21,7 @@ class _FilterState extends State<Filter> {
   ];
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width*0.338;
+    double screenWidth = MediaQuery.of(context).size.width - 300;
     return Center(
       child: Wrap(
         direction: Axis.horizontal,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Dashboard/search.dart';
+import 'package:lji/History.dart';
 import 'package:lji/Keranjang.dart';
 import 'package:lji/NotifikasiUser.dart';
 import 'package:lji/TampilanUserKeranjang.dart';
@@ -31,21 +32,23 @@ class MenuUser extends StatelessWidget {
             ),
           ),
         ),
-        leading: GestureDetector(
-          onTap: () {
-            // Tambahkan fungsi yang ingin dijalankan saat ikon leading ditekan
-          },
-          child: Container(
-            padding: EdgeInsets.all(10),
-            margin: EdgeInsets.only(
-              left: 10 + MediaQuery.of(context).padding.left,
-            ),
-            child: Image.asset(
-              "assets/log.png",
-              width: 24,
+        leading: Row(children: [
+          GestureDetector(
+            onTap: () {
+              // Tambahkan fungsi yang ingin dijalankan saat ikon leading ditekan
+            },
+            child: Container(
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.only(
+                left: 10 + MediaQuery.of(context).padding.left,
+              ),
+              child: Image.asset(
+                "assets/log.png",
+                width: 24,
+              ),
             ),
           ),
-        ),
+        ]),
         actions: [
           InkWell(
             onTap: () {
@@ -55,17 +58,33 @@ class MenuUser extends StatelessWidget {
               );
             },
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 3),
               child: Image.asset(
                 "assets/notif.png",
-                width: 24,
+                width: 22,
               ),
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.symmetric(horizontal: 3),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => History()),
+                );
+                // Handle cart icon press
+              },
+              child: Image.asset(
+                "assets/histori.png",
+                height: 40,
+              ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 3),
             margin: EdgeInsets.only(
-                right: 10 + MediaQuery.of(context).padding.right),
+                right: 15 + MediaQuery.of(context).padding.right),
             child: GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -76,7 +95,7 @@ class MenuUser extends StatelessWidget {
               },
               child: Image.asset(
                 "assets/keranjang.png",
-                width: 24,
+                width: 22,
               ),
             ),
           ),

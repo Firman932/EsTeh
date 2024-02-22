@@ -45,7 +45,7 @@ flutter:
     - assets/minus.png
     - assets/plus.png
     - assets/esteh.png
-
+    - assets/histori.png
     
 
   uses-material-design: true

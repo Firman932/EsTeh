@@ -107,14 +107,13 @@ class _StokProdukState extends State<StokProduk> {
                         Navigator.pop(context);
                       },
                       child: Text("Batal")),
-
-                      ElevatedButton(
+                  ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
                         showDialog(
-            context: context,
-            builder: (context) => SucessDialog(),
-          );
+                          context: context,
+                          builder: (context) => SucessDialog(),
+                        );
                       },
                       child: Text("Konfirmasi"))
                 ],
@@ -126,12 +125,7 @@ class _StokProdukState extends State<StokProduk> {
     );
   }
 
-  void hapusItem() {
-    showDialog(
-      context: context,
-      builder: (context) => DeleteDialog(),
-    );
-  }
+  void hapusItem() {}
 
   void activateChecklistMode() {
     setState(() {

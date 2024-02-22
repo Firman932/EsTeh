@@ -54,7 +54,7 @@ class _KeranjangState extends State<Keranjang> {
       body: ListView(
         children: [
           Container(
-            padding: EdgeInsets.fromLTRB(20, 28, 30, 82),
+            padding: EdgeInsets.fromLTRB(30, 28, 30, 82),
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: Color(0xffffffff),

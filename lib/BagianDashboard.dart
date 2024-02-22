@@ -106,23 +106,26 @@ class _MenuUserState extends State<MenuUser> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Search(),
-              SizedBox(height: 15),
-              FilterUser(),
-              ListUser(),
-              ListUser(),
-              ListUser(),
-              ListUser(),
-              ListUser(),
-            ],
-          ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          children: [
+            Search(),
+            SizedBox(height: 15),
+            FilterUser(),
+            Expanded(
+              child: Container(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount:
+                      10, // Ubah sesuai dengan jumlah item yang ingin ditampilkan
+                  itemBuilder: (context, index) {
+                    return ListUser(); // Ganti dengan item yang ingin ditampilkan
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

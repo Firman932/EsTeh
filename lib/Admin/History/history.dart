@@ -84,6 +84,7 @@ class Riwayat extends StatelessWidget {
                             ListPesan(),
                             ListPesan(),
                             ListPesan(),
+                            SizedBox(height: 10,),
                             Container(
                               width: MediaQuery.of(context).size.width,
                               height: 30,
@@ -117,7 +118,7 @@ class Riwayat extends StatelessWidget {
                               ),
                             ),
                             SizedBox(
-                              height: 30,
+                              height: 40,
                             ),
                             Align(
                               alignment: Alignment.bottomRight,

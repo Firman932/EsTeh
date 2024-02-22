@@ -13,11 +13,12 @@ class ListPesan extends StatelessWidget {
         color: Colors.white,
       ),
       width: double.infinity,
-      height: 60,
+      height: 70,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 7.5, vertical: 7.5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
               height: 45,
@@ -29,6 +30,7 @@ class ListPesan extends StatelessWidget {
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   "Es Teh",

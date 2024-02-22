@@ -130,7 +130,7 @@ class _KeranjangState extends State<Keranjang> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        'Rp ${_nol * _pricePerUnit}', // Ubah teks default menjadi 'Rp ${_nol * _pricePerUnit}'
+                        'Rp ${_nol * _pricePerUnit >= 0 ? _nol * _pricePerUnit : 0}', // Ubah teks default menjadi 'Rp ${_nol * _pricePerUnit}'
                         style: GoogleFonts.poppins(
                           fontSize: 22,
                           fontWeight: FontWeight.w600,
@@ -171,7 +171,9 @@ class _KeranjangState extends State<Keranjang> {
                               textAlign: TextAlign.center,
                               keyboardType: TextInputType.number,
                               onChanged: (value) {
-                                _updateTotalPrice();
+                                if (int.tryParse(value) != null) {
+                                  _updateTotalPrice();
+                                }
                               },
                               style: TextStyle(
                                 fontSize: 20,

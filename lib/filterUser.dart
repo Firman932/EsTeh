@@ -22,13 +22,20 @@ class _FilterUserState extends State<FilterUser> {
               });
             },
             child: Container(
-              color: selectedIndex == 0 ? Colors.grey : Colors.transparent,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: selectedIndex == 0
+                    ? Color.fromRGBO(73, 160, 19, 1)
+                    : Colors.white,
+              ),
+
               height: 40,
               padding: EdgeInsets.all(8.0), // Adjust padding as needed
               child: Image.asset(
                 "assets/minum.png",
                 height: 25,
                 width: 25,
+                color: selectedIndex == 0 ? Colors.white : Colors.black,
               ),
             ),
           ),
@@ -42,13 +49,20 @@ class _FilterUserState extends State<FilterUser> {
               });
             },
             child: Container(
-              color: selectedIndex == 1 ? Colors.grey : Colors.transparent,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: selectedIndex == 1
+                    ? Color.fromRGBO(73, 160, 19, 1)
+                    : Colors.white,
+              ),
+
               height: 40,
               padding: EdgeInsets.all(8.0), // Adjust padding as needed
               child: Image.asset(
                 "assets/makan.png",
                 height: 25,
                 width: 25,
+                color: selectedIndex == 1 ? Colors.white : Colors.black,
               ),
             ),
           ),

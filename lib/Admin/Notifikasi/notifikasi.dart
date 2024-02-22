@@ -120,7 +120,6 @@ class _NotifikasiState extends State<Notifikasi> {
                             ListPesan(),
                             ListPesan(),
                             ListPesan(),
-                            SizedBox(height: 10,),
                             Container(
                               width: MediaQuery.of(context).size.width,
                               height: 30,
@@ -154,7 +153,7 @@ class _NotifikasiState extends State<Notifikasi> {
                               ),
                             ),
                             SizedBox(
-                              height: 40,
+                              height: 30,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,

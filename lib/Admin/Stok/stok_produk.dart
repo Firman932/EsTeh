@@ -5,8 +5,11 @@ import 'package:lji/Admin/Dashboard/filter.dart';
 import 'package:lji/Admin/History/history.dart';
 import 'package:lji/Admin/Notifikasi/notifikasi.dart';
 import 'package:lji/Admin/Stok/list_produk.dart';
-import 'package:lji/Admin/dialog.dart';
 import 'package:lji/filterUser.dart';
+import 'package:lji/styles/button.dart';
+import 'package:lji/styles/font.dart';
+
+import '../../styles/dialog.dart';
 
 class StokProduk extends StatefulWidget {
   const StokProduk({super.key});
@@ -101,13 +104,20 @@ class _StokProdukState extends State<StokProduk> {
                 ],
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
+                      style: redButton,
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Text("Batal")),
+                      child: Text(
+                        "Batal",
+                        style: textButton,
+                      )),
+                      SizedBox(width: 20,),
                   ElevatedButton(
+                      style: greenButton,
                       onPressed: () {
                         Navigator.pop(context);
                         showDialog(
@@ -115,7 +125,10 @@ class _StokProdukState extends State<StokProduk> {
                           builder: (context) => SucessDialog(),
                         );
                       },
-                      child: Text("Konfirmasi"))
+                      child: Text(
+                        "Konfirmasi",
+                        style: textButton,
+                      ))
                 ],
               )
             ],
@@ -125,7 +138,12 @@ class _StokProdukState extends State<StokProduk> {
     );
   }
 
-  void hapusItem() {}
+  void hapusItem() {
+    showDialog(
+      context: context,
+      builder: (context) => DeleteDialog(),
+    );
+  }
 
   void activateChecklistMode() {
     setState(() {
@@ -170,15 +188,26 @@ class _StokProdukState extends State<StokProduk> {
                   shadowColor: Colors.black,
                   surfaceTintColor: Colors.white,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
+                        style: greenButton,
                         onPressed: ubahItem,
-                        child: Text('Ubah'),
+                        child: Text(
+                          'Ubah',
+                          style: textButton,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
                       ),
                       ElevatedButton(
                         onPressed: hapusItem,
-                        child: Text('Hapus'),
+                        style: redButton,
+                        child: Text(
+                          'Hapus',
+                          style: textButton,
+                        ),
                       ),
                     ],
                   ),

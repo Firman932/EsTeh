@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Create/create_produk.dart';
 import 'package:lji/Admin/Stok/stok_produk.dart';
 
+import '../../styles/dialog.dart';
+
 class ListProduk extends StatelessWidget {
   final bool isChecklistMode;
   final bool isChecked;
@@ -19,18 +21,18 @@ class ListProduk extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-    if (isChecklistMode) {
-      onToggleCheck();
-    } else {
-      // Navigate to another page or perform an action
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => TambahProduk(),
-        ),
-      );
-    }
-  },
+        if (isChecklistMode) {
+          onToggleCheck();
+        } else {
+          // Navigate to another page or perform an action
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TambahProduk(),
+            ),
+          );
+        }
+      },
       onLongPress: () {
         if (!isChecklistMode) {
           // Aktifkan mode checklist di StokProduk
@@ -116,19 +118,19 @@ class ListProduk extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-            Text("Stok: 45",
-                style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
+          Text("Stok: 45",
+              style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
           if (isChecklistMode)
             Checkbox(
-               
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5)),
               activeColor: Color.fromRGBO(73, 160, 19, 1),
               value: isChecked,
               onChanged: (value) {
                 onToggleCheck();
               },
             ),
-            SizedBox(height: 14),
+          SizedBox(height: 14),
           if (!isChecklistMode)
             _deleteActionButton(
                 Icons.delete_outline_outlined, Colors.red, context),
@@ -167,90 +169,3 @@ class ListProduk extends StatelessWidget {
   }
 }
 
-class DeleteDialog extends StatelessWidget {
-  const DeleteDialog({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Kotak atas dengan logo peringatan
-            Container(
-              height: 110,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10)),
-                color: Color.fromARGB(
-                    255, 255, 174, 0), // Ganti warna sesuai keinginan
-              ),
-              child: Icon(
-                Icons.warning,
-                color: Colors.white,
-                size: 70,
-              ),
-            ),
-            SizedBox(height: 16), // Spasi antara kotak atas dan bawah
-            // Kotak bawah dengan konfirmasi dan deskripsi peringatan
-            Padding(
-              padding: const EdgeInsets.only(
-                  top: 8, left: 20, right: 20, bottom: 16),
-              child: Column(
-                children: [
-                  Text("Peringatan",
-                      style: GoogleFonts.inter(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 255, 174, 0))),
-                  SizedBox(height: 8),
-                  Text(
-                    "Apakah kamu yakin menghapus produk ini?",
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 50),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pop(); // Tombol untuk menutup dialog
-                        },
-                        child: Text(
-                          "Batal",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Tambahkan logika penghapusan item di sini
-                          Navigator.of(context)
-                              .pop(); // Tutup dialog setelah penghapusan berhasil
-                        },
-                        child: Text(
-                          "Hapus",
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

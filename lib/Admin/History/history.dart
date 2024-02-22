@@ -84,7 +84,9 @@ class Riwayat extends StatelessWidget {
                             ListPesan(),
                             ListPesan(),
                             ListPesan(),
-                            SizedBox(height: 10,),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Container(
                               width: MediaQuery.of(context).size.width,
                               height: 30,
@@ -120,14 +122,33 @@ class Riwayat extends StatelessWidget {
                             SizedBox(
                               height: 40,
                             ),
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: Text("Pesan DIterima",style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color.fromARGB(255, 73, 160, 19),
-                                      ),)),
-                                      SizedBox(
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      "12-02-2024",
+                                      style: TextStyle(fontSize: 10),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text("09:15 WIB",
+                                      style: TextStyle(fontSize: 10),),
+                                  ],
+                                ),
+                                Text(
+                                  "Pesan DIterima",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color.fromARGB(255, 73, 160, 19),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
                               height: 30,
                             ),
                           ],

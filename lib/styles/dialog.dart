@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lji/styles/button.dart';
+import 'package:lji/styles/color.dart';
+import 'package:lji/styles/font.dart';
 
 class DeleteDialog extends StatelessWidget {
   const DeleteDialog({super.key});
@@ -40,43 +43,35 @@ class DeleteDialog extends StatelessWidget {
               child: Column(
                 children: [
                   Text("Peringatan",
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.poppins(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: Color.fromARGB(255, 255, 174, 0))),
                   SizedBox(height: 8),
                   Text(
                     "Apakah kamu yakin menghapus produk ini?",
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.poppins(
                       fontSize: 14,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 50),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pop(); // Tombol untuk menutup dialog
-                        },
-                        child: Text(
-                          "Batal",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Tambahkan logika penghapusan item di sini
-                          Navigator.of(context)
-                              .pop(); // Tutup dialog setelah penghapusan berhasil
-                        },
-                        child: Text(
-                          "Hapus",
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("Batal",style:textButton ,),
+                          style: greenButton,),
+                          SizedBox(width: 20,),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("Hapus",style:textButton ,),
+                          style: redButton,)
                     ],
                   ),
                 ],
@@ -131,10 +126,10 @@ class SucessDialog extends StatelessWidget {
                       style: GoogleFonts.inter(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 255, 174, 0))),
+                          color: greenPrimary)),
                   SizedBox(height: 8),
                   Text(
-                    "Apakah kamu yakin menghapus produk ini?",
+                    "Berhasil menambahkan stok",
                     style: GoogleFonts.inter(
                       fontSize: 14,
                     ),
@@ -142,19 +137,18 @@ class SucessDialog extends StatelessWidget {
                   ),
                   SizedBox(height: 50),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextButton(
-                        onPressed: () {
-                          // Tambahkan logika penghapusan item di sini
-                          Navigator.of(context)
-                              .pop(); // Tutup dialog setelah penghapusan berhasil
-                        },
-                        child: Text(
-                          "Ok",
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            "Ok",
+                            style: GoogleFonts.inter(
+                                fontSize: 14, color: Colors.white),
+                          ),
+                          style: greenButton)
                     ],
                   ),
                 ],

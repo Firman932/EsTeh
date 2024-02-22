@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Stok/list_produk.dart';
 
+import '../../styles/dialog.dart';
+
 class ListMenu extends StatelessWidget {
   const ListMenu({super.key});
 
@@ -40,7 +42,9 @@ class ListMenu extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 15,),
+                SizedBox(
+                  width: 15,
+                ),
                 _buildTextInfo(),
               ],
             ),
@@ -62,14 +66,15 @@ class ListMenu extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("Es Teh",
-                  style:
-                      GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold)),
+                  style: GoogleFonts.poppins(
+                      fontSize: 20, fontWeight: FontWeight.bold)),
               Text("Rasa Taro",
-                  style:
-                      GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.w600)),
+                  style: GoogleFonts.poppins(
+                      fontSize: 11, fontWeight: FontWeight.w600)),
             ],
           ),
-          Text("Rp.8000", style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
+          Text("Rp.8000",
+              style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
         ],
       ),
     );
@@ -81,7 +86,8 @@ class ListMenu extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text("Stok: 45", style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
+          Text("Stok: 45",
+              style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
         ],
       ),
     );
@@ -134,4 +140,3 @@ class ListMenu extends StatelessWidget {
     );
   }
 }
-

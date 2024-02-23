@@ -63,15 +63,24 @@ class DeleteDialog extends StatelessWidget {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: Text("Batal",style:textButton ,),
-                          style: greenButton,),
-                          SizedBox(width: 20,),
+                          child: Text(
+                            "Batal",
+                            style: textdialog,
+                          ),
+                          style: greenButton),
+                      SizedBox(
+                        width: 20,
+                      ),
                       ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text("Hapus",style:textButton ,),
-                          style: redButton,)
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          "Hapus",
+                          style: textdialog,
+                        ),
+                        style: redButton,
+                      )
                     ],
                   ),
                 ],

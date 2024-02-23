@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Dashboard/search.dart';
+import 'package:lji/Admin/History/history.dart';
 import 'package:lji/History.dart';
 import 'package:lji/Keranjang.dart';
 import 'package:lji/NotifikasiUser.dart';
@@ -9,6 +10,7 @@ import 'package:lji/filterUser.dart';
 import 'package:lji/listMenuUser.dart';
 import 'package:lji/login01.dart';
 import 'package:lji/bottomlogout.dart';
+import 'package:lji/CustomHistori.dart';
 
 class MenuUser extends StatefulWidget {
   MenuUser({Key? key}) : super(key: key);
@@ -83,7 +85,7 @@ class _MenuUserState extends State<MenuUser> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => History()),
+                  MaterialPageRoute(builder: (context) => Riwayat()),
                 );
                 // Handle cart icon press
               },

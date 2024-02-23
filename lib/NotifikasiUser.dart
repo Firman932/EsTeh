@@ -27,7 +27,7 @@ class _NotifUserState extends State<NotifUser> {
           },
         ),
         title: Text(
-          'Notifikasi b',
+          'Notifikasi',
           style: GoogleFonts.poppins(
             fontSize: 25,
             fontWeight: FontWeight.w500,

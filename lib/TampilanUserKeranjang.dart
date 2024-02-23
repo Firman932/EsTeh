@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lji/styles/dialog.dart';
 
 class CartItem {
   bool isChecked;
@@ -234,7 +235,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Total : RP ${_nol * _HargaUnit}',
+                      'Total : Rp ${_nol * _HargaUnit >= 0 ? _nol * _HargaUnit : 0}',
                       style: GoogleFonts.poppins(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
@@ -247,28 +248,17 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                       onPressed: () {
                         showDialog(
                           context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("Konfirmasi"),
-                              content: Text(
-                                  "Apakah Anda yakin ingin menghapus item yang dipilih?"),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("Tidak"),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    // Action when "Hapus" button is pressed
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("Ya"),
-                                ),
-                              ],
-                            );
-                          },
+                          builder: (context) => DeleteDialog(
+                            title: 'Peringatan',
+                            content:
+                                'Apakah kamu yakin ingin menghapus list keranjangmu ?',
+                            buttonConfirm: 'Ok',
+                            onButtonConfirm: () {
+                              Navigator.pop(context);
+                            },
+                            buttonCancel: 'Cancel',
+                            onButtonCancel: () {},
+                          ),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -311,28 +301,15 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                         onPressed: () {
                           showDialog(
                             context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text("Konfirmasi"),
-                                content:
-                                    Text("Apakah Anda yakin ingin checkout?"),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text("Tidak"),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      // Action when "Checkout" button is pressed
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text("Ya"),
-                                  ),
-                                ],
-                              );
-                            },
+                            builder: (context) => SucessDialog(
+                              title: 'Sukses',
+                              content:
+                                  'Transaksi telah berhasil terima kasih telah berbelanja di toko kami !',
+                              buttonConfirm: 'Ok',
+                              onButtonConfirm: () {
+                                Navigator.pop(context);
+                              },
+                            ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
@@ -414,16 +391,19 @@ class KeranjangPage01 extends State<KeranjangPage02> {
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
             onChanged: (value) {
-              _updateTotalPrice();
+              if (int.tryParse(value) != null) {
+                _updateTotalPrice();
+              }
             },
-            style: TextStyle(
-              fontSize: 16,
+            style: GoogleFonts.poppins(
+              fontSize: 18,
             ),
             textInputAction: TextInputAction.next,
             textCapitalization: TextCapitalization.none,
-            enabled: !_MaksimalReached,
+            enabled:
+                !_isTotalDisabled, // Nonaktifkan TextField jika batas maksimum tercapai
             decoration: InputDecoration(
-              contentPadding: EdgeInsets.zero,
+              contentPadding: EdgeInsets.zero, // Hapus padding bawaan
             ),
           ),
         ),

@@ -26,8 +26,8 @@ class _KeranjangState extends State<Keranjang> {
   void _updateTotalPrice() {
     setState(() {
       _nol = int.tryParse(_controller.text) ?? 0;
-      if (_nol > 500000) {
-        _nol = 500000;
+      if (_nol > 100) {
+        _nol = 100;
         _controller.text = '$_nol';
         _isMaxReached = true;
       } else {

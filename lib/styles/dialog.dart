@@ -5,7 +5,20 @@ import 'package:lji/styles/color.dart';
 import 'package:lji/styles/font.dart';
 
 class DeleteDialog extends StatelessWidget {
-  const DeleteDialog({super.key});
+  final String title;
+  final String content;
+  final String buttonCancel;
+  final VoidCallback onButtonCancel;
+  final String buttonConfirm;
+  final VoidCallback onButtonConfirm;
+  const DeleteDialog(
+      {super.key,
+      required this.title,
+      required this.content,
+      required this.buttonCancel,
+      required this.onButtonCancel,
+      required this.buttonConfirm,
+      required this.onButtonConfirm});
 
   @override
   Widget build(BuildContext context) {
@@ -42,14 +55,14 @@ class DeleteDialog extends StatelessWidget {
                   top: 8, left: 20, right: 20, bottom: 16),
               child: Column(
                 children: [
-                  Text("Peringatan",
+                  Text(title,
                       style: GoogleFonts.poppins(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: Color.fromARGB(255, 255, 174, 0))),
                   SizedBox(height: 8),
                   Text(
-                    "Apakah kamu yakin menghapus produk ini?",
+                    content,
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                     ),
@@ -60,11 +73,9 @@ class DeleteDialog extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                          onPressed: onButtonCancel,
                           child: Text(
-                            "Batal",
+                            buttonCancel,
                             style: textdialog,
                           ),
                           style: greenButton),
@@ -72,11 +83,9 @@ class DeleteDialog extends StatelessWidget {
                         width: 20,
                       ),
                       ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
+                        onPressed: onButtonConfirm,
                         child: Text(
-                          "Hapus",
+                          buttonConfirm,
                           style: textdialog,
                         ),
                         style: redButton,
@@ -94,7 +103,11 @@ class DeleteDialog extends StatelessWidget {
 }
 
 class SucessDialog extends StatelessWidget {
-  const SucessDialog({super.key});
+    final String title;
+  final String content;
+  final String buttonConfirm;
+  final VoidCallback onButtonConfirm;
+  const SucessDialog({super.key, required this.title, required this.content, required this.buttonConfirm, required this.onButtonConfirm});
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +132,7 @@ class SucessDialog extends StatelessWidget {
                     73, 160, 19, 1), // Ganti warna sesuai keinginan
               ),
               child: Icon(
-                Icons.check,
+                Icons.check_circle,
                 color: Colors.white,
                 size: 70,
               ),
@@ -131,15 +144,15 @@ class SucessDialog extends StatelessWidget {
                   top: 8, left: 20, right: 20, bottom: 16),
               child: Column(
                 children: [
-                  Text("Berhasil",
-                      style: GoogleFonts.inter(
+                  Text(title,
+                      style: GoogleFonts.poppins(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: greenPrimary)),
                   SizedBox(height: 8),
                   Text(
-                    "Berhasil menambahkan stok",
-                    style: GoogleFonts.inter(
+                    content,
+                    style: GoogleFonts.poppins(
                       fontSize: 14,
                     ),
                     textAlign: TextAlign.center,
@@ -149,12 +162,10 @@ class SucessDialog extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                          onPressed: onButtonConfirm,
                           child: Text(
-                            "Ok",
-                            style: GoogleFonts.inter(
+                            buttonConfirm,
+                            style: GoogleFonts.poppins(
                                 fontSize: 14, color: Colors.white),
                           ),
                           style: greenButton)

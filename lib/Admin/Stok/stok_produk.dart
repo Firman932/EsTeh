@@ -115,14 +115,23 @@ class _StokProdukState extends State<StokProduk> {
                         "Batal",
                         style: textButton,
                       )),
-                      SizedBox(width: 20,),
+                  SizedBox(
+                    width: 20,
+                  ),
                   ElevatedButton(
                       style: greenButton,
                       onPressed: () {
                         Navigator.pop(context);
                         showDialog(
                           context: context,
-                          builder: (context) => SucessDialog(),
+                          builder: (context) => SucessDialog(
+                            title: 'Berhasil',
+                            content: 'Berhasil menambahkan stok',
+                            buttonConfirm: 'Ok',
+                            onButtonConfirm: () {
+                              Navigator.pop(context);
+                            },
+                          ),
                         );
                       },
                       child: Text(
@@ -141,7 +150,18 @@ class _StokProdukState extends State<StokProduk> {
   void hapusItem() {
     showDialog(
       context: context,
-      builder: (context) => DeleteDialog(),
+      builder: (context) => DeleteDialog(
+        title: 'Peringatan',
+        content: 'Apakah anda yakin menghapus produk ini?',
+        buttonCancel: 'Batal',
+        onButtonCancel: () {
+          Navigator.pop(context);
+        },
+        buttonConfirm: 'Hapus',
+        onButtonConfirm: () {
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 

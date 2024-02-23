@@ -105,7 +105,18 @@ class ListMenu extends StatelessWidget {
         onPressed: () {
           showDialog(
             context: context,
-            builder: (context) => DeleteDialog(),
+            builder: (context) => DeleteDialog(
+              title: 'Peringatan',
+              content: 'Apakah anda yakin menghapus produk ini?',
+              buttonCancel: 'Batal',
+              onButtonCancel: () {
+                Navigator.pop(context);
+              },
+              buttonConfirm: 'Hapus',
+              onButtonConfirm: () {
+                Navigator.pop(context);
+              },
+            ),
           );
         },
         icon: Icon(

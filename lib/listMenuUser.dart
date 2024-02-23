@@ -8,7 +8,7 @@ class ListUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 15),
+      margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
       height: 116,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(

@@ -141,16 +141,13 @@ class _KeranjangState extends State<Keranjang> {
                               : Color(0xff49a013),
                         ),
                       ),
-                      SizedBox(
-                        height: 9 + MediaQuery.of(context).padding.left,
-                      ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           IconButton(
                             icon: Image.asset(
                               "assets/minus.png",
-                              width: 30,
+                              width: 28,
                             ),
                             onPressed: () {
                               if (_nol > 0) {
@@ -175,8 +172,8 @@ class _KeranjangState extends State<Keranjang> {
                                   _updateTotalPrice();
                                 }
                               },
-                              style: TextStyle(
-                                fontSize: 20,
+                              style: GoogleFonts.poppins(
+                                fontSize: 18,
                               ),
                               textInputAction: TextInputAction.next,
                               textCapitalization: TextCapitalization.none,
@@ -194,7 +191,7 @@ class _KeranjangState extends State<Keranjang> {
                           IconButton(
                             icon: Image.asset(
                               "assets/plus.png",
-                              width: 30,
+                              width: 28,
                             ),
                             onPressed: () {
                               if (!_isMaxReached) {

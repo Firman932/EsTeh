@@ -191,21 +191,25 @@ class _NotifikasiState extends State<Notifikasi> {
                                   )
                               ],
                             ),
-                            if (status.isNotEmpty) 
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: Text(
-                                      status,
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: status == 'Pesanan ditolak'
-                                            ? Colors.red
-                                            : Color.fromARGB(255, 73, 160, 19),
-                                      ),
-                                    ),
-                            ) else SizedBox.shrink(),
-                                SizedBox(height: 30,)
+                            if (status.isNotEmpty)
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: Text(
+                                  status,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: status == 'Pesanan ditolak'
+                                        ? Colors.red
+                                        : Color.fromARGB(255, 73, 160, 19),
+                                  ),
+                                ),
+                              )
+                            else
+                              SizedBox.shrink(),
+                            SizedBox(
+                              height: 30,
+                            )
                           ],
                         ),
                       )

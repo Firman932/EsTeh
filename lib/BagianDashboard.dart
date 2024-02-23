@@ -8,15 +8,20 @@ import 'package:lji/TampilanUserKeranjang.dart';
 import 'package:lji/filterUser.dart';
 import 'package:lji/listMenuUser.dart';
 import 'package:lji/login01.dart';
+import 'package:lji/bottomlogout.dart';
 
 class MenuUser extends StatefulWidget {
-  const MenuUser({Key? key}) : super(key: key);
+  MenuUser({Key? key}) : super(key: key);
 
   @override
   _MenuUserState createState() => _MenuUserState();
 }
 
 class _MenuUserState extends State<MenuUser> {
+  void _showLogoutBottomSheet(BuildContext context) {
+    LogoutBottomSheet.show(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,23 +42,25 @@ class _MenuUserState extends State<MenuUser> {
             ),
           ),
         ),
-        leading: Row(children: [
-          GestureDetector(
-            onTap: () {
-              // Tambahkan fungsi yang ingin dijalankan saat ikon leading ditekan
-            },
-            child: Container(
-              padding: EdgeInsets.all(10),
-              margin: EdgeInsets.only(
-                left: 10 + MediaQuery.of(context).padding.left,
-              ),
-              child: Image.asset(
-                "assets/log.png",
-                width: 24,
+        leading: Row(
+          children: [
+            GestureDetector(
+              onTap: () {
+                _showLogoutBottomSheet(context);
+              },
+              child: Container(
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.only(
+                  left: 10 + MediaQuery.of(context).padding.left,
+                ),
+                child: Image.asset(
+                  "assets/log.png",
+                  width: 24,
+                ),
               ),
             ),
-          ),
-        ]),
+          ],
+        ),
         actions: [
           InkWell(
             onTap: () {
@@ -113,6 +120,9 @@ class _MenuUserState extends State<MenuUser> {
             Search(),
             SizedBox(height: 15),
             FilterUser(),
+            SizedBox(
+              height: 20,
+            ),
             Expanded(
               child: Container(
                 child: ListView.builder(

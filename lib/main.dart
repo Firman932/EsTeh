@@ -9,10 +9,15 @@ import 'package:lji/Keranjang.dart';
 import 'package:lji/splash_screen.dart';
 import 'dart:convert';
 import 'package:lji/SignIn.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future<void> main() async {
   Get.put(UserController());
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   UserController userController = UserController();
   userController.onInit();
   runApp(MyApp());

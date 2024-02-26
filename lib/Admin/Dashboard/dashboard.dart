@@ -7,16 +7,27 @@ import 'package:lji/Admin/Dashboard/header.dart';
 import 'package:lji/Admin/Dashboard/list_menu.dart';
 import 'package:lji/Admin/Dashboard/search.dart';
 import 'package:lji/Admin/Stok/stok_produk.dart';
-import 'package:lji/filterUser.dart';
+// Sesuaikan dengan lokasi file Product.dart
+// Sesuaikan dengan lokasi file api_service.dart
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  const Dashboard({Key? key}) : super(key: key);
 
   @override
   State<Dashboard> createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
+  // List untuk menyimpan data produk
+
+  @override
+  void initState() {
+    super
+        .initState(); // Panggil fungsi untuk mengambil data produk saat widget diinisialisasi
+  }
+
+  // Fungsi untuk mengambil data produk dari backend
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -30,49 +41,49 @@ class _DashboardState extends State<Dashboard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: 45,
-                ),
+                SizedBox(height: 45),
                 Analisis(),
-                SizedBox(
-                  height: 30,
-                ),
+                SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       "Stok",
                       style: GoogleFonts.poppins(
-                          fontSize: 22, fontWeight: FontWeight.w600),
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => StokProduk(),
-                          ),
+                          MaterialPageRoute(builder: (context) => StokProduk()),
                         );
                       },
                       child: Text(
                         "Tampilkan Semua",
                         style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            decoration: TextDecoration.underline,
-                            decorationThickness: 2),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          decoration: TextDecoration.underline,
+                          decorationThickness: 2,
+                        ),
                       ),
-                    )
+                    ),
                   ],
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                SizedBox(height: 10),
                 Filter(),
-                ListMenu(),
-                ListMenu(),
-                ListMenu(),
-                ListMenu(),
+                // Tampilkan data produk dalam daftar
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: 6,
+                  itemBuilder: (context, index) {
+                    return ListMenu();
+                  },
+                ),
               ],
             ),
           ),

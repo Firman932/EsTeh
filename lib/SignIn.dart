@@ -157,36 +157,25 @@ class _SIGNINState extends State<SignScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: GestureDetector(
-                            onTap: () async* {
-                              if (_formKey.currentState?.validate() ?? false) {
-                                bool success = await _userController.loginUser(
-                                  emailController.text.trim(),
-                                  passwordController.text.trim(),
+                            onTap: () {
+                              String adminEmail =
+                                  'admin'; // Ganti dengan email admin yang sesuai
+                              String enteredEmail = emailController.text.trim();
+
+                              if (enteredEmail == adminEmail) {
+                                // Email adalah email admin, arahkan ke dashboard admin
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Dashboard()),
                                 );
-                                if (!success) {
-                                  showCustomSnackBar(
-                                    "Invalid email or password",
-                                    title: 'Login Failed',
-                                  );
-                                } else {
-                                  showCustomSnackBar(
-                                    "Login successful",
-                                    title: 'Login Success',
-                                  );
-                                  // Cek role sebelum menavigasikan pengguna
-                                  WidgetsBinding.instance
-                                      .addPostFrameCallback((_) {
-                                    // Cek role sebelum menavigasikan pengguna
-                                    if (_userController.login.value?.role ==
-                                        'admin') {
-                                      // Navigasikan ke dashboard admin
-                                      Get.to(Dashboard());
-                                    } else {
-                                      // Navigasikan ke dashboard user
-                                      Get.to(MenuUser());
-                                    }
-                                  });
-                                }
+                              } else {
+                                // Email bukan email admin, arahkan ke dashboard user
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MenuUser()),
+                                );
                               }
                             },
                             child: Center(

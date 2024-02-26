@@ -40,6 +40,7 @@ class UserController extends GetxController {
     MySqlConnection? conn;
     try {
       conn = await connectToDatabase();
+      
 
       var result = await conn.query(
         'SELECT * FROM login WHERE USERNAME = ? AND PASSWORD = ? ',
@@ -86,4 +87,59 @@ class UserController extends GetxController {
       await conn?.close();
     }
   }
+
+  Future<bool> addNewUser(String USERNAME, String PASSWORD, String role) async {
+  MySqlConnection? conn;
+  try {
+    conn = await connectToDatabase();
+
+    // Periksa apakah akun dengan USERNAME tersebut sudah ada
+    var existingUserResults = await conn.query(
+      'SELECT * FROM login WHERE USERNAME = ?',
+      [USERNAME],
+    );
+
+    if (existingUserResults.isNotEmpty) {
+      showCustomSnackBar(
+        "Akun dengan nama pengguna tersebut sudah ada",
+        title: "Gagal Menambahkan Akun",
+      );
+      return false;
+    }
+
+    // Jika akun belum ada, tambahkan akun baru
+    var now = DateTime.now();
+    var formattedDate = DateFormat('yyyy-MM-dd').format(now);
+
+    var insertResult = await conn.query(
+      'INSERT INTO login(USERNAME, PASSWORD, since_member, role) VALUES (?, ?, ?, ?)',
+      [USERNAME, PASSWORD, formattedDate, role],
+    );
+
+    var userId = insertResult.insertId;
+    
+    // Menyimpan informasi akun ke SharedPreferences (jika diperlukan)
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("id", userId.toString());
+    prefs.setString("USERNAME", USERNAME);
+    prefs.setString("since_member", formattedDate);
+
+    // Menyimpan informasi akun ke state login (jika diperlukan)
+    login.value = LOGIN(id: userId, USERNAME: USERNAME, sinceMember: formattedDate, role: role);
+
+    showCustomSnackBar(
+      "Akun berhasil ditambahkan",
+      title: "Berhasil",
+    );
+
+    return true;
+  } catch (e) {
+    if (kDebugMode) {
+      print("Error adding new user: $e");
+    }
+    return false;
+  } finally {
+    await conn?.close();
+  }
+}
 }

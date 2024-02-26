@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lji/Admin/Dashboard/dashboard.dart';
 import 'package:lji/DataBasePHPMYSQL/FunctionRegister.dart';
+import 'package:lji/DataBasePHPMYSQL/TextFieldLogin.dart';
 import 'package:lji/FOR%20USER/BagianDashboard.dart';
 import 'package:lji/snackbarlogin.dart';
 
@@ -110,10 +111,16 @@ class _SIGNINState extends State<SignScreen> {
                             ),
                           ),
                         ),
-                        RegisterInput(
+                        LoginInput(
                           hintText: "Email",
                           textController: emailController,
                           leftIcon: Icons.email,
+                          validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Mohon isi email";
+          }
+          return null;
+        },
                         ),
                         SizedBox(
                           height: 20,
@@ -131,6 +138,12 @@ class _SIGNINState extends State<SignScreen> {
                               isPasswordVisible = !isPasswordVisible;
                             });
                           },
+                          validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Mohon isi password";
+          }
+          return null;
+        },
                         ),
                         SizedBox(
                           height: 40,
@@ -143,7 +156,7 @@ class _SIGNINState extends State<SignScreen> {
                             color: Color(0xff55bc15),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: InkWell(
+                          child: GestureDetector(
                             onTap: () async* {
                               if (_formKey.currentState?.validate() ?? false) {
   bool success = await _userController.loginUser(

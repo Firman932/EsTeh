@@ -29,7 +29,7 @@ class _FilterUserState extends State<FilterUser> {
                     : Colors.white,
               ),
 
-              height: 40,
+              height: 35,
               padding: EdgeInsets.all(8.0), // Adjust padding as needed
               child: Image.asset(
                 "assets/minum.png",
@@ -56,7 +56,7 @@ class _FilterUserState extends State<FilterUser> {
                     : Colors.white,
               ),
 
-              height: 40,
+              height: 35,
               padding: EdgeInsets.all(8.0), // Adjust padding as needed
               child: Image.asset(
                 "assets/makan.png",

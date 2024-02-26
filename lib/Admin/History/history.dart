@@ -134,8 +134,10 @@ class Riwayat extends StatelessWidget {
                                     SizedBox(
                                       width: 10,
                                     ),
-                                    Text("09:15 WIB",
-                                      style: TextStyle(fontSize: 10),),
+                                    Text(
+                                      "09:15 WIB",
+                                      style: TextStyle(fontSize: 10),
+                                    ),
                                   ],
                                 ),
                                 Text(

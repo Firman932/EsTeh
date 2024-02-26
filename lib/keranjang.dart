@@ -223,7 +223,7 @@ class _KeranjangState extends State<Keranjang> {
                                 .vertical, // Menggunakan 10% tinggi layar sebagai margin vertikal
                       ),
                       width: MediaQuery.of(context).size.width,
-                      height: 70,
+                      height: 50,
                       decoration: BoxDecoration(
                         color: Color(0xff4fb60e),
                         borderRadius: BorderRadius.circular(15),

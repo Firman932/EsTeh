@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Dashboard/search.dart';
 import 'package:lji/Admin/History/history.dart';
-import 'package:lji/History.dart';
-import 'package:lji/Keranjang.dart';
-import 'package:lji/NotifikasiUser.dart';
+
+import 'package:lji/FOR%20USER/NotifikasiUser.dart';
 import 'package:lji/TampilanUserKeranjang.dart';
 import 'package:lji/filterUser.dart';
-import 'package:lji/listMenuUser.dart';
-import 'package:lji/login01.dart';
-import 'package:lji/bottomlogout.dart';
-import 'package:lji/CustomHistori.dart';
+import 'package:lji/FOR%20USER/listMenuUser.dart';
+
+import 'package:lji/styles/bottomlogout.dart';
 
 class MenuUser extends StatefulWidget {
   MenuUser({Key? key}) : super(key: key);
@@ -37,7 +35,7 @@ class _MenuUserState extends State<MenuUser> {
           child: Text(
             'Menu',
             style: GoogleFonts.poppins(
-              fontSize: 25,
+              fontSize: 20,
               fontWeight: FontWeight.w500,
               height: 3,
               color: Color(0xff000000),
@@ -55,29 +53,31 @@ class _MenuUserState extends State<MenuUser> {
                 margin: EdgeInsets.only(
                   left: 10 + MediaQuery.of(context).padding.left,
                 ),
-                child: Image.asset(
-                  "assets/log.png",
-                  width: 24,
+                child: Icon(
+                  Icons.logout, // Ganti dengan ikon yang sesuai
+                  size: 25,
+                  color: Colors.red,
                 ),
               ),
             ),
           ],
         ),
         actions: [
-          InkWell(
+          GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => NotifUser()),
               );
             },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 3),
-              child: Image.asset(
-                "assets/notif.png",
-                width: 22,
-              ),
+            child: Icon(
+              Icons.notifications, // Ganti dengan ikon yang sesuai
+              size: 25,
+              color: Colors.black,
             ),
+          ),
+          SizedBox(
+            width: 4,
           ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 3),
@@ -87,16 +87,18 @@ class _MenuUserState extends State<MenuUser> {
                   context,
                   MaterialPageRoute(builder: (context) => Riwayat()),
                 );
-                // Handle cart icon press
               },
-              child: Image.asset(
-                "assets/histori.png",
-                height: 40,
+              child: Icon(
+                Icons.history, // Ganti dengan ikon yang sesuai
+                size: 25,
+                color: Colors.black,
               ),
             ),
           ),
+          SizedBox(
+            width: 4,
+          ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 3),
             margin: EdgeInsets.only(
                 right: 15 + MediaQuery.of(context).padding.right),
             child: GestureDetector(
@@ -105,11 +107,11 @@ class _MenuUserState extends State<MenuUser> {
                   context,
                   MaterialPageRoute(builder: (context) => KeranjangPage02()),
                 );
-                // Handle cart icon press
               },
-              child: Image.asset(
-                "assets/keranjang.png",
-                width: 22,
+              child: Icon(
+                Icons.shopping_cart, // Ganti dengan ikon yang sesuai
+                size: 25,
+                color: Colors.black,
               ),
             ),
           ),
@@ -127,6 +129,17 @@ class _MenuUserState extends State<MenuUser> {
             ),
             Expanded(
               child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromRGBO(156, 156, 156, 0.29),
+                      offset: Offset(0, 0),
+                      blurRadius: 55.5,
+                    ),
+                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: ListView.builder(
                   shrinkWrap: true,
                   itemCount:

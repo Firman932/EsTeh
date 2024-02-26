@@ -9,15 +9,15 @@ class NotifDel extends StatelessWidget {
       width: double.infinity,
       height: 100,
       decoration: BoxDecoration(
-        color: Color(0xffffffff),
-        borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Color(0x499c9c9c),
+            color: Color.fromRGBO(156, 156, 156, 0.29),
             offset: Offset(0, 0),
-            blurRadius: 27.7000007629,
+            blurRadius: 55.5,
           ),
         ],
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,7 +34,7 @@ class NotifDel extends StatelessWidget {
           ),
           Container(
             margin: EdgeInsets.all(10),
-            width: MediaQuery.of(context).size.width - 100,
+            width: MediaQuery.of(context).size.width - 80,
             height: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -9,15 +9,15 @@ class NotifReq extends StatelessWidget {
       width: double.infinity,
       height: 120,
       decoration: BoxDecoration(
-        color: Color(0xffffffff),
-        borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Color(0x499c9c9c),
+            color: Color.fromRGBO(156, 156, 156, 0.29),
             offset: Offset(0, 0),
-            blurRadius: 27.7000007629,
+            blurRadius: 55.5,
           ),
         ],
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -30,11 +30,11 @@ class NotifReq extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(5),
                     bottomLeft: Radius.circular(10)),
-                color: Color.fromARGB(255, 73, 160, 19)),
+                color: Color(0xffA5CD14)),
           ),
           Container(
             margin: EdgeInsets.all(10),
-            width: MediaQuery.of(context).size.width - 100,
+            width: MediaQuery.of(context).size.width - 80,
             height: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

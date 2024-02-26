@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lji/Register.dart';
 import 'package:lji/login01.dart';
 
 class LogoutBottomSheet {
@@ -45,11 +46,11 @@ class LogoutBottomSheet {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => LoginScreen()));
-                      // // Navigate to the next page
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegisterScreen()));
+                      // Navigate to the next page
                     },
                     child: Text('Oke',
                         style: GoogleFonts.poppins(

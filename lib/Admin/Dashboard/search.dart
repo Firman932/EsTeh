@@ -17,7 +17,9 @@ class Search extends StatelessWidget {
           ] // Ganti warna sesuai kebutuhan
           ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+        ),
         child: TextField(
           decoration: InputDecoration(
             hintText: 'Search',

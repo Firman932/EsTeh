@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Stok/list_produk.dart';
+import 'package:lji/Admin/Update/update.dart';
 
 import '../../styles/dialog.dart';
 
@@ -9,47 +10,64 @@ class ListMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: 15),
-      height: 116,
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Color.fromRGBO(156, 156, 156, 0.29),
-            offset: Offset(0, 0),
-            blurRadius: 55.5,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UpdateProduk(
+              // Melewatkan data produk yang ingin diperbarui
+              // Disini kamu dapat mengirim data yang sesuai seperti nama, harga, stok, dll.
+              namaProduk: "Es Teh", // Contoh nama produk
+              hargaProduk: "Rp. 8000", // Contoh harga produk
+              stokProduk: "45", // Contoh stok produk
+              image: AssetImage("assets/teh taro.jpg"), varianProduk: 'Leci', // Contoh gambar produk
+            ),
           ),
-        ],
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 97,
-                  height: 82,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: AssetImage("assets/teh taro.jpg"),
-                      fit: BoxFit.cover,
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 15),
+        height: 116,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromRGBO(156, 156, 156, 0.29),
+              offset: Offset(0, 0),
+              blurRadius: 55.5,
+            ),
+          ],
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 97,
+                    height: 82,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: AssetImage("assets/teh taro.jpg"),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: 15,
-                ),
-                _buildTextInfo(),
-              ],
-            ),
-            _buildActions(context),
-          ],
+                  SizedBox(
+                    width: 15,
+                  ),
+                  _buildTextInfo(),
+                ],
+              ),
+              _buildActions(context),
+            ],
+          ),
         ),
       ),
     );

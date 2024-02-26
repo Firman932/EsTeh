@@ -33,6 +33,7 @@ class DeleteDialog extends StatelessWidget {
           children: [
             // Kotak atas dengan logo peringatan
             Container(
+              padding: EdgeInsets.symmetric(vertical: 22),
               height: 110,
               width: double.infinity,
               decoration: BoxDecoration(
@@ -42,11 +43,7 @@ class DeleteDialog extends StatelessWidget {
                 color: Color.fromARGB(
                     255, 255, 174, 0), // Ganti warna sesuai keinginan
               ),
-              child: Icon(
-                Icons.warning,
-                color: Colors.white,
-                size: 70,
-              ),
+              child: Image.asset("assets/Warning.png",)
             ),
             SizedBox(height: 16), // Spasi antara kotak atas dan bawah
             // Kotak bawah dengan konfirmasi dan deskripsi peringatan

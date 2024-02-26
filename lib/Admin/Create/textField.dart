@@ -44,6 +44,7 @@ class CustomTextField extends StatelessWidget {
             height: 50,
             width: 160,
             child: TextField(
+              style: text,
               controller: controller,
               decoration: InputDecoration(
                 hintText: hintText,

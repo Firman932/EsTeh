@@ -50,6 +50,7 @@ flutter:
     - assets/plus.png
     - assets/esteh.png
     - assets/histori.png
+    - assets/Warning.png
     
 
   uses-material-design: true

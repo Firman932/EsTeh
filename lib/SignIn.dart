@@ -116,11 +116,11 @@ class _SIGNINState extends State<SignScreen> {
                           textController: emailController,
                           leftIcon: Icons.email,
                           validator: (value) {
-          if (value == null || value.isEmpty) {
-            return "Mohon isi email";
-          }
-          return null;
-        },
+                            if (value == null || value.isEmpty) {
+                              return "Mohon isi email";
+                            }
+                            return null;
+                          },
                         ),
                         SizedBox(
                           height: 20,
@@ -139,11 +139,11 @@ class _SIGNINState extends State<SignScreen> {
                             });
                           },
                           validator: (value) {
-          if (value == null || value.isEmpty) {
-            return "Mohon isi password";
-          }
-          return null;
-        },
+                            if (value == null || value.isEmpty) {
+                              return "Mohon isi password";
+                            }
+                            return null;
+                          },
                         ),
                         SizedBox(
                           height: 40,
@@ -159,30 +159,35 @@ class _SIGNINState extends State<SignScreen> {
                           child: GestureDetector(
                             onTap: () async* {
                               if (_formKey.currentState?.validate() ?? false) {
-  bool success = await _userController.loginUser(
-    emailController.text.trim(),
-    passwordController.text.trim(),
-  );
-  if (!success) {
-    showCustomSnackBar(
-      "Invalid email or password",
-      title: 'Login Failed',
-    );
-  } else {
-    showCustomSnackBar(
-      "Login successful",
-      title: 'Login Success',
-    );
-    // Cek role sebelum menavigasikan pengguna
-    if (_userController.login.value?.role == 'admin') {
-      // Navigasikan ke dashboard admin
-      Get.to(Dashboard());
-    } else {
-      // Navigasikan ke dashboard user
-      Get.to(MenuUser());
-    }
-  }
-}
+                                bool success = await _userController.loginUser(
+                                  emailController.text.trim(),
+                                  passwordController.text.trim(),
+                                );
+                                if (!success) {
+                                  showCustomSnackBar(
+                                    "Invalid email or password",
+                                    title: 'Login Failed',
+                                  );
+                                } else {
+                                  showCustomSnackBar(
+                                    "Login successful",
+                                    title: 'Login Success',
+                                  );
+                                  // Cek role sebelum menavigasikan pengguna
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((_) {
+                                    // Cek role sebelum menavigasikan pengguna
+                                    if (_userController.login.value?.role ==
+                                        'admin') {
+                                      // Navigasikan ke dashboard admin
+                                      Get.to(Dashboard());
+                                    } else {
+                                      // Navigasikan ke dashboard user
+                                      Get.to(MenuUser());
+                                    }
+                                  });
+                                }
+                              }
                             },
                             child: Center(
                               child: Text(

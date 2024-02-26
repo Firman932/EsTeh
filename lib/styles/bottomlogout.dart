@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Register.dart';
+import 'package:lji/SignIn.dart';
 import 'package:lji/login01.dart';
 
 class LogoutBottomSheet {
@@ -49,7 +50,7 @@ class LogoutBottomSheet {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => RegisterScreen()));
+                              builder: (context) => SignScreen()));
                       // Navigate to the next page
                     },
                     child: Text('Oke',

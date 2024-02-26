@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lji/Register.dart';
+import 'package:lji/SignIn.dart';
 import 'login01.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -16,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(Duration(seconds: 4), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => RegisterScreen()),
+        MaterialPageRoute(builder: (context) => SignScreen()),
       );
     });
   }
@@ -30,7 +31,6 @@ class _SplashScreenState extends State<SplashScreen> {
       height: double.infinity,
       child: Container(
         // splashcs18Y (9:726)
-        padding: EdgeInsets.fromLTRB(30, 328, 30, 328),
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
@@ -43,12 +43,12 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
         child: Center(
           // logoestehnusantara2TWL (93:1434)
-          child: SizedBox(
-              width: 300,
-              height: 144,
+          child: Container(
+              width: MediaQuery.of(context).size.width * .8,
+              height: MediaQuery.of(context).size.height * .4,
               child: Image.asset(
                 "assets/Logoes.png",
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
               )),
         ),
       ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lji/Admin/Dashboard/dashboard.dart';
 import 'package:lji/DataBasePHPMYSQL/FunctionRegister.dart';
+import 'package:lji/FOR%20USER/BagianDashboard.dart';
 import 'package:lji/snackbarlogin.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -145,19 +146,30 @@ class _SIGNINState extends State<SignScreen> {
                           child: InkWell(
                             onTap: () async* {
                               if (_formKey.currentState?.validate() ?? false) {
-                                bool success = await _userController.loginUser(
-                                  emailController.text.trim(),
-                                  passwordController.text.trim(),
-                                );
-                                if (success) {
-                                  Get.to(Dashboard());
-                                } else {
-                                  showCustomSnackBar(
-                                    "Invalid email or password",
-                                    title: 'Login Failed',
-                                  );
-                                }
-                              }
+  bool success = await _userController.loginUser(
+    emailController.text.trim(),
+    passwordController.text.trim(),
+  );
+  if (!success) {
+    showCustomSnackBar(
+      "Invalid email or password",
+      title: 'Login Failed',
+    );
+  } else {
+    showCustomSnackBar(
+      "Login successful",
+      title: 'Login Success',
+    );
+    // Cek role sebelum menavigasikan pengguna
+    if (_userController.login.value?.role == 'admin') {
+      // Navigasikan ke dashboard admin
+      Get.to(Dashboard());
+    } else {
+      // Navigasikan ke dashboard user
+      Get.to(MenuUser());
+    }
+  }
+}
                             },
                             child: Center(
                               child: Text(
@@ -170,34 +182,6 @@ class _SIGNINState extends State<SignScreen> {
                                   color: Color(0xffffffff),
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 23,
-                        ),
-                        Center(
-                          child: RichText(
-                            text: TextSpan(
-                              text: "Don't have an account? ",
-                              style: GoogleFonts.poppins(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
-                              ),
-                              children: [
-                                TextSpan(
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap =
-                                        () => Get.to(() => RegisterScreen()),
-                                  text: 'Create',
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
                             ),
                           ),
                         ),

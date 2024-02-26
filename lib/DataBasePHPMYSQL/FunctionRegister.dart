@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:lji/Admin/Dashboard/dashboard.dart';
+import 'package:lji/FOR%20USER/BagianDashboard.dart';
 import 'package:lji/snackbarlogin.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,8 +11,9 @@ class LOGIN {
   final int? id;
   final String USERNAME;
   final String? sinceMember;
+  final String? role; // Add role property
 
-  LOGIN({this.id, required this.USERNAME, this.sinceMember});
+  LOGIN({this.id, required this.USERNAME, this.sinceMember, this.role});
 }
 
 class UserController extends GetxController {
@@ -30,48 +33,9 @@ class UserController extends GetxController {
     return connection;
   }
 
-  //register
+  // Remove registerUser method
 
-  Future<bool> registerUser(String USERNAME, String PASSWORD) async {
-    MySqlConnection? conn;
-    try {
-      conn = await connectToDatabase();
-
-      var emailCheckResults = await conn
-          .query('SELECT * FROM login WHERE USERNAME = ?', [USERNAME]);
-
-      if (emailCheckResults.isNotEmpty) {
-        showCustomSnackBar("ERROR", title: "Ada yang salah bang");
-        return false;
-      }
-
-      var now = DateTime.now();
-      var formattedDate = DateFormat('yyyy-MM-dd').format(now);
-
-      var insertResult = await conn.query(
-          'INSERT INTO login(USERNAME,PASSWORD, since_member) VALUES (?, ?, ?)',
-          [USERNAME, PASSWORD, formattedDate]);
-
-      var userId = insertResult.insertId;
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("id", userId.toString());
-      prefs.setString("USERNAME", USERNAME);
-
-      login.value =
-          LOGIN(id: userId, USERNAME: USERNAME, sinceMember: formattedDate);
-      return true;
-    } catch (e) {
-      if (kDebugMode) {
-        print("Error inserting user data $e");
-      }
-      return false;
-    } finally {
-      await conn?.close();
-    }
-  }
-
-//login
-
+  // Login
   Future<bool> loginUser(String USERNAME, String PASSWORD) async {
     MySqlConnection? conn;
     try {
@@ -81,27 +45,37 @@ class UserController extends GetxController {
         'SELECT * FROM login WHERE USERNAME = ? AND PASSWORD = ? ',
         [USERNAME, PASSWORD],
       );
+
       if (result.isEmpty) {
         showCustomSnackBar(
-          "Incorrect email or password",
+          "Incorrect username or password",
           title: "Login",
         );
-        return false;
+      } else {
+        var loginData = result.first;
+        var userId = loginData['id'];
+        var userRole = loginData['role'];
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('id', userId.toString());
+        prefs.setString('USERNAME', loginData['USERNAME']);
+        String sinceMemberString = loginData['since_member']?.toString() ?? '';
+        prefs.setString('since_member', sinceMemberString);
+
+        login.value = LOGIN(
+          id: userId,
+          USERNAME: loginData['USERNAME'],
+          sinceMember: sinceMemberString,
+          role: userRole, // Store the user role
+        );
+
+        // Check the user role and navigate accordingly
+        if (userRole == 'admin') {
+          Get.to(Dashboard()); // Ganti dengan navigasi ke dashboard admin
+        } else {
+          Get.to(MenuUser()); // Ganti dengan navigasi ke dashboard user
+        }
       }
-      var login = result.first;
-      var userid = login['id'];
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('id', userid.toString());
-      prefs.setString('USERNAME', login['USERNAME']);
-      String sinceMemberString = login['since_member']?.toString() ?? '';
-      prefs.setString('since_member', sinceMemberString);
-
-      userid.values = LOGIN(
-        id: userid,
-        USERNAME: userid['USERNAME'],
-        sinceMember: sinceMemberString,
-      );
       return true;
     } catch (e) {
       if (kDebugMode) {

@@ -74,7 +74,7 @@ class _DashboardState extends State<Dashboard> {
                   ],
                 ),
                 SizedBox(height: 10),
-                Filter(),
+                FilterAdmin(),
                 // Tampilkan data produk dalam daftar
                 ListView.builder(
                   shrinkWrap: true,

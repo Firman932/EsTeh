@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:lji/styles/shadow.dart';
 
-class Filter extends StatefulWidget {
-  const Filter({super.key});
+class FilterAdmin extends StatefulWidget {
+  const FilterAdmin({super.key});
 
   @override
-  State<Filter> createState() => _FilterState();
+  State<FilterAdmin> createState() => _FilterAdminState();
 }
 
-class _FilterState extends State<Filter> {
+class _FilterAdminState extends State<FilterAdmin> {
   int selectedIndex = 0;
 
   @override

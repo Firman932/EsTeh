@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Create/create_produk.dart';
@@ -9,12 +10,14 @@ class ListProduk extends StatelessWidget {
   final bool isChecklistMode;
   final bool isChecked;
   final VoidCallback onToggleCheck;
+  final DocumentSnapshot produkData;
 
   const ListProduk(
       {Key? key,
       required this.isChecklistMode,
       required this.isChecked,
-      required this.onToggleCheck})
+      required this.onToggleCheck,
+      required this.produkData})
       : super(key: key);
 
   @override
@@ -67,7 +70,7 @@ class ListProduk extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       image: DecorationImage(
-                        image: AssetImage("assets/teh taro.jpg"),
+                        image: NetworkImage(produkData['gambar_produk']),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -96,10 +99,10 @@ class ListProduk extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Es Teh",
+              Text(produkData['nama_produk'],
                   style: GoogleFonts.poppins(
                       fontSize: 20, fontWeight: FontWeight.bold)),
-              Text("Rasa Taro",
+              Text(produkData['variasi_rasa'],
                   style: GoogleFonts.poppins(
                       fontSize: 11, fontWeight: FontWeight.w600)),
             ],
@@ -118,7 +121,7 @@ class ListProduk extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text("Stok: 45",
+          Text(produkData['stok_produk'].toString(),
               style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
           if (isChecklistMode)
             Checkbox(

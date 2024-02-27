@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Create/textField.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:lji/styles/dialog.dart';
 
 class TambahProduk extends StatefulWidget {
   const TambahProduk({super.key});
@@ -14,19 +17,61 @@ class TambahProduk extends StatefulWidget {
 }
 
 class _TambahProdukState extends State<TambahProduk> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
   TextEditingController variationController = TextEditingController();
   TextEditingController stockController = TextEditingController();
+  String? imagePath;
+  String? imageUrl;
+  final storage = FirebaseStorage.instance;
   File? image;
   Future getImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? imagePicked =
         await picker.pickImage(source: ImageSource.gallery);
     if (imagePicked != null) {
-      image = File(imagePicked.path);
+      imagePath = imagePicked.path;
+      image = File(imagePath!);
       setState(() {});
     }
   }
 
+  Future<void> tambahProduk() async {
+    try {
+      if (imagePath != null) {
+        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+        firebase_storage.Reference reference =
+            FirebaseStorage.instance.ref('gambar_produk/$fileName');
+
+        await reference.putFile(File(imagePath!));
+
+        // Dapatkan URL gambar setelah berhasil diunggah
+        imageUrl = await reference.getDownloadURL();
+
+        // Sekarang, Anda dapat menggunakan imageUrl untuk menyimpan ke Firestore
+        print('URL Gambar: $imageUrl');
+      }
+      // Dapatkan referensi koleksi 'produk'
+      CollectionReference produkCollection =
+          FirebaseFirestore.instance.collection('produk');
+
+      // Tambahkan data ke Firestore
+      await produkCollection.add({
+        'nama_produk': nameController.text,
+        'gambar_produk':
+            imageUrl, // Ganti dengan URL gambar atau menyimpan di Firebase Storage
+        'variasi_rasa': variationController.text,
+        'kategori_produk': categoryController.text,
+        'stok_produk': int.parse(stockController.text),
+      });
+
+      // Tambahkan log atau feedback ke pengguna jika berhasil
+      print('Produk berhasil ditambahkan ke Firestore');
+    } catch (e) {
+      // Handle kesalahan jika diperlukan
+      print('Error: $e');
+    }
+  }
 
   void initState() {
     super.initState();
@@ -85,9 +130,9 @@ class _TambahProdukState extends State<TambahProduk> {
                       : Container(
                           padding: EdgeInsets.all(20),
                           decoration: BoxDecoration(
-              border: Border.all(color: Colors.black),
-              borderRadius: BorderRadius.circular(10),
-            ),
+                            border: Border.all(color: Colors.black),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           height: 325,
                           width: screenWidth,
                           child: Opacity(
@@ -129,10 +174,11 @@ class _TambahProdukState extends State<TambahProduk> {
                       height: 50,
                       width: screenWidth,
                       decoration: BoxDecoration(
-              border: Border.all(color: Colors.black),
-              borderRadius: BorderRadius.circular(10),
-            ),
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       child: TextField(
+                        controller: nameController,
                         style: text,
                         decoration: InputDecoration(
                             hintText: "Nama Produk",
@@ -143,10 +189,9 @@ class _TambahProdukState extends State<TambahProduk> {
                     height: 10,
                   ),
                   CustomTextField(
-                    labelText: "Variasi",
-                    hintText: "Leci",
-                    controller: variationController
-                  ),
+                      labelText: "Variasi",
+                      hintText: "Leci",
+                      controller: variationController),
                   SizedBox(
                     height: 10,
                   ),
@@ -154,7 +199,7 @@ class _TambahProdukState extends State<TambahProduk> {
                       labelText: "Kategori",
                       dropdownValues: ['Makanan', 'Minuman'],
                       hintText: "Minuman",
-                      controller: TextEditingController()),
+                      controller: categoryController),
                   SizedBox(
                     height: 10,
                   ),
@@ -167,7 +212,20 @@ class _TambahProdukState extends State<TambahProduk> {
                     height: 20,
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pop(context);
+                      tambahProduk();
+                      showDialog(
+                        context: context,
+                        builder: (context) => SucessDialog(
+                            title: "Berhasil",
+                            content: "Item berhasil ditambahkan",
+                            buttonConfirm: "Ok",
+                            onButtonConfirm: () {
+                              Navigator.pop(context);
+                            }),
+                      );
+                    },
                     child: Text(
                       'Tambah Produk',
                       style: GoogleFonts.poppins(

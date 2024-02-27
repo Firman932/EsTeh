@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Create/create_produk.dart';
@@ -21,19 +22,25 @@ class StokProduk extends StatefulWidget {
 }
 
 class _StokProdukState extends State<StokProduk> {
+  late Stream<QuerySnapshot> produkStream;
   TextEditingController _numberController = TextEditingController();
   int _number = 0;
   int _max = 3;
   bool isChecklistMode = false;
   bool isAllChecked = false;
   bool checkAll = false;
-  List<bool> isCheckedList =
-      List.generate(6, (index) => false); // Ganti jumlah item sesuai kebutuhan
+  List<bool> isCheckedList = [];// Ganti jumlah item sesuai kebutuhan
 
   @override
   void initState() {
     super.initState();
     _numberController.text = '$_number';
+    produkStream = FirebaseFirestore.instance.collection('produk').snapshots();
+    produkStream.listen((QuerySnapshot querySnapshot) {
+    setState(() {
+      isCheckedList = List.generate(querySnapshot.docs.length, (index) => false);
+    });
+  });
   }
 
   void _updateNumber() {
@@ -289,7 +296,7 @@ class _StokProdukState extends State<StokProduk> {
                 SizedBox(
                   height: 15,
                 ),
-                Filter(),
+                FilterAdmin(),
                 SizedBox(
                   height: 10,
                 ),
@@ -408,18 +415,37 @@ class _StokProdukState extends State<StokProduk> {
                   height: 1,
                 ),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: 6, // Ganti dengan jumlah item yang sesuai
-                    itemBuilder: (context, index) {
-                      return ListProduk(
-                        isChecklistMode: isChecklistMode,
-                        isChecked: isCheckedList[index],
-                        onToggleCheck: () {
-                          toggleItemCheck(index);
-                        },
-                      );
-                    },
-                  ),
+                    child: StreamBuilder<QuerySnapshot>(
+    stream: produkStream,
+    builder: (context, snapshot) {
+      if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      }
+
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return CircularProgressIndicator();
+      }
+
+      // Ambil data produk dari snapshot
+      final List<DocumentSnapshot> produkList =
+          snapshot.data!.docs.toList();
+
+      return ListView.builder(
+        itemCount: produkList.length,
+        itemBuilder: (context, index) {
+          return ListProduk(
+            isChecklistMode: isChecklistMode,
+            isChecked: isCheckedList[index],
+            onToggleCheck: () {
+              toggleItemCheck(index);
+            },
+            // Tambahkan data produk dari Firestore ke ListProduk
+            produkData: produkList[index],
+          );
+        },
+      );
+    },
+  ),
                 )
               ],
             ),

@@ -262,7 +262,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.red,
+                        backgroundColor: Colors.red,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50),
                         ),
@@ -313,7 +313,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: Color(0xff4fb60e),
+                          backgroundColor: Color(0xff4fb60e),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50),
                           ),

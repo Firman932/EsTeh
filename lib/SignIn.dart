@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lji/Admin/Dashboard/dashboard.dart';
-import 'package:lji/DataBasePHPMYSQL/FunctionRegister.dart';
 import 'package:lji/DataBasePHPMYSQL/TextFieldLogin.dart';
 import 'package:lji/FOR%20USER/BagianDashboard.dart';
 import 'package:lji/snackbarlogin.dart';
@@ -10,6 +9,7 @@ import 'package:lji/snackbarlogin.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/DataBasePHPMYSQL/TextFieldRegister.dart';
 import 'package:lji/Register.dart';
+import 'package:lji/styles/color.dart';
 
 class SignScreen extends StatefulWidget {
   const SignScreen({Key? key}) : super(key: key);
@@ -22,11 +22,9 @@ class _SIGNINState extends State<SignScreen> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  late UserController _userController;
 
   @override
   void initState() {
-    _userController = Get.put(UserController());
     super.initState();
   }
 
@@ -148,16 +146,8 @@ class _SIGNINState extends State<SignScreen> {
                         SizedBox(
                           height: 40,
                         ),
-                        Container(
-                          width: screenWidth * 0.7,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Color(0xff55bc15)),
-                            color: Color(0xff55bc15),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: GestureDetector(
-                            onTap: () {
+                        ElevatedButton(
+                          onPressed: () {
                               String adminEmail =
                                   'admin'; // Ganti dengan email admin yang sesuai
                               String enteredEmail = emailController.text.trim();
@@ -178,19 +168,23 @@ class _SIGNINState extends State<SignScreen> {
                                 );
                               }
                             },
-                            child: Center(
-                              child: Text(
-                                'Login',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
-                                  height: 1.2125,
-                                  color: Color(0xffffffff),
-                                ),
-                              ),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(screenWidth* .7, 50,),
+                            backgroundColor: greenPrimary,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
+                          ),
+                          child: Text(
+                            'Login',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w800,
+                              height: 1.2125,
+                              color: Color(0xffffffff),
                             ),
                           ),
+                          
                         ),
                       ],
                     ),

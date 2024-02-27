@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lji/DataBasePHPMYSQL/FunctionRegister.dart';
 import 'package:lji/DataBasePHPMYSQL/TextFieldSign.dart';
 import 'package:lji/FOR%20USER/BagianDashboard.dart';
 import 'package:lji/Register.dart';
@@ -13,13 +12,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
-  Get.put(UserController());
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  UserController userController = UserController();
-  userController.onInit();
   runApp(MyApp());
 }
 

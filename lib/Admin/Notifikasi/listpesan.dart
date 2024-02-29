@@ -14,9 +14,14 @@ class _ListPesanState extends State<ListPesan> {
     return Container(
       margin: EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-      ),
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                color: Color.fromRGBO(156, 156, 156, 0.28999999165534972),
+                offset: Offset(0, 0),
+                blurRadius: 55.5)
+          ]),
       width: double.infinity,
       height: 70,
       child: Padding(

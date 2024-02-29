@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lji/Admin/Create/create_produk.dart';
 import 'package:lji/Admin/Stok/list_produk.dart';
 import 'package:lji/Admin/Update/update.dart';
 
@@ -15,14 +16,7 @@ class ListMenu extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => UpdateProduk(
-              // Melewatkan data produk yang ingin diperbarui
-              // Disini kamu dapat mengirim data yang sesuai seperti nama, harga, stok, dll.
-              namaProduk: "Es Teh", // Contoh nama produk
-              hargaProduk: "Rp. 8000", // Contoh harga produk
-              stokProduk: "45", // Contoh stok produk
-              image: AssetImage("assets/teh taro.jpg"), varianProduk: 'Leci', // Contoh gambar produk
-            ),
+            builder: (context) => TambahProduk()
           ),
         );
       },

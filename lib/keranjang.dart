@@ -44,7 +44,7 @@ class _KeranjangState extends State<Keranjang> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            size: 30,
+            size: 23,
           ),
           onPressed: () {
             Navigator.pop(context);

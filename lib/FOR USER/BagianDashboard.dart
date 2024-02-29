@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Dashboard/search.dart';
 import 'package:lji/Admin/History/history.dart';
-
 import 'package:lji/FOR%20USER/NotifikasiUser.dart';
 import 'package:lji/TampilanUserKeranjang.dart';
 import 'package:lji/filterUser.dart';
 import 'package:lji/FOR%20USER/listMenuUser.dart';
-
 import 'package:lji/styles/bottomlogout.dart';
 
 class MenuUser extends StatefulWidget {
@@ -35,7 +33,7 @@ class _MenuUserState extends State<MenuUser> {
           child: Text(
             'Menu',
             style: GoogleFonts.poppins(
-              fontSize: 20,
+              fontSize: 22,
               fontWeight: FontWeight.w500,
               height: 3,
               color: Color(0xff000000),
@@ -55,7 +53,7 @@ class _MenuUserState extends State<MenuUser> {
                 ),
                 child: Icon(
                   Icons.logout, // Ganti dengan ikon yang sesuai
-                  size: 25,
+                  size: 23,
                   color: Colors.red,
                 ),
               ),
@@ -72,7 +70,7 @@ class _MenuUserState extends State<MenuUser> {
             },
             child: Icon(
               Icons.notifications, // Ganti dengan ikon yang sesuai
-              size: 25,
+              size: 23,
               color: Colors.black,
             ),
           ),
@@ -90,7 +88,7 @@ class _MenuUserState extends State<MenuUser> {
               },
               child: Icon(
                 Icons.history, // Ganti dengan ikon yang sesuai
-                size: 25,
+                size: 23,
                 color: Colors.black,
               ),
             ),
@@ -110,7 +108,7 @@ class _MenuUserState extends State<MenuUser> {
               },
               child: Icon(
                 Icons.shopping_cart, // Ganti dengan ikon yang sesuai
-                size: 25,
+                size: 23,
                 color: Colors.black,
               ),
             ),

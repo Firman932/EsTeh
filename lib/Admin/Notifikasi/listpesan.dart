@@ -22,41 +22,64 @@ class _ListPesanState extends State<ListPesan> {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 7.5, vertical: 7.5),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              height: 45,
-              width: 45,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  image: AssetImage("assets/teh taro.jpg"),
-                ),
+              height: 100,
+              width: 100,
+              child: Row(
+                children: [
+                  Container(
+                    height: 45,
+                    width: 45,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: AssetImage("assets/teh taro.jpg"),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Es Teh",
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Text(
+                          "Rasa Taro",
+                          style: GoogleFonts.poppins(fontSize: 8),
+                        ),
+                        Text("Rp.8.000",
+                            style: GoogleFonts.poppins(
+                                fontSize: 9, fontWeight: FontWeight.w500)),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+            Row(
               children: [
-                Text(
-                  "Es Teh",
-                  style: GoogleFonts.poppins(
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  "Rasa Taro",
-                  style: GoogleFonts.poppins(fontSize: 10),
-                ),
-                Text("Rp.8.000", style: GoogleFonts.poppins(fontSize: 10)),
+                Text("2/pcs",
+                    style: GoogleFonts.poppins(
+                        fontSize: 10, fontWeight: FontWeight.w400)),
               ],
             ),
-            SizedBox(width: 10),
-            Text("2/pcs", style: GoogleFonts.poppins(fontSize: 10)),
-            SizedBox(width: 15),
-            Text("Rp.16.000", style: GoogleFonts.poppins(fontSize: 10)),
+            Row(
+              children: [
+                Text("Rp.16.000",
+                    style: GoogleFonts.poppins(
+                        fontSize: 10, fontWeight: FontWeight.w500)),
+              ],
+            ),
           ],
         ),
       ),

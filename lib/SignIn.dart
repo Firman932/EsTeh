@@ -1,14 +1,9 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:lji/Admin/Dashboard/dashboard.dart';
 import 'package:lji/DataBasePHPMYSQL/TextFieldLogin.dart';
 import 'package:lji/FOR%20USER/BagianDashboard.dart';
-import 'package:lji/snackbarlogin.dart';
-
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lji/DataBasePHPMYSQL/TextFieldRegister.dart';
-import 'package:lji/Register.dart';
+import 'package:lji/DataBasePHPMYSQL/passwordtextfield.dart';
 import 'package:lji/styles/color.dart';
 
 class SignScreen extends StatefulWidget {
@@ -59,7 +54,7 @@ class _SIGNINState extends State<SignScreen> {
                 Container(
                   padding: EdgeInsets.fromLTRB(22, 0, 22, 0),
                   width: screenWidth,
-                  height: 170 + MediaQuery.of(context).padding.horizontal,
+                  height: 140 + MediaQuery.of(context).padding.horizontal,
                   child: Image.asset(
                     "assets/Logoes.png",
                     fit: BoxFit.contain,
@@ -67,7 +62,7 @@ class _SIGNINState extends State<SignScreen> {
                 ),
                 Container(
                   margin: EdgeInsets.fromLTRB(15, 20, 15, 13),
-                  padding: EdgeInsets.fromLTRB(28, 20, 28, 50),
+                  padding: EdgeInsets.fromLTRB(28, 20, 28, 20),
                   width: screenWidth,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -126,7 +121,7 @@ class _SIGNINState extends State<SignScreen> {
                         RegisterInput(
                           hintText: "Password",
                           textController: passwordController,
-                          leftIcon: Icons.password,
+                          leftIcon: Icons.lock,
                           isObsecure: !isPasswordVisible,
                           rightIcon: isPasswordVisible
                               ? Icons.visibility
@@ -148,50 +143,52 @@ class _SIGNINState extends State<SignScreen> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                              String adminEmail =
-                                  'admin'; // Ganti dengan email admin yang sesuai
-                              String enteredEmail = emailController.text.trim();
+                            String adminEmail =
+                                'admin'; // Ganti dengan email admin yang sesuai
+                            String enteredEmail = emailController.text.trim();
 
-                              if (enteredEmail == adminEmail) {
-                                // Email adalah email admin, arahkan ke dashboard admin
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Dashboard()),
-                                );
-                              } else {
-                                // Email bukan email admin, arahkan ke dashboard user
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MenuUser()),
-                                );
-                              }
-                            },
+                            if (enteredEmail == adminEmail) {
+                              // Email adalah email admin, arahkan ke dashboard admin
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Dashboard()),
+                              );
+                            } else {
+                              // Email bukan email admin, arahkan ke dashboard user
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MenuUser()),
+                              );
+                            }
+                          },
                           style: ElevatedButton.styleFrom(
-                            minimumSize: Size(screenWidth* .7, 50,),
-                            backgroundColor: greenPrimary,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
-                          ),
+                              minimumSize: Size(
+                                screenWidth * .7,
+                                40,
+                              ),
+                              backgroundColor: greenPrimary,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10))),
                           child: Text(
                             'Login',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.poppins(
                               fontSize: 14,
-                              fontWeight: FontWeight.w800,
+                              fontWeight: FontWeight.w700,
                               height: 1.2125,
                               color: Color(0xffffffff),
                             ),
                           ),
-                          
                         ),
                       ],
                     ),
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 40,
                 )
               ],
             ),

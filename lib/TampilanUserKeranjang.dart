@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/styles/dialog.dart';
 
@@ -23,7 +25,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
   bool _isEditing = false;
   bool _isTotalDisabled = false;
   List<CartItem> cartItems =
-      List.generate(10000, (index) => CartItem(isChecked: false));
+      List.generate(100, (index) => CartItem(isChecked: false));
 
   @override
   void initState() {
@@ -111,7 +113,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
         ],
       ),
       body: Container(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(6),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -130,8 +132,8 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                       });
                     },
                     visualDensity: VisualDensity(
-                      horizontal: -4.0,
-                      vertical: -4.0,
+                      horizontal: -0.0,
+                      vertical: -0.0,
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
@@ -159,7 +161,8 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                     shadowColor: Color(0x499c9c9c),
                     elevation: 5,
                     color: Colors.white,
-                    margin: EdgeInsets.symmetric(vertical: 8),
+                    margin:
+                        EdgeInsets.only(right: 10, left: 10, bottom: 5, top: 5),
                     child: Padding(
                       padding: EdgeInsets.all(8),
                       child: Row(
@@ -221,7 +224,6 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                             ),
                           ]),
                           Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               IconButton(
                                 icon: Icon(Icons.do_not_disturb_on_outlined),
@@ -260,13 +262,9 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                                   enabled:
                                       !_MaksimalReached, // Nonaktifkan TextField jika batas maksimum tercapai
                                   decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.zero,
-                                      enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color(0xff49A013))),
-                                      focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color(0xff49A013)))),
+                                    contentPadding: EdgeInsets.zero,
+                                    border: InputBorder.none,
+                                  ),
                                 ),
                               ),
                               IconButton(
@@ -297,12 +295,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
       ),
       bottomNavigationBar: _isEditing
           ? BottomAppBar(
-              shape: CircularNotchedRectangle(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(5),
-                  topRight: Radius.circular(5),
-                ),
-              ),
+              shape: CircularNotchedRectangle(),
               color: Colors.white,
               elevation: 1,
               notchMargin: 8,

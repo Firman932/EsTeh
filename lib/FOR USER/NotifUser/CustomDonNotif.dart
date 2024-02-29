@@ -13,7 +13,7 @@ class NotifS extends StatelessWidget {
           BoxShadow(
             color: Color.fromRGBO(156, 156, 156, 0.29),
             offset: Offset(0, 0),
-            blurRadius: 55.5,
+            blurRadius: 5,
           ),
         ],
         color: Colors.white,
@@ -34,7 +34,7 @@ class NotifS extends StatelessWidget {
           ),
           Container(
             margin: EdgeInsets.all(10),
-            width: MediaQuery.of(context).size.width - 80,
+            width: MediaQuery.of(context).size.width - 60,
             height: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,7 +56,7 @@ class NotifS extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '31-07-2024 19.59 WIB',
+                        '31-07-2024   19.59 WIB',
                         style: GoogleFonts.poppins(
                           fontSize: 10,
                           fontWeight: FontWeight.w400,

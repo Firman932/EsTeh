@@ -21,7 +21,7 @@ class Riwayat extends StatelessWidget {
           title: Text(
             "Riwayat",
             style:
-                GoogleFonts.poppins(fontSize: 25, fontWeight: FontWeight.w500),
+                GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w500),
           ),
         ),
         body: SingleChildScrollView(

@@ -126,26 +126,13 @@ class _MenuUserState extends State<MenuUser> {
               height: 20,
             ),
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromRGBO(156, 156, 156, 0.29),
-                      offset: Offset(0, 0),
-                      blurRadius: 55.5,
-                    ),
-                  ],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount:
-                      10, // Ubah sesuai dengan jumlah item yang ingin ditampilkan
-                  itemBuilder: (context, index) {
-                    return ListUser(); // Ganti dengan item yang ingin ditampilkan
-                  },
-                ),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount:
+                    10, // Ubah sesuai dengan jumlah item yang ingin ditampilkan
+                itemBuilder: (context, index) {
+                  return ListUser(); // Ganti dengan item yang ingin ditampilkan
+                },
               ),
             ),
           ],

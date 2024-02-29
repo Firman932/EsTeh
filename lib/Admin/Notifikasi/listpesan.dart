@@ -20,7 +20,7 @@ class _ListPesanState extends State<ListPesan> {
             BoxShadow(
                 color: Color.fromRGBO(156, 156, 156, 0.28999999165534972),
                 offset: Offset(0, 0),
-                blurRadius: 55.5)
+                blurRadius: 5)
           ]),
       width: double.infinity,
       height: 70,

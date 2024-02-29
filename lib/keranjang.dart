@@ -40,6 +40,10 @@ class _KeranjangState extends State<Keranjang> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        title: Text("Tambahkan Produk",
+            style:
+                GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w500)),
         forceMaterialTransparency: true,
         leading: IconButton(
           icon: Icon(
@@ -54,7 +58,7 @@ class _KeranjangState extends State<Keranjang> {
       body: ListView(
         children: [
           Container(
-            padding: EdgeInsets.fromLTRB(30, 28, 30, 82),
+            padding: EdgeInsets.fromLTRB(20, 28, 20, 82),
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: Color(0xffffffff),
@@ -63,7 +67,7 @@ class _KeranjangState extends State<Keranjang> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  margin: EdgeInsets.fromLTRB(15, 0, 15, 40),
+                  margin: EdgeInsets.fromLTRB(5, 0, 5, 40),
                   child: Align(
                     alignment: Alignment.topCenter,
                     child: SizedBox(
@@ -177,12 +181,14 @@ class _KeranjangState extends State<Keranjang> {
                               ),
                               textInputAction: TextInputAction.next,
                               textCapitalization: TextCapitalization.none,
+
                               enabled:
                                   !_isMaxReached, // Nonaktifkan TextField jika batas maksimum tercapai
                               decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.zero, // Hapus padding bawaan
-                              ),
+                                  contentPadding: EdgeInsets.zero,
+                                  border:
+                                      InputBorder.none // Hapus padding bawaan
+                                  ),
                             ),
                           ),
                           SizedBox(

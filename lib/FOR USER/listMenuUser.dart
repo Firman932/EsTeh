@@ -8,7 +8,7 @@ class ListUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+      margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
       height: 100,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -17,7 +17,7 @@ class ListUser extends StatelessWidget {
           BoxShadow(
             color: Color(0x499c9c9c),
             offset: Offset(0, 0),
-            blurRadius: 27.7,
+            blurRadius: 5,
           ),
         ],
       ),

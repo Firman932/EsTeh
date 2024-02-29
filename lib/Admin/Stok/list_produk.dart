@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Create/create_produk.dart';
 import 'package:lji/Admin/Stok/stok_produk.dart';
+import 'package:lji/Admin/Update/update.dart';
 
 import '../../styles/dialog.dart';
 
@@ -31,7 +33,15 @@ class ListProduk extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => TambahProduk(),
+              builder: (context) => UpdateProduk(
+                namaProduk: produkData['nama_produk'],
+                hargaProduk: '',
+                stokProduk: produkData['stok_produk'].toString(),
+                gambarUrl: produkData['gambar_produk'],
+                varianProduk: produkData['variasi_rasa'],
+                documentId: produkData.id,
+                kategoriProduk: produkData['kategori_produk'],
+              ),
             ),
           );
         }
@@ -44,6 +54,7 @@ class ListProduk extends StatelessWidget {
       },
       child: Container(
         margin: EdgeInsets.only(top: 15),
+        padding: EdgeInsets.symmetric(vertical: 15),
         height: 116,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
@@ -65,8 +76,8 @@ class ListProduk extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    width: 97,
-                    height: 82,
+                    width: 80,
+                    height: 90,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       image: DecorationImage(
@@ -90,41 +101,43 @@ class ListProduk extends StatelessWidget {
   }
 
   Widget _buildTextInfo() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(produkData['nama_produk'],
-                  style: GoogleFonts.poppins(
-                      fontSize: 20, fontWeight: FontWeight.bold)),
-              Text(produkData['variasi_rasa'],
-                  style: GoogleFonts.poppins(
-                      fontSize: 11, fontWeight: FontWeight.w600)),
-            ],
-          ),
-          Text("Rp.8000",
-              style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(produkData['nama_produk'],
+                style: GoogleFonts.poppins(
+                    fontSize: 16, fontWeight: FontWeight.w600)),
+            Text(produkData['variasi_rasa'],
+                style: GoogleFonts.poppins(
+                    fontSize: 11, fontWeight: FontWeight.w500)),
+          ],
+        ),
+        Text("Rp.8000",
+            style:
+                GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 13)),
+      ],
     );
   }
 
   Widget _buildActions(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(vertical: 20),
       physics: NeverScrollableScrollPhysics(),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(produkData['stok_produk'].toString(),
-              style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text("Stok: " + produkData['stok_produk'].toString(),
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500, fontSize: 12)),
+          ),
           if (isChecklistMode)
             Checkbox(
+              visualDensity: VisualDensity.standard,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5)),
               activeColor: Color.fromRGBO(73, 160, 19, 1),
@@ -133,10 +146,10 @@ class ListProduk extends StatelessWidget {
                 onToggleCheck();
               },
             ),
-          SizedBox(height: 14),
+          SizedBox(height: 15),
           if (!isChecklistMode)
             _deleteActionButton(
-                Icons.delete_outline_outlined, Colors.red, context),
+                Icons.delete_outline_outlined, Colors.red, context,produkData.id),
           SizedBox(
             height: 10,
           )
@@ -145,7 +158,7 @@ class ListProduk extends StatelessWidget {
     );
   }
 
-  Widget _deleteActionButton(IconData icon, Color color, BuildContext context) {
+  Widget _deleteActionButton(IconData icon, Color color, BuildContext context,String documentId) {
     return Container(
       height: 30,
       width: 30,
@@ -165,8 +178,9 @@ class ListProduk extends StatelessWidget {
                 Navigator.pop(context);
               },
               buttonConfirm: 'Hapus',
-              onButtonConfirm: () {
+              onButtonConfirm: () async {
                 Navigator.pop(context);
+                await deleteProduct(documentId);
               },
             ),
           );
@@ -177,8 +191,24 @@ class ListProduk extends StatelessWidget {
         ),
         iconSize: 20,
         padding: EdgeInsets.zero,
-        splashRadius: 24,
       ),
     );
+  }
+
+  Future<void> deleteProduct(String documentId) async {
+    try {
+      // Ambil referensi dokumen produk dari Firestore
+      final CollectionReference produkCollection =
+          FirebaseFirestore.instance.collection('produk');
+
+      // Hapus dokumen berdasarkan ID
+      await produkCollection.doc(documentId).delete();
+
+      // Tampilkan pesan sukses atau lakukan tindakan lain
+      print('Produk berhasil dihapus');
+    } catch (error) {
+      // Tampilkan pesan atau lakukan penanganan kesalahan sesuai kebutuhan
+      print('Error deleting product: $error');
+    }
   }
 }

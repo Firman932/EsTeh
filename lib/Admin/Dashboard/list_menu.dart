@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Create/create_produk.dart';
@@ -7,18 +8,27 @@ import 'package:lji/Admin/Update/update.dart';
 import '../../styles/dialog.dart';
 
 class ListMenu extends StatelessWidget {
-  const ListMenu({super.key});
+  final DocumentSnapshot produkData;
+  const ListMenu({super.key, required this.produkData});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => TambahProduk()
-          ),
-        );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UpdateProduk(
+                namaProduk: produkData['nama_produk'],
+                hargaProduk: produkData['harga_produk'].toString(),
+                stokProduk: produkData['stok_produk'].toString(),
+                gambarUrl: produkData['gambar_produk'],
+                varianProduk: produkData['variasi_rasa'],
+                documentId: produkData.id,
+                kategoriProduk: produkData['kategori_produk'],
+              ),
+            ),
+          );
       },
       child: Container(
         margin: EdgeInsets.only(top: 15),
@@ -43,12 +53,12 @@ class ListMenu extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    width: 97,
-                    height: 82,
+                    width: 80,
+                    height: 90,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       image: DecorationImage(
-                        image: AssetImage("assets/teh taro.jpg"),
+                        image: NetworkImage(produkData['gambar_produk']),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -77,16 +87,16 @@ class ListMenu extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Es Teh",
+              Text(produkData['nama_produk'],
                   style: GoogleFonts.poppins(
-                      fontSize: 20, fontWeight: FontWeight.bold)),
-              Text("Rasa Taro",
+                      fontSize: 16, fontWeight: FontWeight.w600)),
+              Text(produkData['variasi_rasa'],
                   style: GoogleFonts.poppins(
-                      fontSize: 11, fontWeight: FontWeight.w600)),
+                      fontSize: 11, fontWeight: FontWeight.w500)),
             ],
           ),
-          Text("Rp.8000",
-              style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
+          Text("Rp ${produkData['harga_produk']}",
+              style: GoogleFonts.poppins(fontWeight: FontWeight.w500,fontSize: 13)),
         ],
       ),
     );
@@ -98,8 +108,8 @@ class ListMenu extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text("Stok: 45",
-              style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
+          Text("Stok: ${produkData['stok_produk']}",
+              style: GoogleFonts.poppins(fontWeight: FontWeight.w500,fontSize: 12)),
         ],
       ),
     );

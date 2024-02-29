@@ -38,6 +38,7 @@ class _UpdateProdukState extends State<UpdateProduk> {
   TextEditingController categoryController = TextEditingController();
   TextEditingController variationController = TextEditingController();
   TextEditingController stockController = TextEditingController();
+  TextEditingController hargaController = TextEditingController();
   String? imagePath;
   String? imageUrl;
   File? image;
@@ -49,6 +50,7 @@ class _UpdateProdukState extends State<UpdateProduk> {
     categoryController.text = widget.kategoriProduk;
     variationController.text = widget.varianProduk;
     stockController.text = widget.stokProduk;
+    hargaController.text = widget.hargaProduk;
   }
 
   Future<void> updateProduct() async {
@@ -81,6 +83,7 @@ class _UpdateProdukState extends State<UpdateProduk> {
         'nama_produk': nameController.text,
         'kategori_produk': categoryController.text,
         'variasi_rasa': variationController.text,
+        'harga_produk' : int.parse(hargaController.text),
         'stok_produk': int.parse(stockController.text),
         'gambar_produk': imageUrl,
         // Tambahkan field lain sesuai kebutuhan
@@ -259,6 +262,18 @@ class _UpdateProdukState extends State<UpdateProduk> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Kategori tidak boleh kosong";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 10),
+                    CustomTextField(
+                    labelText: "Harga",
+                    hintText: "8000",
+                    controller: hargaController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Harga tidak boleh kosong";
                       }
                       return null;
                     },

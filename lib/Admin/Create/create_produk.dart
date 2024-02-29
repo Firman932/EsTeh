@@ -23,6 +23,7 @@ class _TambahProdukState extends State<TambahProduk> {
   TextEditingController categoryController = TextEditingController();
   TextEditingController variationController = TextEditingController();
   TextEditingController stockController = TextEditingController();
+  TextEditingController hargaController = TextEditingController();
   String? imagePath;
   String? imageUrl;
   final storage = FirebaseStorage.instance;
@@ -63,6 +64,7 @@ class _TambahProdukState extends State<TambahProduk> {
         'gambar_produk':
             imageUrl, // Ganti dengan URL gambar atau menyimpan di Firebase Storage
         'variasi_rasa': variationController.text,
+        'harga_produk' : int.parse(hargaController.text),
         'kategori_produk': categoryController.text,
         'stok_produk': int.parse(stockController.text),
       });
@@ -232,6 +234,19 @@ class _TambahProdukState extends State<TambahProduk> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Kategori tidak boleh kosong";}
+                          return null;
+                          },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                      CustomTextField(
+                      labelText: "Harga",
+                      hintText: "8000",
+                      controller: hargaController,                        
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Harga tidak boleh kosong";}
                           return null;
                           },
                     ),

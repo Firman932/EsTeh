@@ -29,7 +29,9 @@ class _StokProdukState extends State<StokProduk> {
   bool isChecklistMode = false;
   bool isAllChecked = false;
   bool checkAll = false;
-  List<bool> isCheckedList = [];// Ganti jumlah item sesuai kebutuhan
+  List<bool> isCheckedList = []; // Ganti jumlah item sesuai kebutuhan
+  List<DocumentSnapshot> produkList = [];
+  
 
   @override
   void initState() {
@@ -37,10 +39,12 @@ class _StokProdukState extends State<StokProduk> {
     _numberController.text = '$_number';
     produkStream = FirebaseFirestore.instance.collection('produk').snapshots();
     produkStream.listen((QuerySnapshot querySnapshot) {
-    setState(() {
-      isCheckedList = List.generate(querySnapshot.docs.length, (index) => false);
+      setState(() {
+        isCheckedList =
+            List.generate(querySnapshot.docs.length, (index) => false);
+        produkList = querySnapshot.docs.toList();
+      });
     });
-  });
   }
 
   void _updateNumber() {
@@ -205,14 +209,57 @@ class _StokProdukState extends State<StokProduk> {
     });
   }
 
+  void showPopupMenu() {
+    showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(
+          0, 150, 200, 0), // Adjust the position as needed
+      items: <PopupMenuEntry<String>>[
+        PopupMenuItem<String>(
+          value: 'Banyak ke Sedikit',
+          child: Text('Banyak ke Sedikit'),
+        ),
+        PopupMenuItem<String>(
+          value: 'Sedikit ke Banyak',
+          child: Text('Sedikit ke Banyak'),
+        ),
+      ],
+    ).then((selectedValue) {
+      if (selectedValue != null) {
+        handlePopupMenuSelection(selectedValue);
+      }
+    });
+  }
+
+  void handlePopupMenuSelection(String selectedValue) {
+    setState(() {
+      if (selectedValue == 'Banyak ke Sedikit') {
+        produkList.sort((a, b) {
+          print("banyak ke sedikit");
+          int stokA = a['stok_produk'] as int;
+          int stokB = b['stok_produk'] as int;
+          return stokA.compareTo(stokB);
+        });
+      } else if (selectedValue == 'Sedikit ke Banyak') {
+        produkList.sort((a, b) {
+          print("sedikitbanyak ke ");
+          int stokA = a['stok_produk'] as int;
+          int stokB = b['stok_produk'] as int;
+          return stokB.compareTo(stokA);
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
           bottomNavigationBar: isAnyItemChecked()
               ? BottomAppBar(
+                  shape: CircularNotchedRectangle(),
                   elevation: 1,
-                  shadowColor: Colors.black,
+                  shadowColor: const Color.fromARGB(255, 7, 3, 3),
                   surfaceTintColor: Colors.white,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -374,7 +421,9 @@ class _StokProdukState extends State<StokProduk> {
                         : Row(
                             children: [
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  showPopupMenu();
+                                },
                                 icon: Icon(Icons.filter_list_rounded),
                               ),
                               ElevatedButton(
@@ -415,37 +464,40 @@ class _StokProdukState extends State<StokProduk> {
                   height: 1,
                 ),
                 Expanded(
-                    child: StreamBuilder<QuerySnapshot>(
-    stream: produkStream,
-    builder: (context, snapshot) {
-      if (snapshot.hasError) {
-        return Text('Error: ${snapshot.error}');
-      }
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: produkStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
 
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return CircularProgressIndicator();
-      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      }
 
-      // Ambil data produk dari snapshot
-      final List<DocumentSnapshot> produkList =
-          snapshot.data!.docs.toList();
+                      // Ambil data produk dari snapshot
+                      produkList.sort((a, b) {
+                        int stokA = a['stok_produk'] as int;
+                        int stokB = b['stok_produk'] as int;
+                        return stokA.compareTo(stokB);
+                      });
 
-      return ListView.builder(
-        itemCount: produkList.length,
-        itemBuilder: (context, index) {
-          return ListProduk(
-            isChecklistMode: isChecklistMode,
-            isChecked: isCheckedList[index],
-            onToggleCheck: () {
-              toggleItemCheck(index);
-            },
-            // Tambahkan data produk dari Firestore ke ListProduk
-            produkData: produkList[index],
-          );
-        },
-      );
-    },
-  ),
+                      return ListView.builder(
+                        itemCount: produkList.length,
+                        itemBuilder: (context, index) {
+                          return ListProduk(
+                            isChecklistMode: isChecklistMode,
+                            isChecked: isCheckedList[index],
+                            onToggleCheck: () {
+                              toggleItemCheck(index);
+                            },
+                            // Tambahkan data produk dari Firestore ke ListProduk
+                            produkData: produkList[index],
+                          );
+                        },
+                      );
+                    },
+                  ),
                 )
               ],
             ),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Create/create_produk.dart';
@@ -18,12 +19,13 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  // List untuk menyimpan data produk
+  late Stream<QuerySnapshot> produkStream;
 
   @override
   void initState() {
     super
         .initState(); // Panggil fungsi untuk mengambil data produk saat widget diinisialisasi
+    produkStream = FirebaseFirestore.instance.collection('produk').snapshots();
   }
 
   // Fungsi untuk mengambil data produk dari backend
@@ -76,12 +78,45 @@ class _DashboardState extends State<Dashboard> {
                 SizedBox(height: 10),
                 FilterAdmin(),
                 // Tampilkan data produk dalam daftar
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: 6,
-                  itemBuilder: (context, index) {
-                    return ListMenu();
+                StreamBuilder<QuerySnapshot>(
+                  stream: produkStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    }
+
+                    // Extract product data from the snapshot
+                    final List<DocumentSnapshot> produkList =
+                        snapshot.data!.docs.toList();
+
+                    if (produkList.isEmpty) {
+                      return Text('Tidak ada produk.');
+                    }
+
+                    produkList.sort((a, b) {
+                      int stokA = a['stok_produk'] as int;
+                      int stokB = b['stok_produk'] as int;
+                      return stokA.compareTo(stokB);
+                    });
+
+                    final List<DocumentSnapshot> limitedProdukList =
+                        produkList.sublist(0, produkList.length.clamp(0, 3));
+
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: limitedProdukList.length,
+                      itemBuilder: (context, index) {
+                        return ListMenu(
+                          // Pass product data from Firestore to ListMenu
+                          produkData: limitedProdukList[index],
+                        );
+                      },
+                    );
                   },
                 ),
               ],

@@ -35,7 +35,7 @@ class ListProduk extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => UpdateProduk(
                 namaProduk: produkData['nama_produk'],
-                hargaProduk: '',
+                hargaProduk: produkData['harga_produk'].toString(),
                 stokProduk: produkData['stok_produk'].toString(),
                 gambarUrl: produkData['gambar_produk'],
                 varianProduk: produkData['variasi_rasa'],
@@ -116,7 +116,7 @@ class ListProduk extends StatelessWidget {
                     fontSize: 11, fontWeight: FontWeight.w500)),
           ],
         ),
-        Text("Rp.8000",
+        Text("Rp ${produkData['harga_produk']}",
             style:
                 GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 13)),
       ],
@@ -131,7 +131,7 @@ class ListProduk extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.topLeft,
-            child: Text("Stok: " + produkData['stok_produk'].toString(),
+            child: Text("Stok: ${produkData['stok_produk']}",
                 style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w500, fontSize: 12)),
           ),

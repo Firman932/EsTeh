@@ -31,7 +31,8 @@ class _StokProdukState extends State<StokProduk> {
   bool checkAll = false;
   List<bool> isCheckedList = []; // Ganti jumlah item sesuai kebutuhan
   List<DocumentSnapshot> produkList = [];
-  
+  bool isAscendingOrder = true;
+  String selectedCategory = "Minuman";
 
   @override
   void initState() {
@@ -234,6 +235,7 @@ class _StokProdukState extends State<StokProduk> {
   void handlePopupMenuSelection(String selectedValue) {
     setState(() {
       if (selectedValue == 'Banyak ke Sedikit') {
+        isAscendingOrder = true;
         produkList.sort((a, b) {
           print("banyak ke sedikit");
           int stokA = a['stok_produk'] as int;
@@ -241,6 +243,7 @@ class _StokProdukState extends State<StokProduk> {
           return stokA.compareTo(stokB);
         });
       } else if (selectedValue == 'Sedikit ke Banyak') {
+        isAscendingOrder = false;
         produkList.sort((a, b) {
           print("sedikitbanyak ke ");
           int stokA = a['stok_produk'] as int;
@@ -343,7 +346,18 @@ class _StokProdukState extends State<StokProduk> {
                 SizedBox(
                   height: 15,
                 ),
-                FilterAdmin(),
+                FilterUser(
+                  onMinumanSelected: (category) {
+                  setState(() {
+                    selectedCategory = "Minuman";
+                  });
+                  },
+                  onMakananSelected: (category) {
+                  setState(() {
+                    selectedCategory = "Makanan";
+                  });
+                  },
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -476,10 +490,18 @@ class _StokProdukState extends State<StokProduk> {
                       }
 
                       // Ambil data produk dari snapshot
-                      produkList.sort((a, b) {
+                      produkList = snapshot.data!.docs
+                        .where((produk) =>
+                            produk['kategori_produk'] == selectedCategory)
+                        .toList();
+
+
+                              produkList.sort((a, b) {
                         int stokA = a['stok_produk'] as int;
                         int stokB = b['stok_produk'] as int;
-                        return stokA.compareTo(stokB);
+                        return isAscendingOrder
+                            ? stokA.compareTo(stokB)
+                            : stokB.compareTo(stokA);
                       });
 
                       return ListView.builder(

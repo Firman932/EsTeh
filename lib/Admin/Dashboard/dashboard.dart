@@ -17,13 +17,20 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  String selectedCategory = "Minuman";
   late Stream<QuerySnapshot> produkStream;
+  List<DocumentSnapshot> produkList = [];
 
   @override
   void initState() {
     super
         .initState(); // Panggil fungsi untuk mengambil data produk saat widget diinisialisasi
     produkStream = FirebaseFirestore.instance.collection('produk').snapshots();
+    produkStream.listen((QuerySnapshot querySnapshot) {
+      setState(() {
+        produkList = querySnapshot.docs.toList();
+      });
+    });
   }
 
   // Fungsi untuk mengambil data produk dari backend
@@ -33,8 +40,10 @@ class _DashboardState extends State<Dashboard> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar:
-            PreferredSize(preferredSize: Size.fromHeight(70), child: Header()),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(70),
+          child: Header(),
+        ),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -74,7 +83,18 @@ class _DashboardState extends State<Dashboard> {
                   ],
                 ),
                 SizedBox(height: 10),
-                FilterUser(),
+                FilterUser(
+                  onMinumanSelected: (category) {
+                    setState(() {
+                      selectedCategory = "Minuman";
+                    });
+                  },
+                  onMakananSelected: (category) {
+                    setState(() {
+                      selectedCategory = "Makanan";
+                    });
+                  },
+                ),
                 // Tampilkan data produk dalam daftar
                 StreamBuilder<QuerySnapshot>(
                   stream: produkStream,
@@ -88,12 +108,14 @@ class _DashboardState extends State<Dashboard> {
                     }
 
                     // Extract product data from the snapshot
-                    final List<DocumentSnapshot> produkList =
-                        snapshot.data!.docs.toList();
 
                     if (produkList.isEmpty) {
                       return Text('Tidak ada produk.');
                     }
+                    produkList = snapshot.data!.docs
+                        .where((produk) =>
+                            produk['kategori_produk'] == selectedCategory)
+                        .toList();
 
                     produkList.sort((a, b) {
                       int stokA = a['stok_produk'] as int;

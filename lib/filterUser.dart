@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class FilterUser extends StatefulWidget {
-  const FilterUser({Key? key}) : super(key: key);
+  final Function(String) onMinumanSelected;
+  final Function(String) onMakananSelected;
+  const FilterUser({Key? key, required this.onMinumanSelected, required this.onMakananSelected}) : super(key: key);
 
   @override
   State<FilterUser> createState() => _FilterUserState();
@@ -19,10 +21,18 @@ class _FilterUserState extends State<FilterUser> {
             onTap: () {
               setState(() {
                 selectedIndex = 0;
+                widget.onMinumanSelected("Minuman");
               });
             },
             child: Container(
               decoration: BoxDecoration(
+                boxShadow: [
+                    BoxShadow(
+                      color: Color.fromRGBO(156, 156, 156, 0.29),
+                      offset: Offset(0, 0),
+                      blurRadius: 5,
+                    )
+                ],
                 borderRadius: BorderRadius.circular(10),
                 color: selectedIndex == 0
                     ? Color.fromRGBO(73, 160, 19, 1)
@@ -46,10 +56,18 @@ class _FilterUserState extends State<FilterUser> {
             onTap: () {
               setState(() {
                 selectedIndex = 1;
+                widget.onMakananSelected("Makanan");
               });
             },
             child: Container(
               decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(156, 156, 156, 0.29),
+                    offset: Offset(0, 0),
+                    blurRadius: 5,
+                  ),
+                ],
                 borderRadius: BorderRadius.circular(10),
                 color: selectedIndex == 1
                     ? Color.fromRGBO(73, 160, 19, 1)

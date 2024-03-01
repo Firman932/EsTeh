@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lji/Admin/Dashboard/filter.dart';
 import 'package:lji/Admin/Dashboard/search.dart';
 import 'package:lji/Admin/History/history.dart';
 import 'package:lji/FOR%20USER/NotifikasiUser.dart';
@@ -121,7 +122,7 @@ class _MenuUserState extends State<MenuUser> {
           children: [
             Search(),
             SizedBox(height: 15),
-            FilterUser(),
+            FilterAdmin(),
             SizedBox(
               height: 20,
             ),

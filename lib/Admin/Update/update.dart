@@ -293,9 +293,9 @@ class _UpdateProdukState extends State<UpdateProduk> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context);
                       if (_formUpdateKey.currentState?.validate() ?? false) {
                         // Form valid, proceed with further actions
+                        Navigator.pop(context);
                         updateProduct();
                         showDialog(
                           context: context,

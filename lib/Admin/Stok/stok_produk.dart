@@ -34,10 +34,12 @@ class _StokProdukState extends State<StokProduk> {
   bool isAscendingOrder = true;
   String selectedCategory = "Minuman";
   String searchQuery = '';
+  bool _isMounted = false;
 
   @override
   void initState() {
     super.initState();
+    _isMounted = true;
     _numberController.text = '$_number';
     produkStream = FirebaseFirestore.instance.collection('produk').snapshots();
     produkStream.listen((QuerySnapshot querySnapshot) {
@@ -47,6 +49,11 @@ class _StokProdukState extends State<StokProduk> {
         produkList = querySnapshot.docs.toList();
       });
     });
+  }
+
+  void dispose() {
+    _isMounted = false;
+    super.dispose();
   }
 
   void _updateNumber() {
@@ -135,6 +142,8 @@ class _StokProdukState extends State<StokProduk> {
                       style: greenButton,
                       onPressed: () {
                         Navigator.pop(context);
+                        updateSelectedStock();
+                        deactivateChecklistMode();
                         showDialog(
                           context: context,
                           builder: (context) => SucessDialog(
@@ -173,6 +182,7 @@ class _StokProdukState extends State<StokProduk> {
         buttonConfirm: 'Hapus',
         onButtonConfirm: () {
           Navigator.pop(context);
+          deleteCheckedItems();
         },
       ),
     );
@@ -181,16 +191,18 @@ class _StokProdukState extends State<StokProduk> {
   void activateChecklistMode() {
     setState(() {
       isChecklistMode = true;
-      isAllChecked = false;
+      checkAll = isCheckedList.every((isChecked) => isChecked);
     });
   }
 
   void deactivateChecklistMode() {
-    setState(() {
-      isChecklistMode = false;
-      toggleCheckAll(false);
-      print("Fungsi ini dipanggil");
-    });
+    if (_isMounted) {
+      setState(() {
+        isChecklistMode = false;
+        toggleCheckAll(false);
+        print("Fungsi ini dipanggil");
+      });
+    }
   }
 
   void toggleCheckAll(bool value) {
@@ -253,6 +265,65 @@ class _StokProdukState extends State<StokProduk> {
         });
       }
     });
+  }
+
+  void updateSelectedStock() {
+    for (int i = 0; i < isCheckedList.length; i++) {
+      if (isCheckedList[i]) {
+        int currentStock = produkList[i]['stok_produk'] as int;
+        int updatedStock = currentStock + _number; // Use the entered number
+
+        // Update the stock for the selected product in Firestore
+        FirebaseFirestore.instance
+            .collection('produk')
+            .doc(produkList[i].id)
+            .update({
+          'stok_produk': updatedStock,
+        });
+      }
+    }
+  }
+
+  void deleteCheckedItems() {
+    try {
+      // Get a list of document IDs to be deleted
+      List<String> itemsToDelete = [];
+      for (int i = 0; i < isCheckedList.length; i++) {
+        if (isCheckedList[i]) {
+          itemsToDelete.add(produkList[i].id);
+        }
+      }
+
+      // Delete items from Firestore
+      itemsToDelete.forEach((documentId) async {
+        await FirebaseFirestore.instance
+            .collection('produk')
+            .doc(documentId)
+            .delete();
+      });
+
+      // Refresh the StreamBuilder
+      setState(() {
+        // You may need to adjust this if your stream initialization depends on other conditions
+        produkStream =
+            FirebaseFirestore.instance.collection('produk').snapshots();
+      });
+      // Show success message or handle accordingly
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Items deleted successfully.'),
+        ),
+      );
+      deactivateChecklistMode();
+    } catch (error) {
+      print('Error deleting items: $error');
+      // Show error message or handle accordingly
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error deleting items.'),
+        ),
+      );
+    }
   }
 
   @override
@@ -406,11 +477,11 @@ class _StokProdukState extends State<StokProduk> {
                                           border: InputBorder.none,
                                           icon: Icon(Icons.search),
                                         ),
-                                            onChanged: (value) {
-                                              setState(() {
-                                                searchQuery = value.toLowerCase();
-                                              });
-                                            },
+                                        onChanged: (value) {
+                                          setState(() {
+                                            searchQuery = value.toLowerCase();
+                                          });
+                                        },
                                       ),
                                     ),
                                   ],
@@ -498,8 +569,10 @@ class _StokProdukState extends State<StokProduk> {
                       // Ambil data produk dari snapshot
                       produkList = snapshot.data!.docs
                           .where((produk) =>
-                              produk['kategori_produk'] == selectedCategory&&
-                              (produk['nama_produk'] as String).toLowerCase().contains(searchQuery))
+                              produk['kategori_produk'] == selectedCategory &&
+                              (produk['nama_produk'] as String)
+                                  .toLowerCase()
+                                  .contains(searchQuery))
                           .toList();
 
                       produkList.sort((a, b) {

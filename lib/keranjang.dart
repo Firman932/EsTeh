@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -103,7 +103,7 @@ class _KeranjangState extends State<Keranjang> {
                           'Es Teh',
                           style: GoogleFonts.poppins(
                             fontSize: 36,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w700,
                             color: Color(0xff030303),
                           ),
                         ),
@@ -116,7 +116,7 @@ class _KeranjangState extends State<Keranjang> {
                           'Rasa Taro',
                           style: GoogleFonts.poppins(
                             fontSize: 16,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w500,
                             color: Color(0xff000000),
                           ),
                         ),
@@ -136,7 +136,7 @@ class _KeranjangState extends State<Keranjang> {
                       Text(
                         'Rp ${_nol * _pricePerUnit >= 0 ? _nol * _pricePerUnit : 0}', // Ubah teks default menjadi 'Rp ${_nol * _pricePerUnit}'
                         style: GoogleFonts.poppins(
-                          fontSize: 22,
+                          fontSize: 21,
                           fontWeight: FontWeight.w600,
                           height: 1.5,
                           color: _isMaxReached
@@ -163,7 +163,6 @@ class _KeranjangState extends State<Keranjang> {
                               }
                             },
                           ),
-                          SizedBox(width: 5),
                           IntrinsicWidth(
                             // Ubah lebar TextField sesuai kebutuhan Anda
                             child: TextField(
@@ -171,6 +170,7 @@ class _KeranjangState extends State<Keranjang> {
                               controller: _controller,
                               textAlign: TextAlign.center,
                               keyboardType: TextInputType.number,
+
                               onChanged: (value) {
                                 if (int.tryParse(value) != null) {
                                   _updateTotalPrice();
@@ -190,9 +190,6 @@ class _KeranjangState extends State<Keranjang> {
                                       InputBorder.none // Hapus padding bawaan
                                   ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 5,
                           ),
                           IconButton(
                             icon: Image.asset(

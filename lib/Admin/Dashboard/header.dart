@@ -21,10 +21,10 @@ class Header extends StatelessWidget {
             children: [
               Text("Hi Radit",
                   style: GoogleFonts.poppins(
-                      fontSize: 22, fontWeight: FontWeight.bold)),
+                      fontSize: 22, fontWeight: FontWeight.w700)),
               Text("Kamu adalah admin",
                   style: GoogleFonts.poppins(
-                      fontSize: 11, fontWeight: FontWeight.bold))
+                      fontSize: 11, fontWeight: FontWeight.w600))
             ],
           ),
           Row(
@@ -40,7 +40,7 @@ class Header extends StatelessWidget {
                 },
                 child: Icon(
                   Icons.history,
-                  size: 25,
+                  size: 23,
                 ),
               ),
               SizedBox(
@@ -57,7 +57,7 @@ class Header extends StatelessWidget {
                 },
                 child: Icon(
                   Icons.notifications,
-                  size: 25,
+                  size: 23,
                 ),
               )
             ],

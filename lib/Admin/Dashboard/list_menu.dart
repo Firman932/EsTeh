@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lji/Admin/Create/create_produk.dart';
-import 'package:lji/Admin/Stok/list_produk.dart';
+
 import 'package:lji/Admin/Update/update.dart';
 
 import '../../styles/dialog.dart';
@@ -15,20 +14,20 @@ class ListMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => UpdateProduk(
-                namaProduk: produkData['nama_produk'],
-                hargaProduk: produkData['harga_produk'].toString(),
-                stokProduk: produkData['stok_produk'].toString(),
-                gambarUrl: produkData['gambar_produk'],
-                varianProduk: produkData['variasi_rasa'],
-                documentId: produkData.id,
-                kategoriProduk: produkData['kategori_produk'],
-              ),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UpdateProduk(
+              namaProduk: produkData['nama_produk'],
+              hargaProduk: produkData['harga_produk'].toString(),
+              stokProduk: produkData['stok_produk'].toString(),
+              gambarUrl: produkData['gambar_produk'],
+              varianProduk: produkData['variasi_rasa'],
+              documentId: produkData.id,
+              kategoriProduk: produkData['kategori_produk'],
             ),
-          );
+          ),
+        );
       },
       child: Container(
         margin: EdgeInsets.only(top: 15),
@@ -39,7 +38,7 @@ class ListMenu extends StatelessWidget {
             BoxShadow(
               color: Color.fromRGBO(156, 156, 156, 0.29),
               offset: Offset(0, 0),
-              blurRadius: 55.5,
+              blurRadius: 5,
             ),
           ],
           color: Colors.white,
@@ -96,7 +95,8 @@ class ListMenu extends StatelessWidget {
             ],
           ),
           Text("Rp ${produkData['harga_produk']}",
-              style: GoogleFonts.poppins(fontWeight: FontWeight.w500,fontSize: 13)),
+              style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w500, fontSize: 13)),
         ],
       ),
     );
@@ -109,7 +109,8 @@ class ListMenu extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text("Stok: ${produkData['stok_produk']}",
-              style: GoogleFonts.poppins(fontWeight: FontWeight.w500,fontSize: 12)),
+              style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w500, fontSize: 12)),
         ],
       ),
     );

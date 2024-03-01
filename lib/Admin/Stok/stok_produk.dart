@@ -33,6 +33,7 @@ class _StokProdukState extends State<StokProduk> {
   List<DocumentSnapshot> produkList = [];
   bool isAscendingOrder = true;
   String selectedCategory = "Minuman";
+  String searchQuery = '';
 
   @override
   void initState() {
@@ -348,14 +349,14 @@ class _StokProdukState extends State<StokProduk> {
                 ),
                 FilterUser(
                   onMinumanSelected: (category) {
-                  setState(() {
-                    selectedCategory = "Minuman";
-                  });
+                    setState(() {
+                      selectedCategory = "Minuman";
+                    });
                   },
                   onMakananSelected: (category) {
-                  setState(() {
-                    selectedCategory = "Makanan";
-                  });
+                    setState(() {
+                      selectedCategory = "Makanan";
+                    });
                   },
                 ),
                 SizedBox(
@@ -405,6 +406,11 @@ class _StokProdukState extends State<StokProduk> {
                                           border: InputBorder.none,
                                           icon: Icon(Icons.search),
                                         ),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                searchQuery = value.toLowerCase();
+                                              });
+                                            },
                                       ),
                                     ),
                                   ],
@@ -491,12 +497,12 @@ class _StokProdukState extends State<StokProduk> {
 
                       // Ambil data produk dari snapshot
                       produkList = snapshot.data!.docs
-                        .where((produk) =>
-                            produk['kategori_produk'] == selectedCategory)
-                        .toList();
+                          .where((produk) =>
+                              produk['kategori_produk'] == selectedCategory&&
+                              (produk['nama_produk'] as String).toLowerCase().contains(searchQuery))
+                          .toList();
 
-
-                              produkList.sort((a, b) {
+                      produkList.sort((a, b) {
                         int stokA = a['stok_produk'] as int;
                         int stokB = b['stok_produk'] as int;
                         return isAscendingOrder

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Analisis%20Uang/uang.dart';
 
@@ -11,14 +12,14 @@ class Analisis extends StatefulWidget {
 }
 
 class _AnalisisState extends State<Analisis> {
-    late Stream<QuerySnapshot> produkStream;
+  late Stream<QuerySnapshot> produkStream;
 
-      void initState() {
+  void initState() {
     super
         .initState(); // Panggil fungsi untuk mengambil data produk saat widget diinisialisasi
     produkStream = FirebaseFirestore.instance.collection('produk').snapshots();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -30,33 +31,34 @@ class _AnalisisState extends State<Analisis> {
             child: InkWell(
               onTap: () {
                 Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Pendapatan(),
-                          ),
-                        );
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Pendapatan(),
+                  ),
+                );
               },
               child: Container(
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                        color: Color.fromRGBO(156, 156, 156, 0.28999999165534972),
-                        offset: Offset(0, 0),
-                        blurRadius: 55.5)
-                  ]),
                   height: 126,
                   child: Stack(children: <Widget>[
                     Container(
                         height: 126,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(15)),
-                            color: Colors.white),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color.fromRGBO(156, 156, 156, 0.29),
+                                offset: Offset(0, 0),
+                                blurRadius: 5,
+                              )
+                            ]),
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 16),
                           child: Align(
                             alignment: Alignment.bottomCenter,
-                            child: Text("Rp 1.349.324.439",
+                            child: Text("Rp 1.349",
                                 style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.bold, fontSize: 12)),
+                                    fontWeight: FontWeight.w600, fontSize: 12)),
                           ),
                         )),
                     Container(
@@ -79,7 +81,10 @@ class _AnalisisState extends State<Analisis> {
                             Image.asset("assets/uang.png"),
                             Text(
                               "Uang",
-                              style: GoogleFonts.poppins(color: Colors.white),
+                              style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500),
                             )
                           ],
                         ),
@@ -93,19 +98,20 @@ class _AnalisisState extends State<Analisis> {
           ),
           Expanded(
             child: Container(
-                decoration: BoxDecoration(boxShadow: [
-                  BoxShadow(
-                      color: Color.fromRGBO(156, 156, 156, 0.28999999165534973),
-                      offset: Offset(0, 0),
-                      blurRadius: 55.5)
-                ]),
                 height: 126,
                 child: Stack(children: <Widget>[
                   Container(
                     height: 126,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(15)),
-                        color: Colors.white),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromRGBO(156, 156, 156, 0.29),
+                            offset: Offset(0, 0),
+                            blurRadius: 5,
+                          )
+                        ]),
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: Align(
@@ -132,7 +138,7 @@ class _AnalisisState extends State<Analisis> {
                             return Text(
                               "$length",
                               style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                                 fontSize: 12,
                               ),
                             );
@@ -161,7 +167,10 @@ class _AnalisisState extends State<Analisis> {
                           Image.asset("assets/produk.png"),
                           Text(
                             "Total Produk",
-                            style: GoogleFonts.poppins(color: Colors.white),
+                            style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500),
                           )
                         ],
                       ),

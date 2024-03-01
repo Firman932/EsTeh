@@ -9,10 +9,10 @@ class ListUser extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
-      height: 100,
+      height: 70,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
             color: Color(0x499c9c9c),
@@ -29,8 +29,8 @@ class ListUser extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  width: 80,
-                  height: 80,
+                  width: 60,
+                  height: 60,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
@@ -38,9 +38,6 @@ class ListUser extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: 10,
                 ),
                 _buildTextInfo(),
               ],
@@ -61,11 +58,12 @@ class ListUser extends StatelessWidget {
         children: [
           Text("Es Teh",
               style:
-                  GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w600)),
+                  GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600)),
           Text("Rasa Taro",
               style:
                   GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w500)),
-          Text("Rp.8000", style: TextStyle(fontWeight: FontWeight.w500)),
+          Text("Rp.8000",
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 11)),
         ],
       ),
     );

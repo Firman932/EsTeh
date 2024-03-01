@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/styles/dialog.dart';
 
@@ -248,6 +247,9 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                                   controller: _controller,
                                   textAlign: TextAlign.center,
                                   keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
                                   onChanged: (value) {
                                     if (int.tryParse(value) != null) {
                                       _updateTotalPrice();
@@ -294,108 +296,145 @@ class KeranjangPage01 extends State<KeranjangPage02> {
         ),
       ),
       bottomNavigationBar: _isEditing
-          ? BottomAppBar(
-              shape: CircularNotchedRectangle(),
-              color: Colors.white,
-              elevation: 1,
-              notchMargin: 8,
-              clipBehavior: Clip.antiAlias,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(
-                    'Total : Rp ${_nol * _HargaUnit >= 0 ? _nol * _HargaUnit : 0}',
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color:
-                          _isTotalDisabled ? Colors.transparent : Colors.black,
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => DeleteDialog(
-                          title: 'Peringatan',
-                          content:
-                              'Apakah kamu yakin ingin menghapus list keranjangmu ?',
-                          buttonConfirm: 'Ok',
-                          onButtonConfirm: () {
-                            Navigator.pop(context);
-                          },
-                          buttonCancel: 'Cancel',
-                          onButtonCancel: () {},
+          ? Container(
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                  color: Color(0x499c9c9c),
+                  offset: Offset(0, 0),
+                  blurRadius: 2,
+                ),
+              ]),
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    topLeft: Radius.circular(10)),
+                child: BottomAppBar(
+                  height: 70,
+                  surfaceTintColor: Colors.white,
+                  shape: CircularNotchedRectangle(),
+                  color: Colors.white,
+                  elevation: 1,
+                  notchMargin: 8,
+                  clipBehavior: Clip.antiAlias,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Total : Rp ${_nol * _HargaUnit >= 0 ? _nol * _HargaUnit : 0}',
+                        style: GoogleFonts.poppins(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: _isTotalDisabled
+                              ? Colors.transparent
+                              : Colors.black,
                         ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
                       ),
-                    ),
-                    child: Text(
-                      'Hapus',
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                      ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => DeleteDialog(
+                              title: 'Peringatan',
+                              content:
+                                  'Apakah kamu yakin ingin menghapus list keranjangmu ?',
+                              buttonConfirm: 'Ok',
+                              onButtonConfirm: () {
+                                Navigator.pop(context);
+                              },
+                              buttonCancel: 'Cancel',
+                              onButtonCancel: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                        ),
+                        child: Text(
+                          'Hapus',
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
             )
-          : BottomAppBar(
-              elevation: 1,
-              shape: CircularNotchedRectangle(),
-              color: Colors.white,
-              child: Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Row(children: [
-                      Text(
-                        'Total : RP ${_nol * _HargaUnit}',
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: _isTotalDisabled ? Colors.grey : Colors.black,
-                        ),
-                      ),
-                    ]),
-                    ElevatedButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => SucessDialog(
-                            title: 'Sukses',
-                            content:
-                                'Transaksi telah berhasil terima kasih telah berbelanja di toko kami !',
-                            buttonConfirm: 'Ok',
-                            onButtonConfirm: () {
-                              Navigator.pop(context);
-                            },
+          : Container(
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                  color: Color(0x499c9c9c),
+                  offset: Offset(0, 0),
+                  blurRadius: 2,
+                ),
+              ]),
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10)),
+                child: BottomAppBar(
+                  surfaceTintColor: Colors.white,
+                  height: 70,
+                  elevation: 1,
+                  notchMargin: 8,
+                  shape: CircularNotchedRectangle(),
+                  color: Colors.white,
+                  child: Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(children: [
+                          Text(
+                            'Total : RP ${_nol * _HargaUnit}',
+                            style: GoogleFonts.poppins(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color:
+                                  _isTotalDisabled ? Colors.grey : Colors.black,
+                            ),
                           ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xff4fb60e),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
+                        ]),
+                        ElevatedButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => SucessDialog(
+                                title: 'Sukses',
+                                content:
+                                    'Transaksi telah berhasil terima kasih telah berbelanja di toko kami !',
+                                buttonConfirm: 'Ok',
+                                onButtonConfirm: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xff4fb60e),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                          ),
+                          child: Text(
+                            'Checkout',
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        'Checkout',
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),

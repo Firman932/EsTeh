@@ -1,13 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lji/Admin/Create/create_produk.dart';
 import 'package:lji/Admin/Dashboard/analisis.dart';
-import 'package:lji/Admin/Dashboard/filter.dart';
 import 'package:lji/Admin/Dashboard/header.dart';
 import 'package:lji/Admin/Dashboard/list_menu.dart';
-import 'package:lji/Admin/Dashboard/search.dart';
 import 'package:lji/Admin/Stok/stok_produk.dart';
+import 'package:lji/filterUser.dart';
 // Sesuaikan dengan lokasi file Product.dart
 // Sesuaikan dengan lokasi file api_service.dart
 
@@ -76,7 +74,7 @@ class _DashboardState extends State<Dashboard> {
                   ],
                 ),
                 SizedBox(height: 10),
-                FilterAdmin(),
+                FilterUser(),
                 // Tampilkan data produk dalam daftar
                 StreamBuilder<QuerySnapshot>(
                   stream: produkStream,

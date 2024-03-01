@@ -10,10 +10,10 @@ class LogoutBottomSheet {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: 180,
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(

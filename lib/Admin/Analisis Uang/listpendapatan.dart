@@ -17,7 +17,7 @@ class ListPendapatan extends StatelessWidget {
           BoxShadow(
             color: Color(0x499c9c9c),
             offset: Offset(0, 0),
-            blurRadius: 27.7000007629,
+            blurRadius: 5,
           ),
         ],
       ),
@@ -30,13 +30,13 @@ class ListPendapatan extends StatelessWidget {
             height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(5),
+                    topLeft: Radius.circular(10),
                     bottomLeft: Radius.circular(10)),
                 color: Color.fromARGB(255, 73, 160, 19)),
           ),
           Container(
             margin: EdgeInsets.all(10),
-            width: MediaQuery.of(context).size.width - 100,
+            width: MediaQuery.of(context).size.width - 60,
             height: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

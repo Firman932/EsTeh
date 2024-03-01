@@ -79,6 +79,7 @@ class _NotifikasiState extends State<Notifikasi> {
                                 "12-02-2024",
                                 style: GoogleFonts.poppins(
                                   fontSize: 10,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ),
                               SizedBox(
@@ -88,6 +89,7 @@ class _NotifikasiState extends State<Notifikasi> {
                                 "09:15 WIB",
                                 style: GoogleFonts.poppins(
                                   fontSize: 10,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               )
                             ],

@@ -33,18 +33,19 @@ class DeleteDialog extends StatelessWidget {
           children: [
             // Kotak atas dengan logo peringatan
             Container(
-              padding: EdgeInsets.symmetric(vertical: 22),
-              height: 110,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10)),
-                color: Color.fromARGB(
-                    255, 255, 174, 0), // Ganti warna sesuai keinginan
-              ),
-              child: Image.asset("assets/Warning.png",)
-            ),
+                padding: EdgeInsets.symmetric(vertical: 22),
+                height: 110,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10)),
+                  color: Color.fromARGB(
+                      255, 255, 174, 0), // Ganti warna sesuai keinginan
+                ),
+                child: Image.asset(
+                  "assets/Warning.png",
+                )),
             SizedBox(height: 16), // Spasi antara kotak atas dan bawah
             // Kotak bawah dengan konfirmasi dan deskripsi peringatan
             Padding(
@@ -55,9 +56,9 @@ class DeleteDialog extends StatelessWidget {
                   Text(title,
                       style: GoogleFonts.poppins(
                           fontSize: 22,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w700,
                           color: Color.fromARGB(255, 255, 174, 0))),
-                  SizedBox(height: 8),
+                  SizedBox(height: 10),
                   Text(
                     content,
                     style: GoogleFonts.poppins(
@@ -67,7 +68,7 @@ class DeleteDialog extends StatelessWidget {
                   ),
                   SizedBox(height: 50),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       ElevatedButton(
                           onPressed: onButtonCancel,
@@ -76,9 +77,6 @@ class DeleteDialog extends StatelessWidget {
                             style: textdialog,
                           ),
                           style: greenButton),
-                      SizedBox(
-                        width: 20,
-                      ),
                       ElevatedButton(
                         onPressed: onButtonConfirm,
                         child: Text(
@@ -104,7 +102,12 @@ class SucessDialog extends StatelessWidget {
   final String content;
   final String buttonConfirm;
   final VoidCallback onButtonConfirm;
-  const SucessDialog({super.key, required this.title, required this.content, required this.buttonConfirm, required this.onButtonConfirm});
+  const SucessDialog(
+      {super.key,
+      required this.title,
+      required this.content,
+      required this.buttonConfirm,
+      required this.onButtonConfirm});
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +186,12 @@ class WarningDialog extends StatelessWidget {
   final String content;
   final String buttonConfirm;
   final VoidCallback onButtonConfirm;
-  const WarningDialog({super.key, required this.title, required this.content, required this.buttonConfirm, required this.onButtonConfirm});
+  const WarningDialog(
+      {super.key,
+      required this.title,
+      required this.content,
+      required this.buttonConfirm,
+      required this.onButtonConfirm});
 
   @override
   Widget build(BuildContext context) {
@@ -198,18 +206,19 @@ class WarningDialog extends StatelessWidget {
           children: [
             // Kotak atas dengan logo peringatan
             Container(
-              padding: EdgeInsets.symmetric(vertical: 22),
-              height: 110,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10)),
-                color: Color.fromARGB(
-                    255, 255, 174, 0), // Ganti warna sesuai keinginan
-              ),
-              child: Image.asset("assets/Warning.png",)
-            ),
+                padding: EdgeInsets.symmetric(vertical: 22),
+                height: 110,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10)),
+                  color: Color.fromARGB(
+                      255, 255, 174, 0), // Ganti warna sesuai keinginan
+                ),
+                child: Image.asset(
+                  "assets/Warning.png",
+                )),
             SizedBox(height: 16), // Spasi antara kotak atas dan bawah
             // Kotak bawah dengan konfirmasi dan deskripsi peringatan
             Padding(

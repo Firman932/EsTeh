@@ -19,6 +19,19 @@ class MenuUser extends StatefulWidget {
 
 class _MenuUserState extends State<MenuUser> {
   String selectedCategory = "Minuman";
+    late Stream<QuerySnapshot> produkStream;
+    List<DocumentSnapshot> produkList = [];
+
+    void initState() {
+    super
+        .initState(); // Panggil fungsi untuk mengambil data produk saat widget diinisialisasi
+    produkStream = FirebaseFirestore.instance.collection('produk').snapshots();
+    produkStream.listen((QuerySnapshot querySnapshot) {
+      setState(() {
+        produkList = querySnapshot.docs.toList();
+      });
+    });
+  }
   void _showLogoutBottomSheet(BuildContext context) {
     LogoutBottomSheet.show(context);
   }
@@ -141,14 +154,13 @@ class _MenuUserState extends State<MenuUser> {
             ),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance.collection('produk').snapshots(),
+                stream: produkStream,
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return Center(
                       child: CircularProgressIndicator(),
                     );
                   }
-                  List<DocumentSnapshot> produkList = snapshot.data!.docs;
                   produkList = snapshot.data!.docs
                         .where((produk) =>
                             produk['kategori_produk'] == selectedCategory)

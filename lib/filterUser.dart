@@ -53,12 +53,12 @@ class _FilterUserState extends State<FilterUser> {
         SizedBox(width: 10),
         Expanded(
           child: GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedIndex = 1;
-                widget.onMakananSelected("Makanan");
-              });
-            },
+          onTap: () {
+            setState(() {
+              selectedIndex = 1;
+              widget.onMakananSelected("Makanan");
+            });
+          },
             child: Container(
               decoration: BoxDecoration(
                 boxShadow: [

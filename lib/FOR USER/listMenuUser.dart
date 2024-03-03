@@ -35,10 +35,10 @@ class ListUser extends StatelessWidget {
                   height: 60,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: AssetImage("assets/esteh.png"),
-                      fit: BoxFit.cover,
-                    ),
+                      image: DecorationImage(
+                        image: NetworkImage(produkData['gambar_produk']),
+                        fit: BoxFit.cover,
+                      ),
                   ),
                 ),
                 _buildTextInfo(),

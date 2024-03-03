@@ -18,6 +18,7 @@ class MenuUser extends StatefulWidget {
 }
 
 class _MenuUserState extends State<MenuUser> {
+  String selectedCategory = "Minuman";
   void _showLogoutBottomSheet(BuildContext context) {
     LogoutBottomSheet.show(context);
   }
@@ -123,7 +124,18 @@ class _MenuUserState extends State<MenuUser> {
           children: [
             Search(),
             SizedBox(height: 15),
-            FilterAdmin(),
+            FilterUser(
+                  onMinumanSelected: (category) {
+                    setState(() {
+                      selectedCategory = "Minuman";
+                    });
+                  },
+                  onMakananSelected: (category) {
+                    setState(() {
+                      selectedCategory = "Makanan";
+                    });
+                  },
+                ),
             SizedBox(
               height: 20,
             ),
@@ -137,6 +149,10 @@ class _MenuUserState extends State<MenuUser> {
                     );
                   }
                   List<DocumentSnapshot> produkList = snapshot.data!.docs;
+                  produkList = snapshot.data!.docs
+                        .where((produk) =>
+                            produk['kategori_produk'] == selectedCategory)
+                        .toList();
                   return ListView.builder(
                     shrinkWrap: true,
                     itemCount: produkList.length,

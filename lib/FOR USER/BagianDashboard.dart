@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Dashboard/filter.dart';
@@ -127,15 +128,26 @@ class _MenuUserState extends State<MenuUser> {
               height: 20,
             ),
             Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount:
-                    10, // Ubah sesuai dengan jumlah item yang ingin ditampilkan
-                itemBuilder: (context, index) {
-                  return ListUser(); // Ganti dengan item yang ingin ditampilkan
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance.collection('produk').snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  List<DocumentSnapshot> produkList = snapshot.data!.docs;
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: produkList.length,
+                    itemBuilder: (context, index) {
+                      DocumentSnapshot produk = produkList[index];
+                      return ListUser(produkData: produk);
+                    },
+                  );
                 },
               ),
-            ),
+            )
           ],
         ),
       ),

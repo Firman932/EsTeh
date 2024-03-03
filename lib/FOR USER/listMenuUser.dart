@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Keranjang.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ListUser extends StatelessWidget {
-  const ListUser({super.key});
+  final DocumentSnapshot produkData;
+  const ListUser({super.key, required this.produkData});
 
   @override
   Widget build(BuildContext context) {
@@ -56,13 +58,13 @@ class ListUser extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text("Es Teh",
+          Text(produkData["nama_produk"],
               style:
                   GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600)),
-          Text("Rasa Taro",
+          Text(produkData["variasi_rasa"],
               style:
                   GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w500)),
-          Text("Rp.8000",
+          Text("Rp ${produkData['harga_produk']}",
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 11)),
         ],
       ),
@@ -78,7 +80,7 @@ class ListUser extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Keranjang(),
+            builder: (context) => Keranjang(produkData: produkData,),
           ),
         );
       },

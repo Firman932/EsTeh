@@ -1,11 +1,13 @@
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
 class Keranjang extends StatefulWidget {
-  Keranjang({Key? key}) : super(key: key);
+  final DocumentSnapshot produkData;
+  Keranjang({Key? key, required this.produkData}) : super(key: key);
 
   @override
   _KeranjangState createState() => _KeranjangState();
@@ -41,7 +43,7 @@ class _KeranjangState extends State<Keranjang> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Tambahkan Produk",
+        title: Text("Beli Menu",
             style:
                 GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w500)),
         forceMaterialTransparency: true,
@@ -80,10 +82,9 @@ class _KeranjangState extends State<Keranjang> {
                             1, // Memastikan gambar tetap berbentuk persegi
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(20),
-                          child: Image.asset(
-                            "assets/esteh.png",
-                            fit: BoxFit
-                                .cover, // Mengatur bagaimana gambar ditampilkan
+                          child: Image.network(
+                            widget.produkData["gambar_produk"],
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
@@ -100,7 +101,7 @@ class _KeranjangState extends State<Keranjang> {
                         width: MediaQuery.of(context).size.width,
                         margin: EdgeInsets.only(top: 3),
                         child: Text(
-                          'Es Teh',
+                          widget.produkData["nama_produk"],
                           style: GoogleFonts.poppins(
                             fontSize: 36,
                             fontWeight: FontWeight.w700,
@@ -113,7 +114,7 @@ class _KeranjangState extends State<Keranjang> {
                         margin: EdgeInsets.only(
                             left: 2 + MediaQuery.of(context).padding.left),
                         child: Text(
-                          'Rasa Taro',
+                          widget.produkData["variasi_rasa"],
                           style: GoogleFonts.poppins(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -213,6 +214,10 @@ class _KeranjangState extends State<Keranjang> {
                 ),
                 InkWell(
                   onTap: () {
+                    // Tambahkan logika untuk menambahkan produk ke keranjang di sini
+                    // Anda bisa menggunakan _jumlah dan widget.produkData untuk mendapatkan info produk
+                    // Misalnya, menambahkannya ke daftar belanja
+                    print('Menambahkan ${widget.produkData["nama_produk"]} ke keranjang');
                     Navigator.pop(context);
                     // Tambahkan logika navigasi ke layar berikutnya di sini
                   },

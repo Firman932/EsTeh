@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,6 +8,7 @@ import 'package:lji/Admin/Create/textField.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lji/styles/color.dart';
 import 'package:lji/styles/dialog.dart';
+import 'package:flutter/services.dart';
 
 class TambahProduk extends StatefulWidget {
   const TambahProduk({super.key});
@@ -64,7 +64,7 @@ class _TambahProdukState extends State<TambahProduk> {
         'gambar_produk':
             imageUrl, // Ganti dengan URL gambar atau menyimpan di Firebase Storage
         'variasi_rasa': variationController.text,
-        'harga_produk' : int.parse(hargaController.text),
+        'harga_produk': int.parse(hargaController.text),
         'kategori_produk': categoryController.text,
         'stok_produk': int.parse(stockController.text),
       });
@@ -184,31 +184,32 @@ class _TambahProdukState extends State<TambahProduk> {
                       decoration: InputDecoration(
                         hintText: "Nama Produk",
                         border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
-                            borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(
+                            color: Colors.black12, // Default border color
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black, // Default border color
-                            ),
-                            borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Colors.black, // Default border color
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 73, 160, 19), // Desired focus color
-                            ),
-                            borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Color.fromARGB(
+                                255, 73, 160, 19), // Desired focus color
                           ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         hintStyle: textField,
                       ),
                       validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                    return "Nama Produk tidak boleh kosong";
-                                          }
-                                          return null;
-                                        },
+                        if (value == null || value.isEmpty) {
+                          return "Nama Produk tidak boleh kosong";
+                        }
+                        return null;
+                      },
                     ),
                     SizedBox(
                       height: 10,
@@ -216,12 +217,13 @@ class _TambahProdukState extends State<TambahProduk> {
                     CustomTextField(
                       labelText: "Variasi",
                       hintText: "Leci",
-                      controller: variationController,                        
+                      controller: variationController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Variasi tidak boleh kosong";}
-                          return null;
-                          },
+                          return "Variasi tidak boleh kosong";
+                        }
+                        return null;
+                      },
                     ),
                     SizedBox(
                       height: 10,
@@ -233,22 +235,24 @@ class _TambahProdukState extends State<TambahProduk> {
                       controller: categoryController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Kategori tidak boleh kosong";}
-                          return null;
-                          },
+                          return "Kategori tidak boleh kosong";
+                        }
+                        return null;
+                      },
                     ),
                     SizedBox(
                       height: 10,
                     ),
-                      CustomTextField(
+                    CustomTextField(
                       labelText: "Harga",
                       hintText: "8000",
-                      controller: hargaController,                        
+                      controller: hargaController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Harga tidak boleh kosong";}
-                          return null;
-                          },
+                          return "Harga tidak boleh kosong";
+                        }
+                        return null;
+                      },
                     ),
                     SizedBox(
                       height: 10,
@@ -257,12 +261,12 @@ class _TambahProdukState extends State<TambahProduk> {
                       labelText: "Stok",
                       hintText: "100",
                       controller: stockController,
-                        validator: (value) {
-    if (value == null || value.isEmpty) {
-      return "Stok tidak boleh kosong";
-    }
-    return null;
-  },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Stok tidak boleh kosong";
+                        }
+                        return null;
+                      },
                     ),
                     SizedBox(
                       height: 20,
@@ -270,35 +274,35 @@ class _TambahProdukState extends State<TambahProduk> {
                     ElevatedButton(
                       onPressed: () {
                         if (imagePath == null) {
-      // Tampilkan pesan kesalahan jika gambar tidak dipilih
-      showDialog(
-        context: context,
-        builder: (context) => WarningDialog(
-          title: "Error",
-          content: "Silakan pilih gambar terlebih dahulu.",
-          buttonConfirm: "Ok",
-          onButtonConfirm: () {
-            Navigator.pop(context);
-          },
-        ),
-      );
-    }
-                        else if (_formCreateKey.currentState?.validate() ?? false) {
-                    // Form valid, proceed with further actions
-                    Navigator.pop(context);
-                    tambahProduk();
-                    showDialog(
-                      context: context,
-                      builder: (context) => SucessDialog(
-                        title: "Berhasil",
-                        content: "Item berhasil ditambahkan",
-                        buttonConfirm: "Ok",
-                        onButtonConfirm: () {
+                          // Tampilkan pesan kesalahan jika gambar tidak dipilih
+                          showDialog(
+                            context: context,
+                            builder: (context) => WarningDialog(
+                              title: "Error",
+                              content: "Silakan pilih gambar terlebih dahulu.",
+                              buttonConfirm: "Ok",
+                              onButtonConfirm: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          );
+                        } else if (_formCreateKey.currentState?.validate() ??
+                            false) {
+                          // Form valid, proceed with further actions
                           Navigator.pop(context);
-                        },
-                      ),
-                    );
-                  }
+                          tambahProduk();
+                          showDialog(
+                            context: context,
+                            builder: (context) => SucessDialog(
+                              title: "Berhasil",
+                              content: "Item berhasil ditambahkan",
+                              buttonConfirm: "Ok",
+                              onButtonConfirm: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          );
+                        }
                       },
                       child: Text(
                         'Tambah Produk',

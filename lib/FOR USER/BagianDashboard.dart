@@ -19,10 +19,10 @@ class MenuUser extends StatefulWidget {
 
 class _MenuUserState extends State<MenuUser> {
   String selectedCategory = "Minuman";
-    late Stream<QuerySnapshot> produkStream;
-    List<DocumentSnapshot> produkList = [];
+  late Stream<QuerySnapshot> produkStream;
+  List<DocumentSnapshot> produkList = [];
 
-    void initState() {
+  void initState() {
     super
         .initState(); // Panggil fungsi untuk mengambil data produk saat widget diinisialisasi
     produkStream = FirebaseFirestore.instance.collection('produk').snapshots();
@@ -32,6 +32,7 @@ class _MenuUserState extends State<MenuUser> {
       });
     });
   }
+
   void _showLogoutBottomSheet(BuildContext context) {
     LogoutBottomSheet.show(context);
   }
@@ -138,17 +139,17 @@ class _MenuUserState extends State<MenuUser> {
             Search(),
             SizedBox(height: 15),
             FilterUser(
-                  onMinumanSelected: (category) {
-                    setState(() {
-                      selectedCategory = "Minuman";
-                    });
-                  },
-                  onMakananSelected: (category) {
-                    setState(() {
-                      selectedCategory = "Makanan";
-                    });
-                  },
-                ),
+              onMinumanSelected: (category) {
+                setState(() {
+                  selectedCategory = "Minuman";
+                });
+              },
+              onMakananSelected: (category) {
+                setState(() {
+                  selectedCategory = "Makanan";
+                });
+              },
+            ),
             SizedBox(
               height: 20,
             ),
@@ -162,9 +163,9 @@ class _MenuUserState extends State<MenuUser> {
                     );
                   }
                   produkList = snapshot.data!.docs
-                        .where((produk) =>
-                            produk['kategori_produk'] == selectedCategory)
-                        .toList();
+                      .where((produk) =>
+                          produk['kategori_produk'] == selectedCategory)
+                      .toList();
                   return ListView.builder(
                     shrinkWrap: true,
                     itemCount: produkList.length,

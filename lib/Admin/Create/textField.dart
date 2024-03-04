@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/styles/color.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   final String labelText;
@@ -37,32 +37,39 @@ class CustomTextField extends StatelessWidget {
           '$labelText',
           style: text,
         ),
-        SizedBox(height: 5,),
+        SizedBox(
+          height: 5,
+        ),
         TextFormField(
           cursorColor: greenPrimary,
           style: text,
           controller: controller,
           validator: validator,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly
+          ], // hanya angka
+          keyboardType: TextInputType.number, // tipe keyboard angka
           decoration: InputDecoration(
             hintText: hintText,
             border: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Colors.black12, // Default border color
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Colors.black, // Default border color
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: const Color.fromRGBO(73, 160, 19, 1), // Desired focus color
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+              borderSide: const BorderSide(
+                color: Colors.black12, // Default border color
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: Colors.black, // Default border color
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color:
+                    const Color.fromRGBO(73, 160, 19, 1), // Desired focus color
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
             hintStyle: textField,
           ),
         ),
@@ -109,7 +116,9 @@ class CustomDropdownField extends StatelessWidget {
           '$labelText',
           style: text,
         ),
-        SizedBox(height: 5,),
+        SizedBox(
+          height: 5,
+        ),
         DropdownButtonFormField(
           validator: validator,
           isExpanded: true,
@@ -130,23 +139,24 @@ class CustomDropdownField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hintText,
             border: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.black12, // Default border color
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.black, // Default border color
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: const Color.fromRGBO(73, 160, 19, 1), // Desired focus color
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+              borderSide: const BorderSide(
+                color: Colors.black12, // Default border color
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: Colors.black, // Default border color
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color:
+                    const Color.fromRGBO(73, 160, 19, 1), // Desired focus color
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
             hintStyle: textField,
           ),
         ),

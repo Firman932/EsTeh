@@ -168,17 +168,21 @@ class _KeranjangState extends State<Keranjang> {
                             // Ubah lebar TextField sesuai kebutuhan Anda
                             child: TextField(
                               autofocus: false,
+                              cursorColor: Color(0xff49A013),
+
                               controller: _controller,
                               textAlign: TextAlign.center,
                               keyboardType: TextInputType.number,
-
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
                               onChanged: (value) {
                                 if (int.tryParse(value) != null) {
                                   _updateTotalPrice();
                                 }
                               },
                               style: GoogleFonts.poppins(
-                                fontSize: 18,
+                                fontSize: 13,
                               ),
                               textInputAction: TextInputAction.next,
                               textCapitalization: TextCapitalization.none,
@@ -186,10 +190,9 @@ class _KeranjangState extends State<Keranjang> {
                               enabled:
                                   !_isMaxReached, // Nonaktifkan TextField jika batas maksimum tercapai
                               decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.zero,
-                                  border:
-                                      InputBorder.none // Hapus padding bawaan
-                                  ),
+                                contentPadding: EdgeInsets.zero,
+                                border: InputBorder.none,
+                              ),
                             ),
                           ),
                           IconButton(
@@ -217,7 +220,8 @@ class _KeranjangState extends State<Keranjang> {
                     // Tambahkan logika untuk menambahkan produk ke keranjang di sini
                     // Anda bisa menggunakan _jumlah dan widget.produkData untuk mendapatkan info produk
                     // Misalnya, menambahkannya ke daftar belanja
-                    print('Menambahkan ${widget.produkData["nama_produk"]} ke keranjang');
+                    print(
+                        'Menambahkan ${widget.produkData["nama_produk"]} ke keranjang');
                     Navigator.pop(context);
                     // Tambahkan logika navigasi ke layar berikutnya di sini
                   },

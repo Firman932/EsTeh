@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/styles/dialog.dart';
+import 'package:lji/FOR USER/listMenuUser.dart';
 
 class CartItem {
   bool isChecked;
@@ -10,7 +12,8 @@ class CartItem {
 }
 
 class KeranjangPage02 extends StatefulWidget {
-  KeranjangPage02({Key? key});
+  final DocumentSnapshot produkData;
+  KeranjangPage02({Key? key, required this.produkData}) : super(key: key);
 
   @override
   State<KeranjangPage02> createState() => KeranjangPage01();
@@ -23,11 +26,23 @@ class KeranjangPage01 extends State<KeranjangPage02> {
   bool _MaksimalReached = false;
   bool _isEditing = false;
   bool _isTotalDisabled = false;
-  List<CartItem> cartItems =
-      List.generate(100, (index) => CartItem(isChecked: false));
+  late Stream<QuerySnapshot> produkStream;
+  List<DocumentSnapshot> produkList = [];
+
+  void initState() {
+    super
+        .initState(); // Panggil fungsi untuk mengambil data produk saat widget diinisialisasi
+    produkStream = FirebaseFirestore.instance.collection('produk').snapshots();
+    produkStream.listen((QuerySnapshot querySnapshot) {
+      setState(() {
+        produkList = querySnapshot.docs.toList();
+      });
+    });
+  }
+  
 
   @override
-  void initState() {
+  void iniStState() {
     super.initState();
     _controller.text = '$_nol';
   }
@@ -79,7 +94,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
-                '${cartItems.where((item) => item.isChecked).length}',
+                '${produkList.where((item) => item.isChecked).length}',
                 style: GoogleFonts.poppins(
                   fontSize: 13,
                   color: Colors.white,
@@ -122,10 +137,10 @@ class KeranjangPage01 extends State<KeranjangPage02> {
               child: Row(
                 children: [
                   Checkbox(
-                    value: cartItems.every((item) => item.isChecked),
+                    value: produkList.every((item) => item.isChecked),
                     onChanged: (value) {
                       setState(() {
-                        cartItems.forEach((item) {
+                        produkList.forEach((item) {
                           item.isChecked = value!;
                         });
                       });
@@ -154,148 +169,19 @@ class KeranjangPage01 extends State<KeranjangPage02> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: cartItems.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Card.filled(
-                    shadowColor: Color(0x499c9c9c),
-                    elevation: 5,
-                    color: Colors.white,
-                    margin:
-                        EdgeInsets.only(right: 10, left: 10, bottom: 5, top: 5),
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(children: [
-                            Checkbox(
-                              value: cartItems[index].isChecked,
-                              onChanged: (value) {
-                                setState(() {
-                                  cartItems[index].isChecked = value!;
-                                });
-                              },
-                              visualDensity: VisualDensity(
-                                horizontal: -4.0,
-                                vertical: -4.0,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                side: BorderSide.none,
-                              ),
-                              activeColor:
-                                  _isEditing ? Colors.red : Color(0xFF49A013),
-                              checkColor: Colors.white,
-                            ),
-                            Container(
-                              width: 60,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: DecorationImage(
-                                  image: AssetImage("assets/esteh.png"),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Es Teh',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14),
-                                ),
-                                Text(
-                                  'Rasa Taro',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400, fontSize: 9),
-                                ),
-                                Text(
-                                  'Rp.8000',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ]),
-                          Row(
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.do_not_disturb_on_outlined),
-                                iconSize: 22,
-                                color: Color(0xFF49A013),
-                                onPressed: () {
-                                  if (_nol > 0) {
-                                    setState(() {
-                                      _nol--;
-                                      _controller.text = '$_nol';
-                                      _updateTotalPrice();
-                                    });
-                                  }
-                                },
-                              ),
-                              IntrinsicWidth(
-                                // Ubah lebar TextField sesuai kebutuhan Anda
-                                child: TextField(
-                                  autofocus: false,
-                                  cursorColor: Color(0xff49A013),
+  itemCount: produkList.length,
+  itemBuilder: (BuildContext context, int index) {
+    return ListTile(
+      title: Text(' ${index + 1}'), // Sesuaikan dengan data produk Anda
+      // Tambahkan widget lain sesuai dengan data produk Anda
+    );
+  },
+)
 
-                                  controller: _controller,
-                                  textAlign: TextAlign.center,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly
-                                  ],
-                                  onChanged: (value) {
-                                    if (int.tryParse(value) != null) {
-                                      _updateTotalPrice();
-                                    }
-                                  },
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 13,
-                                  ),
-                                  textInputAction: TextInputAction.next,
-                                  textCapitalization: TextCapitalization.none,
-
-                                  enabled:
-                                      !_MaksimalReached, // Nonaktifkan TextField jika batas maksimum tercapai
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.zero,
-                                    border: InputBorder.none,
-                                  ),
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.add_circle_outline),
-                                iconSize: 22,
-                                color: Color(0xFF49A013),
-                                onPressed: () {
-                                  if (!_MaksimalReached) {
-                                    setState(() {
-                                      _nol++;
-                                      _controller.text = '$_nol';
-                                      _updateTotalPrice();
-                                    });
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
             ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: _isEditing
+                  );
+                   ),
+                        bottomNavigationBar: _isEditing
           ? Container(
               decoration: BoxDecoration(boxShadow: [
                 BoxShadow(

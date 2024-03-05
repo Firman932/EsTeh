@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+
+final DateTime timestamp = DateTime.now();
 
 class NotifDel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    String formattedDate =
+        DateFormat.yMMMd().format(timestamp); // Format tanggal
+    String formattedTime = DateFormat.Hm().format(timestamp); // Format waktu
     return Container(
       margin: EdgeInsets.all(10),
       width: double.infinity,
@@ -56,7 +62,7 @@ class NotifDel extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '31-07-2024   19.59 WIB',
+                        '$formattedDate   $formattedTime',
                         style: GoogleFonts.poppins(
                           fontSize: 10,
                           fontWeight: FontWeight.w400,

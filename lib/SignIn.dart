@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -156,9 +157,14 @@ class _SignScreenState extends State<SignScreen> {
                               // Check if user is authenticated successfully
                               if (userCredential.user != null) {
                                 // Insert user to Firebase
+                                DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(userCredential.user!.uid)
+                                .get();
 
+                                String role = userSnapshot['role'];
                                 // Check if the user is an admin or a regular user
-                                if (enteredEmail == 'gembes4565@gmail.com') {
+                                if (role == 'admin') {
                                   // Navigate to admin dashboard
                                   Navigator.push(
                                     context,

@@ -174,28 +174,17 @@ class _RegisterState extends State<Register> {
 
                               // Check apakah pembuatan akun berhasil
                               if (userCredential.user != null) {
+                                String uid = userCredential.user!.uid;
                                 insertUserToFirebase(
-                                    enteredEmail, enteredUsername);
+                                    enteredEmail, enteredUsername, uid);
                                 // Jika berhasil, lakukan sesuatu (misalnya, navigasi ke halaman beranda)
                                 // Di sini Anda juga dapat menambahkan logika untuk menyimpan informasi pengguna ke database Firestore
-
-                                // Jika email adalah akun admin, arahkan ke dashboard admin
-                                if (enteredEmail == 'gembes4565@gmail.com') {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Dashboard(),
-                                    ),
-                                  );
-                                } else {
-                                  // Jika bukan akun admin, arahkan ke halaman beranda pengguna
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => MenuUser(),
                                     ),
                                   );
-                                }
                               } else {
                                 // Jika gagal, tampilkan pesan kesalahan
                                 showDialog(
@@ -289,15 +278,16 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  void insertUserToFirebase(String email, String username) {
+  void insertUserToFirebase(String email, String username, String uid) {
     // Implementasi penyimpanan pengguna ke Firebase
     // Anda dapat menggunakan Firestore atau Realtime Database, tergantung pada preferensi Anda
     // Di sini, saya akan memberikan contoh menggunakan Firestore
 
     FirebaseFirestore.instance
         .collection('users')
-        .add(
-            {'email': email, 'username': username}) // Add username to Firestore
+        .doc(uid)
+        .set(
+            {'email': email, 'username': username, 'role': 'user','user_id': uid}) // Add username to Firestore
         .then((value) => print("User added to Firebase"))
         .catchError((error) => print("Failed to add user: $error"));
   }

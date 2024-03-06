@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
@@ -14,38 +15,56 @@ class Keranjang extends StatefulWidget {
 }
 
 class _KeranjangState extends State<Keranjang> {
-  TextEditingController _controller = TextEditingController();
-  int _nol = 0; // Angka awal dan nilai awal uang
-  int _pricePerUnit = 8000; // Harga per unit
-  bool _isMaxReached = false; // Penanda jika nilai maksimum telah tercapai
 
-  @override
-  void initState() {
-    super.initState();
-    _controller.text = '$_nol'; // Set nilai awal teks
+void tambahkanKeKeranjang() async {
+  // Ambil informasi produk
+  String namaProduk = widget.produkData["nama_produk"];
+  String gambarProduk = widget.produkData["gambar_produk"];
+  String variasiRasa = widget.produkData["variasi_rasa"];
+  int hargaProduk = widget.produkData["harga_produk"];
+  int jumlah = 1; // Jumlah awal produk dalam keranjang
+
+  // Dapatkan user ID dari pengguna yang sedang diotentikasi
+  String? userID;
+  
+  // Mendapatkan informasi pengguna yang sedang diotentikasi
+  User? user = FirebaseAuth.instance.currentUser;
+
+  if (user != null) {
+    userID = user.uid;
+  } else {
+    // Handle case where the user is not authenticated
+    print('User not authenticated');
+    return;
   }
 
-  void _updateTotalPrice() {
-    setState(() {
-      _nol = int.tryParse(_controller.text) ?? 0;
-      if (_nol > 100) {
-        _nol = 100;
-        _controller.text = '$_nol';
-        _isMaxReached = true;
-      } else {
-        _isMaxReached = false;
+  // Update cart di dalam dokumen pengguna
+  await FirebaseFirestore.instance.collection('users').doc(userID).update({
+    'cart': FieldValue.arrayUnion([
+      {
+        'product_id': widget.produkData.id,// Gunakan ID dokumen produk sebagai product_id
+        'jumlah': jumlah
       }
-    });
-  }
+    ])
+  }).then((value) {
+    print('Produk ditambahkan ke keranjang');
+    Navigator.pop(context); // Kembali ke halaman sebelumnya setelah menambahkan ke keranjang
+  }).catchError((error) {
+    print('Gagal menambahkan produk ke keranjang: $error');
+    // Handle error, misalnya, menampilkan pesan kesalahan kepada pengguna
+  });
+}
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Beli Menu",
-            style:
-                GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w500)),
+        title: Text(
+          "Beli Menu",
+          style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w500),
+        ),
         forceMaterialTransparency: true,
         leading: IconButton(
           icon: Icon(
@@ -129,130 +148,57 @@ class _KeranjangState extends State<Keranjang> {
                   margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                   width: 800,
                   height: 49,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment
-                        .spaceBetween, //ubah menjadi MainAxisAlignment.spaceBetween
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Rp ${_nol * _pricePerUnit >= 0 ? _nol * _pricePerUnit : 0}', // Ubah teks default menjadi 'Rp ${_nol * _pricePerUnit}'
-                        style: GoogleFonts.poppins(
-                          fontSize: 21,
-                          fontWeight: FontWeight.w600,
-                          height: 1.5,
-                          color: _isMaxReached
-                              ? Colors
-                                  .grey // Ubah warna teks saat batas maksimum tercapai
-                              : Color(0xff49a013),
-                        ),
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            icon: Image.asset(
-                              "assets/minus.png",
-                              width: 28,
-                            ),
-                            onPressed: () {
-                              if (_nol > 0) {
-                                setState(() {
-                                  _nol--;
-                                  _controller.text = '$_nol';
-                                  _updateTotalPrice();
-                                });
-                              }
-                            },
-                          ),
-                          IntrinsicWidth(
-                            // Ubah lebar TextField sesuai kebutuhan Anda
-                            child: TextField(
-                              autofocus: false,
-                              cursorColor: Color(0xff49A013),
-
-                              controller: _controller,
-                              textAlign: TextAlign.center,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
-                              onChanged: (value) {
-                                if (int.tryParse(value) != null) {
-                                  _updateTotalPrice();
-                                }
-                              },
-                              style: GoogleFonts.poppins(
-                                fontSize: 13,
-                              ),
-                              textInputAction: TextInputAction.next,
-                              textCapitalization: TextCapitalization.none,
-
-                              enabled:
-                                  !_isMaxReached, // Nonaktifkan TextField jika batas maksimum tercapai
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.zero,
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            icon: Image.asset(
-                              "assets/plus.png",
-                              width: 28,
-                            ),
-                            onPressed: () {
-                              if (!_isMaxReached) {
-                                setState(() {
-                                  _nol++;
-                                  _controller.text = '$_nol';
-                                  _updateTotalPrice();
-                                });
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
+                  child: Text(
+                    'Rp ${widget.produkData["harga_produk"]}',
+                    style: GoogleFonts.poppins(
+                      fontSize: 21,
+                      fontWeight: FontWeight.w600,
+                      height: 1.5,
+                      color: Color(0xff49a013),
+                    ),
                   ),
                 ),
-                InkWell(
-                  onTap: () {
-                    // Tambahkan logika untuk menambahkan produk ke keranjang di sini
-                    // Anda bisa menggunakan _jumlah dan widget.produkData untuk mendapatkan info produk
-                    // Misalnya, menambahkannya ke daftar belanja
-                    print(
-                        'Menambahkan ${widget.produkData["nama_produk"]} ke keranjang');
-                    Navigator.pop(context);
-                    // Tambahkan logika navigasi ke layar berikutnya di sini
-                  },
-                  child: Center(
-                    child: Container(
-                      margin: EdgeInsets.symmetric(
-                        // Menggunakan 10% lebar layar sebagai margin horizontal
-                        vertical: 30 +
-                            MediaQuery.of(context)
-                                .padding
-                                .vertical, // Menggunakan 10% tinggi layar sebagai margin vertikal
+                SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        // Tambahkan logika untuk membeli langsung
+                        print('Membeli langsung ${widget.produkData["nama_produk"]}');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(double.minPositive, 50), backgroundColor: Color(0xff4fb60e),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
-                      width: MediaQuery.of(context).size.width,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Color(0xff4fb60e),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Masukkan Keranjang',
-                          style: GoogleFonts.poppins(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500,
-                            height: 1.5,
-                            color: Color(0xffffffff),
-                          ),
+                      child: Text(
+                        'Beli Langsung',
+                        style: GoogleFonts.poppins(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xffffffff),
                         ),
                       ),
                     ),
-                  ),
+                    SizedBox(width: 5),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Tambahkan logika untuk memasukkan produk ke keranjang
+                        tambahkanKeKeranjang();
+                        print('Menambahkan ${widget.produkData["nama_produk"]} ke keranjang');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(double.minPositive, 50), backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      child: Icon(Icons.add_shopping_cart,
+                      color: Colors.white,)
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -262,3 +208,4 @@ class _KeranjangState extends State<Keranjang> {
     );
   }
 }
+

@@ -1,12 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/styles/dialog.dart';
 
 class CartItem {
   bool isChecked;
+  String productId;
+  String productImage;
+  String productName;
+  String productVariation;
+  int quantity;
+  int price;
 
-  CartItem({required this.isChecked});
+  CartItem({
+    required this.isChecked,
+    required this.productId,
+    required this.productImage,
+    required this.productName,
+    required this.productVariation,
+    required this.quantity,
+    required this.price,
+  });
 }
 
 class KeranjangPage02 extends StatefulWidget {
@@ -17,32 +33,151 @@ class KeranjangPage02 extends StatefulWidget {
 }
 
 class KeranjangPage01 extends State<KeranjangPage02> {
-  TextEditingController _controller = TextEditingController();
-  int _HargaUnit = 8000;
-  int _nol = 0;
-  bool _MaksimalReached = false;
   bool _isEditing = false;
   bool _isTotalDisabled = false;
-  List<CartItem> cartItems =
-      List.generate(100, (index) => CartItem(isChecked: false));
+  List<CartItem> cartItems = [];
 
   @override
   void initState() {
     super.initState();
-    _controller.text = '$_nol';
+    _loadCartItems();
   }
 
-  void _updateTotalPrice() {
-    setState(() {
-      _nol = int.tryParse(_controller.text) ?? 0;
-      if (_nol > 99) {
-        _nol = 100;
-        _controller.text = '$_nol';
-        _MaksimalReached = true;
-      } else {
-        _MaksimalReached = false;
+  void _loadCartItems() async {
+    String? userID;
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      userID = user.uid;
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userID)
+          .get();
+
+      List<CartItem> items = [];
+      List<dynamic> cart = userDoc['cart'];
+
+      for (var item in cart) {
+        DocumentSnapshot productDoc = await FirebaseFirestore.instance
+            .collection('produk')
+            .doc(item['product_id'])
+            .get();
+
+        items.add(CartItem(
+          productId: item['product_id'],
+          productName: productDoc['nama_produk'],
+          productVariation: productDoc['variasi_rasa'],
+          quantity: item['jumlah'],
+          price: productDoc['harga_produk'],
+          isChecked: false,
+          productImage: productDoc['gambar_produk'],
+        ));
       }
-    });
+
+      setState(() {
+        cartItems = items;
+        if (!_isEditing) {
+          for (var item in cartItems) {
+            item.isChecked = true;
+          }
+        }
+      });
+    }
+  }
+
+  void _updateTotalPrice() async {
+  // Calculate total price based on selected quantities
+  int total = 0;
+
+  // List untuk menyimpan produk yang perlu dihapus
+  List<String> productsToDelete = [];
+
+  for (var item in cartItems) {
+    if (item.isChecked) {
+      total += item.quantity * item.price;
+
+      // Periksa apakah jumlah produk menjadi 0 dan tambahkan ke list delete
+      if (item.quantity == 0) {
+        bool deleteConfirmed = await _showDeleteConfirmationDialog(item);
+        if (deleteConfirmed) {
+          productsToDelete.add(item.productId);
+        } else {
+          // Jika pengguna menolak hapus, set jumlah kembali ke 1
+          item.quantity = 1;
+        }
+      }
+    }
+  }
+
+  // Hapus produk dari Firestore
+  await _deleteProductsFromFirestore(productsToDelete);
+
+  // Setelah semua pekerjaan asinkron selesai, update state
+  setState(() {
+    _isTotalDisabled = total <= 0;
+  });
+}
+
+  Future<bool> _showDeleteConfirmationDialog(CartItem cartItem) async {
+    bool deleteConfirmed = false;
+
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Konfirmasi Hapus'),
+        content: Text('Apakah Anda yakin ingin menghapus produk ini?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              // Set deleteConfirmed menjadi true dan tutup dialog
+              deleteConfirmed = true;
+              Navigator.pop(context);
+            },
+            child: Text('Ya'),
+          ),
+          TextButton(
+            onPressed: () {
+              // Set deleteConfirmed menjadi false dan tutup dialog
+              deleteConfirmed = false;
+              Navigator.pop(context);
+            },
+            child: Text('Tidak'),
+          ),
+        ],
+      ),
+    );
+
+    return deleteConfirmed;
+  }
+
+  Future<void> _deleteProductsFromFirestore(List<String> productIds) async {
+    // Dapatkan user ID dari pengguna yang sedang diotentikasi
+    String? userID;
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      userID = user.uid;
+
+      // Hapus produk dari koleksi cart pada dokumen pengguna
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userID)
+          .get();
+
+      List<dynamic> updatedCart = List.from(userDoc['cart']);
+
+      // Hapus item dengan product_id yang ada di dalam productIds
+      updatedCart
+          .removeWhere((item) => productIds.contains(item['product_id']));
+
+      // Update data di Firestore
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userID)
+          .update({'cart': updatedCart});
+
+      _loadCartItems();
+    }
   }
 
   @override
@@ -93,7 +228,6 @@ class KeranjangPage01 extends State<KeranjangPage02> {
             onTap: () {
               setState(() {
                 _isEditing = !_isEditing;
-                _isTotalDisabled = _isEditing;
               });
             },
             child: Container(
@@ -128,6 +262,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                         cartItems.forEach((item) {
                           item.isChecked = value!;
                         });
+                        _updateTotalPrice();
                       });
                     },
                     visualDensity: VisualDensity(
@@ -156,7 +291,8 @@ class KeranjangPage01 extends State<KeranjangPage02> {
               child: ListView.builder(
                 itemCount: cartItems.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Card.filled(
+                  CartItem cartItem = cartItems[index];
+                  return Card(
                     shadowColor: Color(0x499c9c9c),
                     elevation: 5,
                     color: Colors.white,
@@ -167,61 +303,65 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(children: [
-                            Checkbox(
-                              value: cartItems[index].isChecked,
-                              onChanged: (value) {
-                                setState(() {
-                                  cartItems[index].isChecked = value!;
-                                });
-                              },
-                              visualDensity: VisualDensity(
-                                horizontal: -4.0,
-                                vertical: -4.0,
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: cartItems[index].isChecked,
+                                onChanged: (value) {
+                                  setState(() {
+                                    cartItems[index].isChecked = value!;
+                                    _updateTotalPrice();
+                                  });
+                                },
+                                visualDensity: VisualDensity(
+                                  horizontal: -4.0,
+                                  vertical: -4.0,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  side: BorderSide.none,
+                                ),
+                                activeColor:
+                                    _isEditing ? Colors.red : Color(0xFF49A013),
+                                checkColor: Colors.white,
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                side: BorderSide.none,
-                              ),
-                              activeColor:
-                                  _isEditing ? Colors.red : Color(0xFF49A013),
-                              checkColor: Colors.white,
-                            ),
-                            Container(
-                              width: 60,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: DecorationImage(
-                                  image: AssetImage("assets/esteh.png"),
-                                  fit: BoxFit.cover,
+                              Container(
+                                width: 60,
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  image: DecorationImage(
+                                    image: NetworkImage(cartItem.productImage),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(width: 8),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Es Teh',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14),
-                                ),
-                                Text(
-                                  'Rasa Taro',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400, fontSize: 9),
-                                ),
-                                Text(
-                                  'Rp.8000',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ]),
+                              SizedBox(width: 8),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    cartItem.productName,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  Text(
+                                    cartItem.productVariation,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 9),
+                                  ),
+                                  Text(
+                                    'Rp ${cartItem.price}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                           Row(
                             children: [
                               IconButton(
@@ -229,43 +369,21 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                                 iconSize: 22,
                                 color: Color(0xFF49A013),
                                 onPressed: () {
-                                  if (_nol > 0) {
+                                  if (cartItems[index].quantity > 0) {
                                     setState(() {
-                                      _nol--;
-                                      _controller.text = '$_nol';
+                                      cartItems[index].quantity--;
                                       _updateTotalPrice();
                                     });
                                   }
                                 },
                               ),
                               IntrinsicWidth(
-                                // Ubah lebar TextField sesuai kebutuhan Anda
-                                child: TextField(
-                                  autofocus: false,
-                                  cursorColor: Color(0xff49A013),
-
-                                  controller: _controller,
-                                  textAlign: TextAlign.center,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly
-                                  ],
-                                  onChanged: (value) {
-                                    if (int.tryParse(value) != null) {
-                                      _updateTotalPrice();
-                                    }
-                                  },
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 13,
-                                  ),
-                                  textInputAction: TextInputAction.next,
-                                  textCapitalization: TextCapitalization.none,
-
-                                  enabled:
-                                      !_MaksimalReached, // Nonaktifkan TextField jika batas maksimum tercapai
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.zero,
-                                    border: InputBorder.none,
+                                child: Text(
+                                  '${cartItems[index].quantity}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xFF49A013),
                                   ),
                                 ),
                               ),
@@ -274,13 +392,10 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                                 iconSize: 22,
                                 color: Color(0xFF49A013),
                                 onPressed: () {
-                                  if (!_MaksimalReached) {
-                                    setState(() {
-                                      _nol++;
-                                      _controller.text = '$_nol';
-                                      _updateTotalPrice();
-                                    });
-                                  }
+                                  setState(() {
+                                    cartItems[index].quantity++;
+                                    _updateTotalPrice();
+                                  });
                                 },
                               ),
                             ],
@@ -320,7 +435,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Total : Rp ${_nol * _HargaUnit >= 0 ? _nol * _HargaUnit : 0}',
+                        'Total : Rp ${_isTotalDisabled ? 0 : _calculateTotal()}',
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
@@ -393,7 +508,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                       children: [
                         Row(children: [
                           Text(
-                            'Total : RP ${_nol * _HargaUnit}',
+                            'Total : RP ${_isTotalDisabled ? 0 : _calculateTotal()}',
                             style: GoogleFonts.poppins(
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
@@ -439,5 +554,15 @@ class KeranjangPage01 extends State<KeranjangPage02> {
               ),
             ),
     );
+  }
+
+  int _calculateTotal() {
+    int total = 0;
+    for (var item in cartItems) {
+      if (item.isChecked) {
+        total += item.quantity * item.price;
+      }
+    }
+    return total;
   }
 }

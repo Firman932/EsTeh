@@ -35,6 +35,7 @@ class _RegisterInputState extends State<RegisterInput> {
       controller: widget.textController,
       style: GoogleFonts.poppins(fontSize: 12),
       decoration: InputDecoration(
+          counterText: '',
           contentPadding: EdgeInsets.zero,
           hintText: widget.hintText,
           hintStyle: GoogleFonts.poppins(fontSize: 12),
@@ -58,6 +59,7 @@ class _RegisterInputState extends State<RegisterInput> {
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(width: 1, color: Colors.grey))),
+      maxLength: 50,
     );
   }
 }

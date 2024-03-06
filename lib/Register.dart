@@ -8,7 +8,6 @@ import 'package:lji/FOR%20USER/BagianDashboard.dart';
 import 'package:lji/styles/color.dart';
 import 'package:lji/DataBasePHPMYSQL/passwordtextfield.dart';
 import 'package:lji/DataBasePHPMYSQL/TextFieldLogin.dart';
-import 'package:lji/Register.dart';
 import 'package:lji/SignIn.dart';
 
 class Register extends StatefulWidget {
@@ -23,6 +22,7 @@ class _RegisterState extends State<Register> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final usernameController = TextEditingController();
 
   bool isPasswordVisible = false;
 
@@ -106,6 +106,20 @@ class _RegisterState extends State<Register> {
                           ),
                         ),
                         LoginInput(
+                          hintText: "Username",
+                          textController: usernameController,
+                          leftIcon: Icons.person,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Please enter a username";
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        LoginInput(
                           hintText: "Email",
                           textController: emailController,
                           leftIcon: Icons.email,
@@ -143,6 +157,8 @@ class _RegisterState extends State<Register> {
                         ElevatedButton(
                           onPressed: () async {
                             try {
+                              String enteredUsername =
+                                  usernameController.text.trim();
                               String enteredEmail = emailController.text.trim();
                               String enteredPassword =
                                   passwordController.text.trim();
@@ -156,6 +172,8 @@ class _RegisterState extends State<Register> {
 
                               // Check apakah pembuatan akun berhasil
                               if (userCredential.user != null) {
+                                insertUserToFirebase(
+                                    enteredEmail, enteredUsername);
                                 // Jika berhasil, lakukan sesuatu (misalnya, navigasi ke halaman beranda)
                                 // Di sini Anda juga dapat menambahkan logika untuk menyimpan informasi pengguna ke database Firestore
 
@@ -268,5 +286,18 @@ class _RegisterState extends State<Register> {
         ),
       ),
     );
+  }
+
+  void insertUserToFirebase(String email, String username) {
+    // Implementasi penyimpanan pengguna ke Firebase
+    // Anda dapat menggunakan Firestore atau Realtime Database, tergantung pada preferensi Anda
+    // Di sini, saya akan memberikan contoh menggunakan Firestore
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .add(
+            {'email': email, 'username': username}) // Add username to Firestore
+        .then((value) => print("User added to Firebase"))
+        .catchError((error) => print("Failed to add user: $error"));
   }
 }

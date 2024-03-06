@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:lji/Admin/Dashboard/dashboard.dart';
 import 'package:lji/FOR%20USER/BagianDashboard.dart';
 import 'package:lji/styles/color.dart';
@@ -156,7 +156,6 @@ class _SignScreenState extends State<SignScreen> {
                               // Check if user is authenticated successfully
                               if (userCredential.user != null) {
                                 // Insert user to Firebase
-                                insertUserToFirebase(enteredEmail);
 
                                 // Check if the user is an admin or a regular user
                                 if (enteredEmail == 'gembes4565@gmail.com') {
@@ -268,17 +267,5 @@ class _SignScreenState extends State<SignScreen> {
         ),
       ),
     );
-  }
-
-  void insertUserToFirebase(String email) {
-    // Implementasi penyimpanan pengguna ke Firebase
-    // Anda dapat menggunakan Firestore atau Realtime Database, tergantung pada preferensi Anda
-    // Di sini, saya akan memberikan contoh menggunakan Firestore
-
-    FirebaseFirestore.instance
-        .collection('users')
-        .add({'email': email})
-        .then((value) => print("User added to Firebase"))
-        .catchError((error) => print("Failed to add user: $error"));
   }
 }

@@ -32,6 +32,7 @@ class LoginInputState extends State<LoginInput> {
       obscureText: widget.isObsecure,
       controller: widget.textController,
       decoration: InputDecoration(
+        counterText: '',
         hintText: widget.hintText,
         contentPadding: EdgeInsets.zero,
         hintStyle: GoogleFonts.poppins(fontSize: 12),
@@ -48,6 +49,7 @@ class LoginInputState extends State<LoginInput> {
           borderSide: BorderSide(width: 1, color: Colors.grey),
         ),
       ),
+      maxLength: 50,
     );
   }
 }

@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:lji/Admin/Dashboard/dashboard.dart';
-import 'package:lji/DataBasePHPMYSQL/TextFieldLogin.dart';
-import 'package:lji/FOR%20USER/BagianDashboard.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lji/DataBasePHPMYSQL/passwordtextfield.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lji/Admin/Dashboard/dashboard.dart';
+import 'package:lji/FOR%20USER/BagianDashboard.dart';
 import 'package:lji/styles/color.dart';
+import 'package:lji/DataBasePHPMYSQL/passwordtextfield.dart';
+import 'package:lji/DataBasePHPMYSQL/TextFieldLogin.dart';
+import 'package:lji/Register.dart';
 
 class SignScreen extends StatefulWidget {
   const SignScreen({Key? key}) : super(key: key);
 
   @override
-  _SIGNINState createState() => _SIGNINState();
+  _SignScreenState createState() => _SignScreenState();
 }
 
-class _SIGNINState extends State<SignScreen> {
+class _SignScreenState extends State<SignScreen> {
+  final _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   bool isPasswordVisible = false;
 
@@ -138,40 +138,78 @@ class _SIGNINState extends State<SignScreen> {
                             return null;
                           },
                         ),
-                        SizedBox(
-                          height: 40,
-                        ),
+                        SizedBox(height: 40),
                         ElevatedButton(
-                          onPressed: () {
-                            String adminEmail =
-                                'admin'; // Ganti dengan email admin yang sesuai
-                            String enteredEmail = emailController.text.trim();
+                          onPressed: () async {
+                            try {
+                              String enteredEmail = emailController.text.trim();
+                              String enteredPassword =
+                                  passwordController.text.trim();
 
-                            if (enteredEmail == adminEmail) {
-                              // Email adalah email admin, arahkan ke dashboard admin
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Dashboard()),
+                              // Sign in user with email and password
+                              UserCredential userCredential =
+                                  await _auth.signInWithEmailAndPassword(
+                                email: enteredEmail,
+                                password: enteredPassword,
                               );
-                            } else {
-                              // Email bukan email admin, arahkan ke dashboard user
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MenuUser()),
-                              );
+
+                              // Check if user is authenticated successfully
+                              if (userCredential.user != null) {
+                                // Insert user to Firebase
+                                insertUserToFirebase(enteredEmail);
+
+                                // Check if the user is an admin or a regular user
+                                if (enteredEmail == 'gembes4565@gmail.com') {
+                                  // Navigate to admin dashboard
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Dashboard(),
+                                    ),
+                                  );
+                                } else {
+                                  // Navigate to regular user menu
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MenuUser(),
+                                    ),
+                                  );
+                                }
+                              } else {
+                                // Show AlertDialog for login failure
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Login Failed'),
+                                      content: Text(
+                                          'Email or password is incorrect. Please try again or register if you don\'t have an account.'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('OK'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            } catch (e) {
+                              print('Error: $e');
+                              // Handle error, such as displaying an error message to the user
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                              minimumSize: Size(
-                                screenWidth * .7,
-                                40,
-                              ),
-                              backgroundColor: greenPrimary,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10))),
+                            minimumSize: Size(screenWidth * .7, 40),
+                            backgroundColor: greenPrimary,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
                           child: Text(
                             'Login',
                             textAlign: TextAlign.center,
@@ -183,18 +221,64 @@ class _SIGNINState extends State<SignScreen> {
                             ),
                           ),
                         ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Belum memiliki akun ?',
+                              style: GoogleFonts.poppins(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Register()));
+                              },
+                              // Navigates to the registration screen
+                              // You can implement your registration screen here
+
+                              child: Text(
+                                'Daftar',
+                                style: GoogleFonts.poppins(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 40,
-                )
+                SizedBox(height: 40),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  void insertUserToFirebase(String email) {
+    // Implementasi penyimpanan pengguna ke Firebase
+    // Anda dapat menggunakan Firestore atau Realtime Database, tergantung pada preferensi Anda
+    // Di sini, saya akan memberikan contoh menggunakan Firestore
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .add({'email': email})
+        .then((value) => print("User added to Firebase"))
+        .catchError((error) => print("Failed to add user: $error"));
   }
 }

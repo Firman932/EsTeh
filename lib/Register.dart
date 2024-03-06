@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,7 +38,9 @@ class _RegisterState extends State<Register> {
           width: screenWidth,
           height: MediaQuery.of(context).size.height,
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 30),
+            padding: EdgeInsets.symmetric(
+              horizontal: 30,
+            ),
             width: screenWidth,
             height: 100,
             decoration: BoxDecoration(
@@ -48,14 +52,12 @@ class _RegisterState extends State<Register> {
               ),
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 30),
                 Container(
-                  padding: EdgeInsets.fromLTRB(22, 0, 22, 0),
+                  padding: EdgeInsets.fromLTRB(22, 20, 22, 45),
                   width: screenWidth,
-                  height: 140 + MediaQuery.of(context).padding.horizontal,
+                  height: 200 + MediaQuery.of(context).padding.horizontal,
                   child: Image.asset(
                     "assets/Logoes.png",
                     fit: BoxFit.contain,
@@ -79,7 +81,7 @@ class _RegisterState extends State<Register> {
                   child: Form(
                     key: _formKey,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
                           margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
@@ -250,7 +252,7 @@ class _RegisterState extends State<Register> {
                               style: GoogleFonts.poppins(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w400,
-                                  fontSize: 12),
+                                  fontSize: 11),
                             ),
                             SizedBox(
                               width: 5,
@@ -270,7 +272,7 @@ class _RegisterState extends State<Register> {
                                 style: GoogleFonts.poppins(
                                     color: Colors.blue,
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 12),
+                                    fontSize: 11),
                               ),
                             ),
                           ],
@@ -279,7 +281,6 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                 ),
-                SizedBox(height: 40),
               ],
             ),
           ),

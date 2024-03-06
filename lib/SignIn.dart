@@ -231,7 +231,7 @@ class _SignScreenState extends State<SignScreen> {
                               style: GoogleFonts.poppins(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w400,
-                                  fontSize: 12),
+                                  fontSize: 11),
                             ),
                             SizedBox(
                               width: 5,
@@ -251,7 +251,7 @@ class _SignScreenState extends State<SignScreen> {
                                 style: GoogleFonts.poppins(
                                     color: Colors.blue,
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 12),
+                                    fontSize: 11),
                               ),
                             ),
                           ],

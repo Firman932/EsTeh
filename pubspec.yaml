@@ -31,6 +31,16 @@ dev_dependencies:
     sdk: flutter    
   flutter_lints: ^3.0.1
   google_fonts: ^6.1.0
+  flutter_launcher_icons: "^0.13.1"
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/1024.png"
+  adaptive_icon_background: "#49A013"
+  min_sdk_android: 21 
+  
+
   
 
 flutter:
@@ -59,6 +69,8 @@ flutter:
     - assets/esteh.png
     - assets/histori.png
     - assets/Warning.png
+    - assets/1024.png
+    # - assets/512.png
     
 
   uses-material-design: true

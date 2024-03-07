@@ -1,6 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Create/create_produk.dart';
 import 'package:lji/Admin/Stok/stok_produk.dart';
@@ -8,47 +7,52 @@ import 'package:lji/Admin/Update/update.dart';
 
 import '../../styles/dialog.dart';
 
-class ListProduk extends StatelessWidget {
+class ListProduk extends StatefulWidget {
   final bool isChecklistMode;
   final bool isChecked;
   final VoidCallback onToggleCheck;
   final DocumentSnapshot produkData;
 
-  const ListProduk(
-      {Key? key,
-      required this.isChecklistMode,
-      required this.isChecked,
-      required this.onToggleCheck,
-      required this.produkData})
-      : super(key: key);
+  const ListProduk({
+    Key? key,
+    required this.isChecklistMode,
+    required this.isChecked,
+    required this.onToggleCheck,
+    required this.produkData,
+  }) : super(key: key);
+
+  @override
+  _ListProdukState createState() => _ListProdukState();
+}
+
+class _ListProdukState extends State<ListProduk> {
+  bool _deleteSuccess = false;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (isChecklistMode) {
-          onToggleCheck();
+        if (widget.isChecklistMode) {
+          widget.onToggleCheck();
         } else {
-          // Navigate to another page or perform an action
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => UpdateProduk(
-                namaProduk: produkData['nama_produk'],
-                hargaProduk: produkData['harga_produk'].toString(),
-                stokProduk: produkData['stok_produk'].toString(),
-                gambarUrl: produkData['gambar_produk'],
-                varianProduk: produkData['variasi_rasa'],
-                documentId: produkData.id,
-                kategoriProduk: produkData['kategori_produk'],
+                namaProduk: widget.produkData['nama_produk'],
+                hargaProduk: widget.produkData['harga_produk'].toString(),
+                stokProduk: widget.produkData['stok_produk'].toString(),
+                gambarUrl: widget.produkData['gambar_produk'],
+                varianProduk: widget.produkData['variasi_rasa'],
+                documentId: widget.produkData.id,
+                kategoriProduk: widget.produkData['kategori_produk'],
               ),
             ),
           );
         }
       },
       onLongPress: () {
-        if (!isChecklistMode) {
-          // Aktifkan mode checklist di StokProduk
+        if (!widget.isChecklistMode) {
           StokProduk.of(context).activateChecklistMode();
         }
       },
@@ -81,7 +85,7 @@ class ListProduk extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       image: DecorationImage(
-                        image: NetworkImage(produkData['gambar_produk']),
+                        image: NetworkImage(widget.produkData['gambar_produk']),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -108,15 +112,15 @@ class ListProduk extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(produkData['nama_produk'],
+            Text(widget.produkData['nama_produk'],
                 style: GoogleFonts.poppins(
                     fontSize: 16, fontWeight: FontWeight.w600)),
-            Text(produkData['variasi_rasa'],
+            Text(widget.produkData['variasi_rasa'],
                 style: GoogleFonts.poppins(
                     fontSize: 11, fontWeight: FontWeight.w500)),
           ],
         ),
-        Text("Rp ${produkData['harga_produk']}",
+        Text("Rp ${widget.produkData['harga_produk']}",
             style:
                 GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 13)),
       ],
@@ -131,25 +135,25 @@ class ListProduk extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.topLeft,
-            child: Text("Stok: ${produkData['stok_produk']}",
+            child: Text("Stok: ${widget.produkData['stok_produk']}",
                 style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w500, fontSize: 12)),
           ),
-          if (isChecklistMode)
+          if (widget.isChecklistMode)
             Checkbox(
               visualDensity: VisualDensity.standard,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5)),
               activeColor: Color.fromRGBO(73, 160, 19, 1),
-              value: isChecked,
+              value: widget.isChecked,
               onChanged: (value) {
-                onToggleCheck();
+                widget.onToggleCheck();
               },
             ),
           SizedBox(height: 15),
-          if (!isChecklistMode)
-            _deleteActionButton(
-                Icons.delete_outline_outlined, Colors.red, context,produkData.id),
+          if (!widget.isChecklistMode)
+            _deleteActionButton(Icons.delete_outline_outlined, Colors.red,
+                context, widget.produkData.id),
           SizedBox(
             height: 10,
           )
@@ -158,7 +162,8 @@ class ListProduk extends StatelessWidget {
     );
   }
 
-  Widget _deleteActionButton(IconData icon, Color color, BuildContext context,String documentId) {
+  Widget _deleteActionButton(
+      IconData icon, Color color, BuildContext context, String documentId) {
     return Container(
       height: 30,
       width: 30,
@@ -167,8 +172,8 @@ class ListProduk extends StatelessWidget {
         color: color,
       ),
       child: IconButton(
-        onPressed: () {
-          showDialog(
+        onPressed: () async {
+          await showDialog(
             context: context,
             builder: (context) => DeleteDialog(
               title: 'Peringatan',
@@ -179,11 +184,23 @@ class ListProduk extends StatelessWidget {
               },
               buttonConfirm: 'Hapus',
               onButtonConfirm: () async {
+                final String documentId = widget.produkData.id;
+                await deleteProduct(documentId, context);
+                setState(() {
+                  _deleteSuccess = true;
+                });
                 Navigator.pop(context);
-                await deleteProduct(documentId);
               },
             ),
           );
+          if (_deleteSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Produk berhasil dihapus'),
+                duration: Duration(seconds: 3),
+              ),
+            );
+          }
         },
         icon: Icon(
           icon,
@@ -195,20 +212,26 @@ class ListProduk extends StatelessWidget {
     );
   }
 
-  Future<void> deleteProduct(String documentId) async {
+  Future<void> deleteProduct(String documentId, BuildContext context) async {
     try {
-      // Ambil referensi dokumen produk dari Firestore
       final CollectionReference produkCollection =
           FirebaseFirestore.instance.collection('produk');
 
-      // Hapus dokumen berdasarkan ID
       await produkCollection.doc(documentId).delete();
-
-      // Tampilkan pesan sukses atau lakukan tindakan lain
       print('Produk berhasil dihapus');
     } catch (error) {
-      // Tampilkan pesan atau lakukan penanganan kesalahan sesuai kebutuhan
       print('Error deleting product: $error');
+      showDialog(
+        context: context,
+        builder: (context) => WarningDialog(
+          title: "Error",
+          content: "Terjadi kesalahan saat menghapus produk",
+          buttonConfirm: "Ok",
+          onButtonConfirm: () {
+            Navigator.pop(context);
+          },
+        ),
+      );
     }
   }
 }

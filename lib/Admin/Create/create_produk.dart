@@ -182,6 +182,8 @@ class _TambahProdukState extends State<TambahProduk> {
                       controller: nameController,
                       style: text,
                       decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                         hintText: "Nama Produk",
                         border: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -230,7 +232,7 @@ class _TambahProdukState extends State<TambahProduk> {
                     ),
                     CustomDropdownField(
                       labelText: "Kategori",
-                      dropdownValues: ['Makanan', 'Minuman'],
+                      dropdownValues: ['Minuman', 'Makanan'],
                       hintText: "Minuman",
                       controller: categoryController,
                       validator: (value) {
@@ -320,7 +322,7 @@ class _TambahProdukState extends State<TambahProduk> {
                           borderRadius:
                               BorderRadius.circular(15), // Bentuk tepi tombol
                         ),
-                        minimumSize: Size(screenWidth, 70),
+                        minimumSize: Size(screenWidth, 60),
                       ),
                     )
                   ],

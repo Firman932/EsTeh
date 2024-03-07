@@ -50,6 +50,7 @@ class CustomNumberField extends StatelessWidget {
           ], // hanya angka
           keyboardType: TextInputType.number, // tipe keyboard angka
           decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
             hintText: hintText,
             border: OutlineInputBorder(
               borderSide: const BorderSide(
@@ -119,8 +120,8 @@ class CustomTextField extends StatelessWidget {
           style: text,
           controller: controller,
           validator: validator, // hanya angka
-          keyboardType: TextInputType.number, // tipe keyboard angka
           decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
             hintText: hintText,
             border: OutlineInputBorder(
               borderSide: const BorderSide(
@@ -208,6 +209,7 @@ class CustomDropdownField extends StatelessWidget {
             );
           }).toList(),
           decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
             hintText: hintText,
             border: OutlineInputBorder(
               borderSide: const BorderSide(

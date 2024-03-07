@@ -1,13 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Dashboard/analisis.dart';
-import 'package:lji/Admin/Dashboard/header.dart';
+import 'package:lji/Admin/History/history.dart';
+import 'package:lji/Admin/Notifikasi/notifikasi.dart';
 import 'package:lji/Admin/Dashboard/list_menu.dart';
 import 'package:lji/Admin/Stok/stok_produk.dart';
 import 'package:lji/filterUser.dart';
-// Sesuaikan dengan lokasi file Product.dart
-// Sesuaikan dengan lokasi file api_service.dart
+import 'package:lji/styles/bottomlogout.dart'; // Sesuaikan dengan lokasi file FilterUser.dart
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -23,8 +23,8 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   void initState() {
-    super
-        .initState(); // Panggil fungsi untuk mengambil data produk saat widget diinisialisasi
+    super.initState();
+    // Panggil fungsi untuk mengambil data produk saat widget diinisialisasi
     produkStream = FirebaseFirestore.instance.collection('produk').snapshots();
     produkStream.listen((QuerySnapshot querySnapshot) {
       setState(() {
@@ -33,16 +33,44 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
-  // Fungsi untuk mengambil data produk dari backend
+  void _showLogoutBottomSheet(BuildContext context) {
+    LogoutBottomSheet.show(context);
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(70),
-          child: Header(),
+        appBar: AppBar(
+          title: Text(
+            "Dashboard",
+            style:
+                GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w500),
+          ),
+          centerTitle: true,
+          leading: IconButton(
+              onPressed: () {
+                _showLogoutBottomSheet(context);
+              },
+              icon: Icon(
+                Icons.logout,
+                color: Colors.red,
+              )),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Notifikasi()));
+                },
+                icon: Icon(Icons.notifications)),
+            IconButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Riwayat()));
+                },
+                icon: Icon(Icons.history)),
+          ],
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -95,7 +123,6 @@ class _DashboardState extends State<Dashboard> {
                     });
                   },
                 ),
-                // Tampilkan data produk dalam daftar
                 StreamBuilder<QuerySnapshot>(
                   stream: produkStream,
                   builder: (context, snapshot) {
@@ -107,11 +134,10 @@ class _DashboardState extends State<Dashboard> {
                       return CircularProgressIndicator();
                     }
 
-                    // Extract product data from the snapshot
-
                     if (produkList.isEmpty) {
                       return Text('Tidak ada produk.');
                     }
+
                     produkList = snapshot.data!.docs
                         .where((produk) =>
                             produk['kategori_produk'] == selectedCategory)

@@ -9,6 +9,7 @@ class Riwayat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           forceMaterialTransparency: true,
@@ -163,14 +164,14 @@ class Riwayat extends StatelessWidget {
                             Row(
                               children: [
                                 Text(
-                                  "12-02-2024",
+                                  "12 Jan 2024",
                                   style: TextStyle(fontSize: 10),
                                 ),
                                 SizedBox(
                                   width: 10,
                                 ),
                                 Text(
-                                  "09:15 WIB",
+                                  "09:15",
                                   style: TextStyle(fontSize: 10),
                                 ),
                               ],

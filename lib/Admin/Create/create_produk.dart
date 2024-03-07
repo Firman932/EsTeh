@@ -98,6 +98,7 @@ class _TambahProdukState extends State<TambahProduk> {
         color: Color.fromARGB(255, 240, 240, 240));
     double screenWidth = MediaQuery.of(context).size.width;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
           appBar: AppBar(
             elevation: 0,

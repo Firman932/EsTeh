@@ -132,6 +132,7 @@ class _UpdateProdukState extends State<UpdateProduk> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           elevation: 0,

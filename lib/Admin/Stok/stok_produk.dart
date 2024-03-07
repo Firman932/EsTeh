@@ -223,11 +223,11 @@ class _StokProdukState extends State<StokProduk> {
     });
   }
 
-  void showPopupMenu() {
+  void showPopupMenu() {  
     showMenu(
       context: context,
       position: RelativeRect.fromLTRB(
-          0, 150, 200, 0), // Adjust the position as needed
+          100, 150, 200, 0), // Adjust the position as needed
       items: <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
           value: 'Banyak ke Sedikit',
@@ -248,7 +248,7 @@ class _StokProdukState extends State<StokProduk> {
   void handlePopupMenuSelection(String selectedValue) {
     setState(() {
       if (selectedValue == 'Banyak ke Sedikit') {
-        isAscendingOrder = true;
+        isAscendingOrder = false;
         produkList.sort((a, b) {
           print("banyak ke sedikit");
           int stokA = a['stok_produk'] as int;
@@ -256,7 +256,7 @@ class _StokProdukState extends State<StokProduk> {
           return stokA.compareTo(stokB);
         });
       } else if (selectedValue == 'Sedikit ke Banyak') {
-        isAscendingOrder = false;
+        isAscendingOrder = true;
         produkList.sort((a, b) {
           print("sedikitbanyak ke ");
           int stokA = a['stok_produk'] as int;
@@ -329,6 +329,7 @@ class _StokProdukState extends State<StokProduk> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
           bottomNavigationBar: isAnyItemChecked()
               ? BottomAppBar(

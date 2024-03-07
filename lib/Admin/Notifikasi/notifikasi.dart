@@ -15,6 +15,7 @@ class _NotifikasiState extends State<Notifikasi> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -53,47 +54,38 @@ class _NotifikasiState extends State<Notifikasi> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Icon(
-                                Icons.circle_notifications_rounded,
-                                color: Color.fromARGB(255, 73, 160, 19),
-                              ),
-                              SizedBox(
-                                width: 2,
-                              ),
-                              Text(
-                                "Dari Maulana Ilham Sudrajat",
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.poppins(
-                                    fontSize: 12, fontWeight: FontWeight.w600),
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                            ],
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Icon(
+                                  Icons.circle_notifications_rounded,
+                                  color: Color.fromARGB(255, 73, 160, 19),
+                                ),
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    "Dari Maulana Ilham Sudrajat",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                              ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                "12 Jan 2024",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "09:15",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              )
-                            ],
+                          Text(
+                            "12 Jan 2024",
+                            style: GoogleFonts.poppins(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ],
                       ),

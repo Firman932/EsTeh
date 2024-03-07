@@ -33,6 +33,7 @@ class ListMenu extends StatelessWidget {
       },
       child: Container(
         margin: EdgeInsets.only(top: 15),
+        padding: EdgeInsets.symmetric(vertical: 15),
         height: 116,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
@@ -82,42 +83,27 @@ class ListMenu extends StatelessWidget {
 
   Widget _buildTextInfo() {
     return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    produkData['nama_produk'],
-                    style: GoogleFonts.poppins(
-                        fontSize: 16, fontWeight: FontWeight.w600),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    produkData['variasi_rasa'],
-                    style: GoogleFonts.poppins(
-                        fontSize: 11, fontWeight: FontWeight.w500),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-            Text(
-              "Rp ${produkData['harga_produk']}",
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(produkData['nama_produk'],
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: GoogleFonts.poppins(
+                      fontSize: 16, fontWeight: FontWeight.w600)),
+              Text(produkData['variasi_rasa'],
+                  style: GoogleFonts.poppins(
+                      fontSize: 11, fontWeight: FontWeight.w500)),
+            ],
+          ),
+          Text("Rp ${produkData['harga_produk']}",
               style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500, fontSize: 13),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
+                  fontWeight: FontWeight.w500, fontSize: 13)),
+        ],
       ),
     );
   }

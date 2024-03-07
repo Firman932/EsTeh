@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Keranjang.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,64 +10,85 @@ class ListUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
-      height: 70,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x499c9c9c),
-            offset: Offset(0, 0),
-            blurRadius: 5,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          margin: EdgeInsets.only(bottom: 10),
+          padding: EdgeInsetsDirectional.all(5),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Color(0x499c9c9c),
+                offset: Offset(0, 0),
+                blurRadius: 5,
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                        image: NetworkImage(produkData['gambar_produk']),
-                        fit: BoxFit.cover,
+                Expanded(
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: NetworkImage(produkData['gambar_produk']),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
+                      _buildTextInfo(),
+                    ],
                   ),
                 ),
-                _buildTextInfo(),
+                _buildActions(context),
               ],
             ),
-            _buildActions(context),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
   Widget _buildTextInfo() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(produkData["nama_produk"],
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              produkData["nama_produk"],
               style:
-                  GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600)),
-          Text(produkData["variasi_rasa"],
+                  GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text(
+              produkData["variasi_rasa"],
               style:
-                  GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w500)),
-          Text("Rp ${produkData['harga_produk']}",
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 11)),
-        ],
+                  GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w500),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text(
+              "Rp ${produkData['harga_produk']}",
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -80,7 +102,9 @@ class ListUser extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Keranjang(produkData: produkData,),
+            builder: (context) => Keranjang(
+              produkData: produkData,
+            ),
           ),
         );
       },

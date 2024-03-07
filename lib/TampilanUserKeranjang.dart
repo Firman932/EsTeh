@@ -78,7 +78,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
         cartItems = items;
         if (!_isEditing) {
           for (var item in cartItems) {
-            item.isChecked = true;
+            item.isChecked = false;
           }
         }
       });

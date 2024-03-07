@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Register.dart';
@@ -6,6 +7,7 @@ import 'package:lji/login01.dart';
 
 class LogoutBottomSheet {
   static void show(BuildContext context) {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -53,12 +55,19 @@ class LogoutBottomSheet {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignScreen()),
-                      );
-                      // Navigate to the next page
+                    onPressed: () async {
+                      try {
+                        await _auth.signOut(); // Sign out the user
+                        Navigator.pop(context); // Pop the bottom sheet
+                        // Navigate to the sign-in page
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignScreen()),
+                        );
+                      } catch (e) {
+                        print("Error signing out: $e");
+                        // Handle sign-out errors
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor:

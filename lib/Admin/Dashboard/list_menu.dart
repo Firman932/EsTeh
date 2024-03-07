@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:lji/Admin/Update/update.dart';
@@ -46,30 +47,32 @@ class ListMenu extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 80,
-                    height: 90,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                        image: NetworkImage(produkData['gambar_produk']),
-                        fit: BoxFit.cover,
+          child: Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 80,
+                      height: 90,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                          image: NetworkImage(produkData['gambar_produk']),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  _buildTextInfo(),
-                ],
-              ),
-              _buildActions(context),
-            ],
+                    SizedBox(
+                      width: 15,
+                    ),
+                    _buildTextInfo(),
+                  ],
+                ),
+                _buildActions(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -77,27 +80,43 @@ class ListMenu extends StatelessWidget {
   }
 
   Widget _buildTextInfo() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(produkData['nama_produk'],
-                  style: GoogleFonts.poppins(
-                      fontSize: 16, fontWeight: FontWeight.w600)),
-              Text(produkData['variasi_rasa'],
-                  style: GoogleFonts.poppins(
-                      fontSize: 11, fontWeight: FontWeight.w500)),
-            ],
-          ),
-          Text("Rp ${produkData['harga_produk']}",
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    produkData['nama_produk'],
+                    style: GoogleFonts.poppins(
+                        fontSize: 16, fontWeight: FontWeight.w600),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    produkData['variasi_rasa'],
+                    style: GoogleFonts.poppins(
+                        fontSize: 11, fontWeight: FontWeight.w500),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              "Rp ${produkData['harga_produk']}",
               style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500, fontSize: 13)),
-        ],
+                  fontWeight: FontWeight.w500, fontSize: 13),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
     );
   }

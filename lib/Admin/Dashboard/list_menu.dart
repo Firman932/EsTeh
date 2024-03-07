@@ -74,6 +74,7 @@ class ListMenu extends StatelessWidget {
                   ],
                 ),
               ),
+              SizedBox(width: 5,),
               _buildActions(context),
             ],
           ),
@@ -111,74 +112,13 @@ class ListMenu extends StatelessWidget {
   }
 
   Widget _buildActions(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text("Stok: ${produkData['stok_produk']}",
-              style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500, fontSize: 12)),
-        ],
-      ),
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Text("Stok: ${produkData['stok_produk']}",
+          style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w500, fontSize: 12)),
     );
   }
 
-  Widget _deleteActionButton(IconData icon, Color color, BuildContext context) {
-    return Container(
-      height: 30,
-      width: 30,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: color,
-      ),
-      child: IconButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) => DeleteDialog(
-              title: 'Peringatan',
-              content: 'Apakah anda yakin menghapus produk ini?',
-              buttonCancel: 'Batal',
-              onButtonCancel: () {
-                Navigator.pop(context);
-              },
-              buttonConfirm: 'Hapus',
-              onButtonConfirm: () {
-                Navigator.pop(context);
-              },
-            ),
-          );
-        },
-        icon: Icon(
-          icon,
-          color: Colors.white,
-        ),
-        iconSize: 20,
-        padding: EdgeInsets.zero,
-        splashRadius: 24,
-      ),
-    );
-  }
 
-  Widget _updateActionButton(IconData icon, Color color) {
-    return Container(
-      height: 30,
-      width: 30,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: color,
-      ),
-      child: IconButton(
-        onPressed: () {},
-        icon: Icon(
-          icon,
-          color: Colors.white,
-        ),
-        iconSize: 20,
-        padding: EdgeInsets.zero,
-        splashRadius: 24,
-      ),
-    );
-  }
 }

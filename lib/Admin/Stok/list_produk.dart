@@ -100,6 +100,7 @@ class _ListProdukState extends State<ListProduk> {
                   ],
                 ),
               ),
+              SizedBox(width: 5,),
               _buildActions(context),
             ],
           ),

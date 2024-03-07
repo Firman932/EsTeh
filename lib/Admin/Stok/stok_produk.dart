@@ -377,6 +377,7 @@ class _StokProdukState extends State<StokProduk> {
                 child: Icon(
                   Icons.history,
                   size: 25,
+                  color: Colors.black,
                 ),
               ),
               SizedBox(
@@ -394,6 +395,7 @@ class _StokProdukState extends State<StokProduk> {
                 child: Icon(
                   Icons.notifications,
                   size: 25,
+                  color: Colors.black,
                 ),
               ),
               SizedBox(

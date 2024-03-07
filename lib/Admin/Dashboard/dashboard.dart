@@ -58,19 +58,43 @@ class _DashboardState extends State<Dashboard> {
                 color: Colors.red,
               )),
           actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Notifikasi()));
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Riwayat(),
+                    ),
+                  );
                 },
-                icon: Icon(Icons.notifications)),
-            IconButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Riwayat()));
+                child: Icon(
+                  Icons.history,
+                  size: 25,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Notifikasi(),
+                    ),
+                  );
                 },
-                icon: Icon(Icons.history)),
-          ],
+                child: Icon(
+                  Icons.notifications,
+                  size: 25,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(
+                width: 13,
+              )
+            ],
         ),
         body: SingleChildScrollView(
           child: Padding(

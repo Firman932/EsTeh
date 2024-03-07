@@ -53,6 +53,7 @@ class ListUser extends StatelessWidget {
                 ],
               ),
             ),
+            SizedBox(width: 5,),
             _buildActions(context),
           ],
         ),

@@ -77,24 +77,27 @@ class _ListProdukState extends State<ListProduk> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: 80,
-                    height: 90,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                        image: NetworkImage(widget.produkData['gambar_produk']),
-                        fit: BoxFit.cover,
+              Expanded(
+                child: Row(
+                  children: [
+                    Container(
+                      width: 80,
+                      height: 90,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                          image:
+                              NetworkImage(widget.produkData['gambar_produk']),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  _buildTextInfo(),
-                ],
+                    SizedBox(
+                      width: 15,
+                    ),
+                    _buildTextInfo(),
+                  ],
+                ),
               ),
               _buildActions(context),
             ],
@@ -105,25 +108,29 @@ class _ListProdukState extends State<ListProduk> {
   }
 
   Widget _buildTextInfo() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.produkData['nama_produk'],
-                style: GoogleFonts.poppins(
-                    fontSize: 16, fontWeight: FontWeight.w600)),
-            Text(widget.produkData['variasi_rasa'],
-                style: GoogleFonts.poppins(
-                    fontSize: 11, fontWeight: FontWeight.w500)),
-          ],
-        ),
-        Text("Rp ${widget.produkData['harga_produk']}",
-            style:
-                GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 13)),
-      ],
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.produkData['nama_produk'],
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: GoogleFonts.poppins(
+                      fontSize: 16, fontWeight: FontWeight.w600)),
+              Text(widget.produkData['variasi_rasa'],
+                  style: GoogleFonts.poppins(
+                      fontSize: 11, fontWeight: FontWeight.w500)),
+            ],
+          ),
+          Text("Rp ${widget.produkData['harga_produk']}",
+              style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w500, fontSize: 13)),
+        ],
+      ),
     );
   }
 

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:lji/Admin/Update/update.dart';
@@ -47,11 +48,11 @@ class ListMenu extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Row(
                   children: [
                     Container(
                       width: 80,
@@ -70,9 +71,9 @@ class ListMenu extends StatelessWidget {
                     _buildTextInfo(),
                   ],
                 ),
-                _buildActions(context),
-              ],
-            ),
+              ),
+              _buildActions(context),
+            ],
           ),
         ),
       ),
@@ -95,7 +96,7 @@ class ListMenu extends StatelessWidget {
                     produkData['nama_produk'],
                     style: GoogleFonts.poppins(
                         fontSize: 16, fontWeight: FontWeight.w600),
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
@@ -112,7 +113,7 @@ class ListMenu extends StatelessWidget {
               "Rp ${produkData['harga_produk']}",
               style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500, fontSize: 13),
-              maxLines: 1,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
           ],

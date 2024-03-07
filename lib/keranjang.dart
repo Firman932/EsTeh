@@ -15,46 +15,46 @@ class Keranjang extends StatefulWidget {
 }
 
 class _KeranjangState extends State<Keranjang> {
+  void tambahkanKeKeranjang() async {
+    // Ambil informasi produk
+    String namaProduk = widget.produkData["nama_produk"];
+    String gambarProduk = widget.produkData["gambar_produk"];
+    String variasiRasa = widget.produkData["variasi_rasa"];
+    int hargaProduk = widget.produkData["harga_produk"];
+    int jumlah = 1; // Jumlah awal produk dalam keranjang
 
-void tambahkanKeKeranjang() async {
-  // Ambil informasi produk
-  String namaProduk = widget.produkData["nama_produk"];
-  String gambarProduk = widget.produkData["gambar_produk"];
-  String variasiRasa = widget.produkData["variasi_rasa"];
-  int hargaProduk = widget.produkData["harga_produk"];
-  int jumlah = 1; // Jumlah awal produk dalam keranjang
+    // Dapatkan user ID dari pengguna yang sedang diotentikasi
+    String? userID;
 
-  // Dapatkan user ID dari pengguna yang sedang diotentikasi
-  String? userID;
-  
-  // Mendapatkan informasi pengguna yang sedang diotentikasi
-  User? user = FirebaseAuth.instance.currentUser;
+    // Mendapatkan informasi pengguna yang sedang diotentikasi
+    User? user = FirebaseAuth.instance.currentUser;
 
-  if (user != null) {
-    userID = user.uid;
-  } else {
-    // Handle case where the user is not authenticated
-    print('User not authenticated');
-    return;
+    if (user != null) {
+      userID = user.uid;
+    } else {
+      // Handle case where the user is not authenticated
+      print('User not authenticated');
+      return;
+    }
+
+    // Update cart di dalam dokumen pengguna
+    await FirebaseFirestore.instance.collection('users').doc(userID).update({
+      'cart': FieldValue.arrayUnion([
+        {
+          'product_id': widget
+              .produkData.id, // Gunakan ID dokumen produk sebagai product_id
+          'jumlah': jumlah
+        }
+      ])
+    }).then((value) {
+      print('Produk ditambahkan ke keranjang');
+      Navigator.pop(
+          context); // Kembali ke halaman sebelumnya setelah menambahkan ke keranjang
+    }).catchError((error) {
+      print('Gagal menambahkan produk ke keranjang: $error');
+      // Handle error, misalnya, menampilkan pesan kesalahan kepada pengguna
+    });
   }
-
-  // Update cart di dalam dokumen pengguna
-  await FirebaseFirestore.instance.collection('users').doc(userID).update({
-    'cart': FieldValue.arrayUnion([
-      {
-        'product_id': widget.produkData.id,// Gunakan ID dokumen produk sebagai product_id
-        'jumlah': jumlah
-      }
-    ])
-  }).then((value) {
-    print('Produk ditambahkan ke keranjang');
-    Navigator.pop(context); // Kembali ke halaman sebelumnya setelah menambahkan ke keranjang
-  }).catchError((error) {
-    print('Gagal menambahkan produk ke keranjang: $error');
-    // Handle error, misalnya, menampilkan pesan kesalahan kepada pengguna
-  });
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,7 @@ void tambahkanKeKeranjang() async {
       body: ListView(
         children: [
           Container(
-            padding: EdgeInsets.fromLTRB(20, 28, 20, 82),
+            padding: EdgeInsets.fromLTRB(20, 28, 20, 20),
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: Color(0xffffffff),
@@ -88,7 +88,7 @@ void tambahkanKeKeranjang() async {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  margin: EdgeInsets.fromLTRB(5, 0, 5, 40),
+                  margin: EdgeInsets.fromLTRB(5, 0, 5, 20),
                   child: Align(
                     alignment: Alignment.topCenter,
                     child: SizedBox(
@@ -111,7 +111,7 @@ void tambahkanKeKeranjang() async {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.fromLTRB(10, 0, 0, 26),
+                  margin: EdgeInsets.fromLTRB(10, 0, 0, 20),
                   width: MediaQuery.of(context).size.width,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +122,7 @@ void tambahkanKeKeranjang() async {
                         child: Text(
                           widget.produkData["nama_produk"],
                           style: GoogleFonts.poppins(
-                            fontSize: 36,
+                            fontSize: 27,
                             fontWeight: FontWeight.w700,
                             color: Color(0xff030303),
                           ),
@@ -135,7 +135,7 @@ void tambahkanKeKeranjang() async {
                         child: Text(
                           widget.produkData["variasi_rasa"],
                           style: GoogleFonts.poppins(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: Color(0xff000000),
                           ),
@@ -147,7 +147,7 @@ void tambahkanKeKeranjang() async {
                 Container(
                   margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                   width: 800,
-                  height: 49,
+                  height: 30,
                   child: Text(
                     'Rp ${widget.produkData["harga_produk"]}',
                     style: GoogleFonts.poppins(
@@ -158,17 +158,37 @@ void tambahkanKeKeranjang() async {
                     ),
                   ),
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
+                        onPressed: () {
+                          // Tambahkan logika untuk memasukkan produk ke keranjang
+                          tambahkanKeKeranjang();
+                          print(
+                              'Menambahkan ${widget.produkData["nama_produk"]} ke keranjang');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(double.minPositive, 50),
+                          backgroundColor: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.add_shopping_cart,
+                          color: Colors.white,
+                        )),
+                    ElevatedButton(
                       onPressed: () {
                         // Tambahkan logika untuk membeli langsung
-                        print('Membeli langsung ${widget.produkData["nama_produk"]}');
+                        print(
+                            'Membeli langsung ${widget.produkData["nama_produk"]}');
                       },
                       style: ElevatedButton.styleFrom(
-                        minimumSize: Size(double.minPositive, 50), backgroundColor: Color(0xff4fb60e),
+                        minimumSize: Size(double.minPositive, 50),
+                        backgroundColor: Color(0xff4fb60e),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
@@ -182,22 +202,6 @@ void tambahkanKeKeranjang() async {
                         ),
                       ),
                     ),
-                    SizedBox(width: 5),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Tambahkan logika untuk memasukkan produk ke keranjang
-                        tambahkanKeKeranjang();
-                        print('Menambahkan ${widget.produkData["nama_produk"]} ke keranjang');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(double.minPositive, 50), backgroundColor: Colors.blue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      child: Icon(Icons.add_shopping_cart,
-                      color: Colors.white,)
-                    ),
                   ],
                 ),
               ],
@@ -208,4 +212,3 @@ void tambahkanKeKeranjang() async {
     );
   }
 }
-

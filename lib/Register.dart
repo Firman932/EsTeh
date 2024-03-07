@@ -119,7 +119,7 @@ class _RegisterState extends State<Register> {
                           },
                         ),
                         SizedBox(
-                          height: 20,
+                          height: 15,
                         ),
                         LoginInput(
                           hintText: "Email",
@@ -133,7 +133,7 @@ class _RegisterState extends State<Register> {
                           },
                         ),
                         SizedBox(
-                          height: 20,
+                          height: 15,
                         ),
                         RegisterInput(
                           hintText: "Password",
@@ -155,7 +155,7 @@ class _RegisterState extends State<Register> {
                             return null;
                           },
                         ),
-                        SizedBox(height: 40),
+                        SizedBox(height: 30),
                         ElevatedButton(
                           onPressed: () async {
                             try {
@@ -179,12 +179,12 @@ class _RegisterState extends State<Register> {
                                     enteredEmail, enteredUsername, uid);
                                 // Jika berhasil, lakukan sesuatu (misalnya, navigasi ke halaman beranda)
                                 // Di sini Anda juga dapat menambahkan logika untuk menyimpan informasi pengguna ke database Firestore
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => MenuUser(),
-                                    ),
-                                  );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MenuUser(),
+                                  ),
+                                );
                               } else {
                                 // Jika gagal, tampilkan pesan kesalahan
                                 showDialog(
@@ -286,8 +286,12 @@ class _RegisterState extends State<Register> {
     FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
-        .set(
-            {'email': email, 'username': username, 'role': 'user','user_id': uid}) // Add username to Firestore
+        .set({
+          'email': email,
+          'username': username,
+          'role': 'user',
+          'user_id': uid
+        }) // Add username to Firestore
         .then((value) => print("User added to Firebase"))
         .catchError((error) => print("Failed to add user: $error"));
   }

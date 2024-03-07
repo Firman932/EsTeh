@@ -34,7 +34,7 @@ class LoginInputState extends State<LoginInput> {
       decoration: InputDecoration(
         counterText: '',
         hintText: widget.hintText,
-        contentPadding: EdgeInsets.zero,
+        contentPadding: EdgeInsets.symmetric(vertical: 2),
         hintStyle: GoogleFonts.poppins(fontSize: 12),
         prefixIcon: Icon(widget.leftIcon, color: Color(0xff49A013)),
         focusedBorder: OutlineInputBorder(

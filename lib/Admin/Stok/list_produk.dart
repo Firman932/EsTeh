@@ -140,6 +140,7 @@ class _ListProdukState extends State<ListProduk> {
     return SingleChildScrollView(
       physics: NeverScrollableScrollPhysics(),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Align(

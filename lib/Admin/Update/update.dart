@@ -268,7 +268,7 @@ class _UpdateProdukState extends State<UpdateProduk> {
                     },
                   ),
                   SizedBox(height: 10),
-                    CustomTextField(
+                    CustomCurrencyField(
                     labelText: "Harga",
                     hintText: "8000",
                     controller: hargaController,
@@ -280,7 +280,7 @@ class _UpdateProdukState extends State<UpdateProduk> {
                     },
                   ),
                   SizedBox(height: 10),
-                  CustomTextField(
+                  CustomNumberField(
                     labelText: "Stok",
                     hintText: "100",
                     controller: stockController,

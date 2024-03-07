@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:lji/styles/dialog.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class Keranjang extends StatefulWidget {
   final DocumentSnapshot produkData;
@@ -153,7 +154,8 @@ class _KeranjangState extends State<Keranjang> {
                     width: 800,
                     height: 30,
                     child: Text(
-                      'Rp ${widget.produkData["harga_produk"]}',
+                      NumberFormat.currency(locale: 'id', symbol: 'Rp ',decimalDigits: 0)
+                  .format(widget.produkData['harga_produk']),
                       style: GoogleFonts.poppins(
                         fontSize: 21,
                         fontWeight: FontWeight.w600,

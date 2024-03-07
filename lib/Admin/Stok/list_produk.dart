@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lji/Admin/Create/create_produk.dart';
 import 'package:lji/Admin/Stok/stok_produk.dart';
 import 'package:lji/Admin/Update/update.dart';
@@ -126,7 +127,8 @@ class _ListProdukState extends State<ListProduk> {
                       fontSize: 11, fontWeight: FontWeight.w500)),
             ],
           ),
-          Text("Rp ${widget.produkData['harga_produk']}",
+          Text(NumberFormat.currency(locale: 'id', symbol: 'Rp ',decimalDigits: 0)
+                  .format(widget.produkData['harga_produk']),
               style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500, fontSize: 13)),
         ],

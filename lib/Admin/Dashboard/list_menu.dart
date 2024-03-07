@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 import 'package:lji/Admin/Update/update.dart';
 
@@ -100,7 +101,8 @@ class ListMenu extends StatelessWidget {
                       fontSize: 11, fontWeight: FontWeight.w500)),
             ],
           ),
-          Text("Rp ${produkData['harga_produk']}",
+          Text(NumberFormat.currency(locale: 'id', symbol: 'Rp ',decimalDigits: 0)
+                  .format(produkData['harga_produk']),
               style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500, fontSize: 13)),
         ],

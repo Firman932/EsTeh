@@ -246,9 +246,9 @@ class _TambahProdukState extends State<TambahProduk> {
                     SizedBox(
                       height: 10,
                     ),
-                    CustomNumberField(
+                    CustomCurrencyField(
                       labelText: "Harga",
-                      hintText: "8000",
+                      hintText: "8.000",
                       controller: hargaController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {

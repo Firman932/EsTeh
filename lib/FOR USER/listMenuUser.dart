@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lji/Keranjang.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -10,85 +11,80 @@ class ListUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          margin: EdgeInsets.only(bottom: 10),
-          padding: EdgeInsetsDirectional.all(5),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Color(0x499c9c9c),
-                offset: Offset(0, 0),
-                blurRadius: 5,
-              ),
-            ],
+    return Container(
+      margin: EdgeInsets.only(top: 15),
+      padding: EdgeInsets.symmetric(vertical: 15),
+      height: 116,
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromRGBO(156, 156, 156, 0.29),
+            offset: Offset(0, 0),
+            blurRadius: 5,
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: NetworkImage(produkData['gambar_produk']),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+        ],
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  Container(
+                    width: 80,
+                    height: 90,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: NetworkImage(produkData['gambar_produk']),
+                        fit: BoxFit.cover,
                       ),
-                      _buildTextInfo(),
-                    ],
+                    ),
                   ),
-                ),
-                _buildActions(context),
-              ],
+                  SizedBox(
+                    width: 15,
+                  ),
+                  _buildTextInfo(),
+                ],
+              ),
             ),
-          ),
+            _buildActions(context),
+          ],
         ),
-      ],
+      ),
     );
   }
 
   Widget _buildTextInfo() {
     return Expanded(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              produkData["nama_produk"],
-              style:
-                  GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Text(
-              produkData["variasi_rasa"],
-              style:
-                  GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w500),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Text(
-              "Rp ${produkData['harga_produk']}",
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(produkData['nama_produk'],
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: GoogleFonts.poppins(
+                      fontSize: 16, fontWeight: FontWeight.w600)),
+              Text(produkData['variasi_rasa'],
+                  style: GoogleFonts.poppins(
+                      fontSize: 11, fontWeight: FontWeight.w500)),
+            ],
+          ),
+          Text(
+              NumberFormat.currency(locale: 'id', symbol: 'Rp ',decimalDigits: 0)
+                  .format(produkData['harga_produk']),
+              style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w500, fontSize: 13)),
+        ],
       ),
     );
   }

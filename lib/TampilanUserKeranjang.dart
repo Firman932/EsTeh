@@ -175,8 +175,6 @@ class KeranjangPage01 extends State<KeranjangPage02> {
           .collection('users')
           .doc(userID)
           .update({'cart': updatedCart});
-
-      _loadCartItems();
     }
   }
 

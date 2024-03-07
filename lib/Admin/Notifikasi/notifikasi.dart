@@ -64,7 +64,8 @@ class _NotifikasiState extends State<Notifikasi> {
                                 width: 2,
                               ),
                               Text(
-                                "Dari Maulana Ilham",
+                                "Dari Maulana Ilham Sudrajat",
+                                overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.poppins(
                                     fontSize: 12, fontWeight: FontWeight.w600),
                               ),
@@ -76,7 +77,7 @@ class _NotifikasiState extends State<Notifikasi> {
                           Row(
                             children: [
                               Text(
-                                "12-02-2024",
+                                "12 Jan 2024",
                                 style: GoogleFonts.poppins(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w400,
@@ -86,7 +87,7 @@ class _NotifikasiState extends State<Notifikasi> {
                                 width: 10,
                               ),
                               Text(
-                                "09:15 WIB",
+                                "09:15",
                                 style: GoogleFonts.poppins(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w400,

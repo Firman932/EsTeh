@@ -4,6 +4,80 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/styles/color.dart';
 import 'package:flutter/services.dart';
 
+class CustomNumberField extends StatelessWidget {
+  final String labelText;
+  final String hintText;
+  final TextEditingController controller;
+  final String? Function(String?)? validator;
+
+  const CustomNumberField({
+    Key? key,
+    required this.labelText,
+    required this.hintText,
+    required this.controller,
+    this.validator,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final textField = GoogleFonts.poppins(
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+      color: Colors.black26,
+    );
+    final text = GoogleFonts.poppins(
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+      color: Colors.black,
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '$labelText',
+          style: text,
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        TextFormField(
+          cursorColor: greenPrimary,
+          style: text,
+          controller: controller,
+          validator: validator,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly
+          ], // hanya angka
+          keyboardType: TextInputType.number, // tipe keyboard angka
+          decoration: InputDecoration(
+            hintText: hintText,
+            border: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: Colors.black12, // Default border color
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: Colors.black, // Default border color
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color:
+                    const Color.fromRGBO(73, 160, 19, 1), // Desired focus color
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            hintStyle: textField,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class CustomTextField extends StatelessWidget {
   final String labelText;
   final String hintText;
@@ -44,10 +118,7 @@ class CustomTextField extends StatelessWidget {
           cursorColor: greenPrimary,
           style: text,
           controller: controller,
-          validator: validator,
-          inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly
-          ], // hanya angka
+          validator: validator, // hanya angka
           keyboardType: TextInputType.number, // tipe keyboard angka
           decoration: InputDecoration(
             hintText: hintText,

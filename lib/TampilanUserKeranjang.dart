@@ -529,18 +529,8 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                   notchMargin: 8,
                   clipBehavior: Clip.antiAlias,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(
-                        'Total : ${NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(_isTotalDisabled ? 0 : _calculateTotal())}',
-                        style: GoogleFonts.poppins(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: _isTotalDisabled
-                              ? Colors.transparent
-                              : Colors.black,
-                        ),
-                      ),
                       ElevatedButton(
                         onPressed: () {
                           showDialog(
@@ -606,7 +596,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                       children: [
                         Row(children: [
                           Text(
-                            'Total : RP ${_isTotalDisabled ? 0 : _calculateTotal()}',
+                            'Total : ${NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(_isTotalDisabled ? 0 : _calculateTotal())}',
                             style: GoogleFonts.poppins(
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
@@ -615,7 +605,8 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                             ),
                           ),
                         ]),
-                        ElevatedButton(
+                        _isTotalDisabled ? SizedBox.shrink() 
+                        : ElevatedButton(
                           onPressed: () {
                             showDialog(
                               context: context,

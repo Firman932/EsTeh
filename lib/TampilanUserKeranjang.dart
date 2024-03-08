@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lji/styles/dialog.dart';
 
 class CartItem {
@@ -63,15 +64,24 @@ class KeranjangPage01 extends State<KeranjangPage02> {
             .doc(item['product_id'])
             .get();
 
-        items.add(CartItem(
-          productId: item['product_id'],
-          productName: productDoc['nama_produk'],
-          productVariation: productDoc['variasi_rasa'],
-          quantity: item['jumlah'],
-          price: productDoc['harga_produk'],
-          isChecked: false,
-          productImage: productDoc['gambar_produk'],
-        ));
+        // Check if the product document exists
+        if (productDoc.exists) {
+          items.add(CartItem(
+            productId: item['product_id'],
+            productName: productDoc['nama_produk'],
+            productVariation: productDoc['variasi_rasa'],
+            quantity: item['jumlah'],
+            price: productDoc['harga_produk'],
+            isChecked: false,
+            productImage: productDoc['gambar_produk'],
+          ));
+        } else {
+          // Handle the case where the product has been deleted
+          print('Product with ID ${item['product_id']} no longer exists');
+
+          // Optionally, remove the item from the user's cart in Firestore
+          await _removeProductFromCart(item['product_id']);
+        }
       }
 
       setState(() {
@@ -85,18 +95,64 @@ class KeranjangPage01 extends State<KeranjangPage02> {
     }
   }
 
+  Future<void> _removeProductFromCart(String productId) async {
+    // Get user ID from the authenticated user
+    String? userID;
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      userID = user.uid;
+
+      try {
+        // Get the user's cart data
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userID)
+            .get();
+
+        List<dynamic> updatedCart = List.from(userDoc['cart']);
+
+        // Remove the item with the specified product_id from the user's cart
+        updatedCart.removeWhere((item) => item['product_id'] == productId);
+
+        // Update the cart in Firestore
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userID)
+            .update({'cart': updatedCart});
+
+        print('Product removed from the cart');
+
+        // Print the current cart after removal for debugging purposes
+        DocumentSnapshot updatedUserDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userID)
+            .get();
+        print('Updated Cart: ${updatedUserDoc['cart']}');
+      } catch (error) {
+        print('Error removing product from the cart: $error');
+        // Handle error, if needed
+      }
+    }
+  }
+
   void _updateTotalPrice() async {
-  // Calculate total price based on selected quantities
-  int total = 0;
+    if (cartItems.isEmpty) {
+      setState(() {
+        _isTotalDisabled = true;
+      });
+      return;
+    }
+    // Calculate total price based on selected quantities
+    int total = 0;
 
-  // List untuk menyimpan produk yang perlu dihapus
-  List<String> productsToDelete = [];
+    // List untuk menyimpan produk yang perlu dihapus
+    List<String> productsToDelete = [];
 
-  for (var item in cartItems) {
-    if (item.isChecked) {
-      total += item.quantity * item.price;
-
-      // Periksa apakah jumlah produk menjadi 0 dan tambahkan ke list delete
+    for (var item in cartItems) {
+      if (item.isChecked) {
+        total += item.quantity * item.price;
+      }
       if (item.quantity == 0) {
         bool deleteConfirmed = await _showDeleteConfirmationDialog(item);
         if (deleteConfirmed) {
@@ -107,16 +163,20 @@ class KeranjangPage01 extends State<KeranjangPage02> {
         }
       }
     }
+
+    // Hapus produk dari Firestore
+    await _deleteProductsFromFirestore(productsToDelete);
+
+    // Setelah semua pekerjaan asinkron selesai, update state
+    setState(() {
+      _isTotalDisabled = total <= 0;
+      if (cartItems.isEmpty) {
+        for (var item in cartItems) {
+          item.isChecked = false;
+        }
+      }
+    });
   }
-
-  // Hapus produk dari Firestore
-  await _deleteProductsFromFirestore(productsToDelete);
-
-  // Setelah semua pekerjaan asinkron selesai, update state
-  setState(() {
-    _isTotalDisabled = total <= 0;
-  });
-}
 
   Future<bool> _showDeleteConfirmationDialog(CartItem cartItem) async {
     bool deleteConfirmed = false;
@@ -175,6 +235,29 @@ class KeranjangPage01 extends State<KeranjangPage02> {
           .collection('users')
           .doc(userID)
           .update({'cart': updatedCart});
+    }
+    if (productIds.isNotEmpty) {
+      _loadCartItems();
+    }
+    setState(() {
+      cartItems.removeWhere((item) => productIds.contains(item.productId));
+    });
+  }
+
+  void _deleteSelectedProducts() async {
+    List<String> selectedProductIds = [];
+
+    for (var item in cartItems) {
+      if (item.isChecked) {
+        selectedProductIds.add(item.productId);
+      }
+    }
+
+    if (selectedProductIds.isNotEmpty) {
+      // Hapus produk yang dipilih dari Firestore
+      await _deleteProductsFromFirestore(selectedProductIds);
+
+      // Setelah menghapus, load kembali daftar produk
     }
   }
 
@@ -294,6 +377,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                     shadowColor: Color(0x499c9c9c),
                     elevation: 5,
                     color: Colors.white,
+                    surfaceTintColor: Colors.white,
                     margin:
                         EdgeInsets.only(right: 10, left: 10, bottom: 5, top: 5),
                     child: Padding(
@@ -301,64 +385,79 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: cartItems[index].isChecked,
-                                onChanged: (value) {
-                                  setState(() {
-                                    cartItems[index].isChecked = value!;
-                                    _updateTotalPrice();
-                                  });
-                                },
-                                visualDensity: VisualDensity(
-                                  horizontal: -4.0,
-                                  vertical: -4.0,
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                  value: cartItems[index].isChecked,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      cartItems[index].isChecked = value!;
+                                      _updateTotalPrice();
+                                    });
+                                  },
+                                  visualDensity: VisualDensity(
+                                    horizontal: -4.0,
+                                    vertical: -4.0,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    side: BorderSide.none,
+                                  ),
+                                  activeColor: _isEditing
+                                      ? Colors.red
+                                      : Color(0xFF49A013),
+                                  checkColor: Colors.white,
                                 ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                  side: BorderSide.none,
-                                ),
-                                activeColor:
-                                    _isEditing ? Colors.red : Color(0xFF49A013),
-                                checkColor: Colors.white,
-                              ),
-                              Container(
-                                width: 60,
-                                height: 60,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  image: DecorationImage(
-                                    image: NetworkImage(cartItem.productImage),
-                                    fit: BoxFit.cover,
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    image: DecorationImage(
+                                      image:
+                                          NetworkImage(cartItem.productImage),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(width: 8),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    cartItem.productName,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        cartItem.productName,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                      Text(
+                                        cartItem.productVariation,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 9),
+                                      ),
+                                      Text(
+                                        NumberFormat.currency(
+                                                locale: 'id',
+                                                symbol: 'Rp ',
+                                                decimalDigits: 0)
+                                            .format(cartItem.price),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 12),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    cartItem.productVariation,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 9),
-                                  ),
-                                  Text(
-                                    'Rp ${cartItem.price}',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 12),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                ),
+                              ],
+                            ),
                           ),
                           Row(
                             children: [
@@ -433,7 +532,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Total : Rp ${_isTotalDisabled ? 0 : _calculateTotal()}',
+                        'Total : ${NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(_isTotalDisabled ? 0 : _calculateTotal())}',
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
@@ -452,6 +551,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                                   'Apakah kamu yakin ingin menghapus list keranjangmu ?',
                               buttonConfirm: 'Ok',
                               onButtonConfirm: () {
+                                _deleteSelectedProducts();
                                 Navigator.pop(context);
                               },
                               buttonCancel: 'Cancel',

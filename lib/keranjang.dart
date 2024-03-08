@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:lji/styles/color.dart';
 import 'package:lji/styles/dialog.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -200,15 +201,16 @@ class _KeranjangState extends State<Keranjang> {
                           'Menambahkan ${widget.produkData["nama_produk"]} ke keranjang');
                     },
                     style: ElevatedButton.styleFrom(
+                      side: BorderSide(color: greenPrimary, width: 2),
                       minimumSize: Size(double.minPositive, 50),
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
                     child: Icon(
                       Icons.shopping_cart,
-                      color: Colors.white,
+                      color: greenPrimary,
                     )),
                 SizedBox(
                   width: 15,

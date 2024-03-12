@@ -30,46 +30,42 @@ class _ListPesanState extends State<ListPesan> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              height: 100,
-              width: 100,
-              child: Row(
-                children: [
-                  Container(
-                    height: 45,
-                    width: 45,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                        image: AssetImage("assets/teh taro.jpg"),
+            Row(
+              children: [
+                Container(
+                  height: 45,
+                  width: 45,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      image: AssetImage("assets/teh taro.jpg"),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Es Teh",
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Es Teh",
+                      Text(
+                        "Rasa Taro",
+                        style: GoogleFonts.poppins(fontSize: 8),
+                      ),
+                      Text("Rp.8.000",
                           style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        Text(
-                          "Rasa Taro",
-                          style: GoogleFonts.poppins(fontSize: 8),
-                        ),
-                        Text("Rp.8.000",
-                            style: GoogleFonts.poppins(
-                                fontSize: 9, fontWeight: FontWeight.w500)),
-                      ],
-                    ),
+                              fontSize: 9, fontWeight: FontWeight.w500)),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             Row(
               children: [

@@ -34,7 +34,7 @@ class ListMenu extends StatelessWidget {
       },
       child: Container(
         margin: EdgeInsets.only(top: 15),
-        padding: EdgeInsets.symmetric(vertical: 15),
+        padding: EdgeInsets.symmetric(vertical: 10),
         height: 116,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
@@ -74,7 +74,9 @@ class ListMenu extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(width: 5,),
+              SizedBox(
+                width: 5,
+              ),
               _buildActions(context),
             ],
           ),
@@ -102,7 +104,9 @@ class ListMenu extends StatelessWidget {
                       fontSize: 11, fontWeight: FontWeight.w500)),
             ],
           ),
-          Text(NumberFormat.currency(locale: 'id', symbol: 'Rp ',decimalDigits: 0)
+          Text(
+              NumberFormat.currency(
+                      locale: 'id', symbol: 'Rp ', decimalDigits: 0)
                   .format(produkData['harga_produk']),
               style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500, fontSize: 13)),
@@ -115,10 +119,8 @@ class ListMenu extends StatelessWidget {
     return Align(
       alignment: Alignment.topCenter,
       child: Text("Stok: ${produkData['stok_produk']}",
-          style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w500, fontSize: 12)),
+          style:
+              GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 12)),
     );
   }
-
-
 }

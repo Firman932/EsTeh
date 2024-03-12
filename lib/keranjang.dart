@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lji/styles/color.dart';
 import 'package:lji/styles/dialog.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -57,6 +58,39 @@ class _KeranjangState extends State<Keranjang> {
     }).catchError((error) {
       print('Gagal menambahkan produk ke keranjang: $error');
       // Handle error, misalnya, menampilkan pesan kesalahan kepada pengguna
+    });
+  }
+
+  void beliLangsung() async {
+    // Ambil informasi produk
+    String namaProduk = widget.produkData["nama_produk"];
+    String variasiRasa = widget.produkData["variasi_rasa"];
+    int hargaProduk = widget.produkData["harga_produk"];
+    int jumlah = 1; // Jumlah produk yang dibeli langsung
+
+    // Dapatkan user ID dari pengguna yang sedang diotentikasi
+    String? userID;
+
+    // Mendapatkan informasi pengguna yang sedang diotentikasi
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      userID = user.uid;
+    } else {
+      // Handle case where the user is not authenticated
+      print('User not authenticated');
+      return;
+    }
+
+    // Simpan pesanan ke Firebase
+    DocumentReference pesananRef =
+        await FirebaseFirestore.instance.collection('pesanan').add({
+      'nama_produk': namaProduk,
+      'variasi_rasa': variasiRasa,
+      'harga_produk': hargaProduk,
+      'jumlah': jumlah,
+      'userID': userID,
+      'status': 'pending', // Status pesanan menunggu persetujuan admin
     });
   }
 
@@ -155,8 +189,9 @@ class _KeranjangState extends State<Keranjang> {
                     width: 800,
                     height: 30,
                     child: Text(
-                      NumberFormat.currency(locale: 'id', symbol: 'Rp ',decimalDigits: 0)
-                  .format(widget.produkData['harga_produk']),
+                      NumberFormat.currency(
+                              locale: 'id', symbol: 'Rp ', decimalDigits: 0)
+                          .format(widget.produkData['harga_produk']),
                       style: GoogleFonts.poppins(
                         fontSize: 21,
                         fontWeight: FontWeight.w600,
@@ -218,7 +253,8 @@ class _KeranjangState extends State<Keranjang> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      // Tambahkan logika untuk membeli langsung
+                      // Memanggil fungsi untuk membeli langsung produk
+                      beliLangsung();
                       print(
                           'Membeli langsung ${widget.produkData["nama_produk"]}');
                     },

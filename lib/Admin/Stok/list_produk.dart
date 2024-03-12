@@ -59,7 +59,7 @@ class _ListProdukState extends State<ListProduk> {
       },
       child: Container(
         margin: EdgeInsets.only(top: 15),
-        padding: EdgeInsets.symmetric(vertical: 15),
+        padding: EdgeInsets.symmetric(vertical: 10),
         height: 116,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
@@ -100,7 +100,9 @@ class _ListProdukState extends State<ListProduk> {
                   ],
                 ),
               ),
-              SizedBox(width: 5,),
+              SizedBox(
+                width: 5,
+              ),
               _buildActions(context),
             ],
           ),
@@ -128,7 +130,9 @@ class _ListProdukState extends State<ListProduk> {
                       fontSize: 11, fontWeight: FontWeight.w500)),
             ],
           ),
-          Text(NumberFormat.currency(locale: 'id', symbol: 'Rp ',decimalDigits: 0)
+          Text(
+              NumberFormat.currency(
+                      locale: 'id', symbol: 'Rp ', decimalDigits: 0)
                   .format(widget.produkData['harga_produk']),
               style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500, fontSize: 13)),

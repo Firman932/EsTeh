@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Analisis%20Uang/uang.dart';
+import 'package:intl/intl.dart';
 
 class Analisis extends StatefulWidget {
   const Analisis({super.key});
@@ -13,6 +14,13 @@ class Analisis extends StatefulWidget {
 
 class _AnalisisState extends State<Analisis> {
   late Stream<QuerySnapshot> produkStream;
+
+  String _formatCurrency(int number) {
+    NumberFormat currencyFormat =
+        NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0);
+    String formattedCurrency = currencyFormat.format(number);
+    return formattedCurrency;
+  }
 
   void initState() {
     super
@@ -56,9 +64,13 @@ class _AnalisisState extends State<Analisis> {
                           padding: const EdgeInsets.only(bottom: 16),
                           child: Align(
                             alignment: Alignment.bottomCenter,
-                            child: Text("Rp 1.349",
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w600, fontSize: 12)),
+                            child: Text(
+                              "${_formatCurrency(1354543435)}",
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12,
+                              ),
+                            ),
                           ),
                         )),
                     Container(

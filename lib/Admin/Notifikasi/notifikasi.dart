@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Notifikasi/listpesan.dart';
 
 class Notifikasi extends StatefulWidget {
-  const Notifikasi({super.key});
+  const Notifikasi({Key? key}) : super(key: key);
 
   @override
   State<Notifikasi> createState() => _NotifikasiState();
@@ -14,40 +14,42 @@ class _NotifikasiState extends State<Notifikasi> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(Icons.arrow_back)),
-          centerTitle: true,
-          title: Text(
-            "Notifikasi",
-            style:
-                GoogleFonts.poppins(fontSize: 25, fontWeight: FontWeight.w500),
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back),
         ),
-        body: SingleChildScrollView(
-            child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              Container(
+        centerTitle: true,
+        title: Text(
+          "Notifikasi",
+          style: GoogleFonts.poppins(fontSize: 25, fontWeight: FontWeight.w500),
+        ),
+      ),
+      body: ListView.builder(
+        itemCount: 20,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                Container(
                   margin: EdgeInsets.only(top: 20),
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color.fromRGBO(
-                                156, 156, 156, 0.28999999165534972),
-                            offset: Offset(0, 0),
-                            blurRadius: 55.5)
-                      ],
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white),
+                    boxShadow: [
+                      BoxShadow(
+                        color:
+                            Color.fromRGBO(156, 156, 156, 0.28999999165534972),
+                        offset: Offset(0, 0),
+                        blurRadius: 55.5,
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
                   width: MediaQuery.of(context).size.width,
                   child: Column(
                     children: [
@@ -62,21 +64,18 @@ class _NotifikasiState extends State<Notifikasi> {
                                   Icons.circle_notifications_rounded,
                                   color: Color.fromARGB(255, 73, 160, 19),
                                 ),
-                                SizedBox(
-                                  width: 2,
-                                ),
+                                SizedBox(width: 2),
                                 Expanded(
                                   child: Text(
                                     "Dari Maulana Ilham Sudrajat",
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600),
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 15,
-                                ),
+                                SizedBox(width: 15),
                               ],
                             ),
                           ),
@@ -89,67 +88,75 @@ class _NotifikasiState extends State<Notifikasi> {
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                                "Apakah kamu mau menerima pesanan dari user yang mau membeli produk kamu ?",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                )),
-                            SizedBox(
-                              height: 30,
+                              "Apakah kamu mau menerima pesanan dari user yang mau membeli produk kamu ?",
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                              ),
                             ),
-                            Text("List Pesanan: ",
-                                style: GoogleFonts.poppins(
-                                    fontSize: 12, fontWeight: FontWeight.bold)),
-                            SizedBox(
-                              height: 20,
+                            SizedBox(height: 30),
+                            Text(
+                              "List Pesanan: ",
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            ListPesan(),
-                            ListPesan(),
-                            ListPesan(),
-                            ListPesan(),
+                            SizedBox(height: 20),
+                            Container(
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 5),
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: 10,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) => ListPesan(),
+                                ),
+                              ),
+                            ),
                             Container(
                               width: MediaQuery.of(context).size.width,
                               height: 30,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.white),
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
+                              ),
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 7.5),
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceAround,
                                   children: [
-                                    SizedBox(
-                                      width: 30,
+                                    SizedBox(width: 15),
+                                    Text(
+                                      "Total :",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                    Text("Total :",
-                                        style: GoogleFonts.poppins(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold)),
-                                    Text("8/pcs",
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 10,
-                                        )),
-                                    Text("Rp.88.000",
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 10,
-                                        ))
+                                    Text(
+                                      "8/pcs",
+                                      style: GoogleFonts.poppins(fontSize: 10),
+                                    ),
+                                    Text(
+                                      "Rp.88.000",
+                                      style: GoogleFonts.poppins(fontSize: 10),
+                                    ),
                                   ],
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              height: 30,
-                            ),
+                            SizedBox(height: 30),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -160,15 +167,16 @@ class _NotifikasiState extends State<Notifikasi> {
                                         status = 'Pesanan ditolak';
                                       });
                                     },
-                                    child: Text("Tolak",
-                                        style: GoogleFonts.poppins(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.red)),
+                                    child: Text(
+                                      "Tolak",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.red,
+                                      ),
+                                    ),
                                   ),
-                                SizedBox(
-                                  width: 10,
-                                ),
+                                SizedBox(width: 10),
                                 if (status.isEmpty)
                                   GestureDetector(
                                     onTap: () {
@@ -176,14 +184,15 @@ class _NotifikasiState extends State<Notifikasi> {
                                         status = 'Pesanan diterima';
                                       });
                                     },
-                                    child: Text("Terima",
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                          color:
-                                              Color.fromARGB(255, 73, 160, 19),
-                                        )),
-                                  )
+                                    child: Text(
+                                      "Terima",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color.fromARGB(255, 73, 160, 19),
+                                      ),
+                                    ),
+                                  ),
                               ],
                             ),
                             if (status.isNotEmpty)
@@ -202,17 +211,17 @@ class _NotifikasiState extends State<Notifikasi> {
                               )
                             else
                               SizedBox.shrink(),
-                            SizedBox(
-                              height: 30,
-                            )
+                            SizedBox(height: 30),
                           ],
                         ),
-                      )
+                      ),
                     ],
-                  ))
-            ],
-          ),
-        )),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

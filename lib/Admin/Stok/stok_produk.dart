@@ -223,7 +223,7 @@ class _StokProdukState extends State<StokProduk> {
     });
   }
 
-  void showPopupMenu() {  
+  void showPopupMenu() {
     showMenu(
       context: context,
       position: RelativeRect.fromLTRB(
@@ -415,7 +415,8 @@ class _StokProdukState extends State<StokProduk> {
                 icon: Icon(Icons.arrow_back)),
           ),
           body: Container(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.05),
             child: Column(
               children: [
                 SizedBox(

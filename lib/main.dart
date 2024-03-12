@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 // import 'package:lji/login01.dart';
 import 'package:lji/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -9,6 +10,8 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
   runApp(MyApp());
 }
 

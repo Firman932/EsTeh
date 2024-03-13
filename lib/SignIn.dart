@@ -157,20 +157,12 @@ class _SignScreenState extends State<SignScreen> {
                                   // If user is not found in the database, display an error message
                                   showDialog(
                                     context: context,
-                                    builder: (context) => DeleteDialog(
-                                      title: "Error",
+                                    builder: (context) => WarningDialog(
+                                      title: "Warning",
                                       content:
-                                          "Email atau kata sandi Anda salah. Silakan coba lagi atau daftar jika Anda belum memiliki akun. Jika ingin daftar akun silahkan klik ( OK )",
+                                          "Email atau kata sandi Anda salah. Silakan coba lagi atau daftar jika Anda belum memiliki akun",
                                       buttonConfirm: 'OK',
                                       onButtonConfirm: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Register()));
-                                      },
-                                      buttonCancel: 'Batal',
-                                      onButtonCancel: () {
                                         Navigator.pop(context);
                                       },
                                     ),

@@ -118,7 +118,7 @@ class _RegisterState extends State<Register> {
                           leftIcon: Icons.person,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return "Please enter a username";
+                              return "Mohon isi nama Anda";
                             }
                             return null;
                           },
@@ -217,18 +217,6 @@ class _RegisterState extends State<Register> {
                                 print('Error: $e');
                                 // Handle error, seperti menampilkan pesan kesalahan kepada pengguna
                               }
-                              showDialog(
-                                context: context,
-                                builder: (context) => WarningDialog(
-                                  title: "Warning",
-                                  content:
-                                      "Kamu belum mengisi atau melengkapi semua isian. Mohon isi semua kolom.",
-                                  buttonConfirm: 'OK',
-                                  onButtonConfirm: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              );
                             }
                           },
                           style: ElevatedButton.styleFrom(

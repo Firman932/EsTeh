@@ -10,18 +10,20 @@ class RegisterInput extends StatefulWidget {
   final bool isObsecure;
   final VoidCallback? onLeftIconPressed;
   final VoidCallback? onRightconPressed;
+  final String? Function(String?)? validator;
 
-  const RegisterInput({
-    super.key,
-    required this.hintText,
-    this.isObsecure = false,
-    this.leftIcon,
-    this.rightIcon,
-    required this.textController,
-    this.onLeftIconPressed,
-    this.onRightconPressed,
-    required String? Function(dynamic value) validator,
-  });
+  const RegisterInput(
+      {Key? key,
+      required this.hintText,
+      this.isObsecure = false,
+      this.leftIcon,
+      this.rightIcon,
+      required this.textController,
+      this.onLeftIconPressed,
+      this.onRightconPressed,
+      this.validator})
+      : super(key: key);
+
   @override
   State<RegisterInput> createState() => _RegisterInputState();
 }
@@ -29,10 +31,11 @@ class RegisterInput extends StatefulWidget {
 class _RegisterInputState extends State<RegisterInput> {
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       cursorColor: greenPrimary,
       obscureText: widget.isObsecure,
       controller: widget.textController,
+      validator: widget.validator,
       style: GoogleFonts.poppins(fontSize: 12),
       decoration: InputDecoration(
           counterText: '',
@@ -51,16 +54,30 @@ class _RegisterInputState extends State<RegisterInput> {
             },
             child: Icon(widget.rightIcon, color: Color(0xff49A013)),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
+          border: OutlineInputBorder(
+            borderSide: const BorderSide(
               width: 1,
-              color: Colors.grey,
+              color: Colors.black12, // Default border color
             ),
+            borderRadius: BorderRadius.circular(10),
           ),
           enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(width: 1, color: Colors.grey))),
+            borderSide: const BorderSide(
+              width: 1,
+              color: Colors.black, // Default border color
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              width: 1,
+              color:
+                  const Color.fromRGBO(73, 160, 19, 1), // Desired focus color
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          errorStyle:
+              GoogleFonts.poppins(fontSize: 10, fontWeight: FontWeight.w400)),
       maxLength: 50,
     );
   }

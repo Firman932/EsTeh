@@ -36,7 +36,9 @@ class _RegisterInputState extends State<RegisterInput> {
       style: GoogleFonts.poppins(fontSize: 12),
       decoration: InputDecoration(
           counterText: '',
-          contentPadding: EdgeInsets.symmetric(vertical: 2),
+          contentPadding: EdgeInsets.symmetric(
+            vertical: 2,
+          ),
           hintText: widget.hintText,
           hintStyle: GoogleFonts.poppins(fontSize: 12),
           prefixIcon: Icon(widget.leftIcon, color: Color(0xff49A013)),

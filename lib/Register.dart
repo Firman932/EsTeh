@@ -53,12 +53,16 @@ class _RegisterState extends State<Register> {
               ),
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                // SizedBox(
+                //   height: 10,
+                // ),
                 Container(
-                  padding: EdgeInsets.fromLTRB(22, 20, 22, 45),
+                  padding: EdgeInsets.fromLTRB(22, 0, 22, 0),
                   width: screenWidth,
-                  height: 200 + MediaQuery.of(context).padding.horizontal,
+                  height: 140 + MediaQuery.of(context).padding.horizontal,
                   child: Image.asset(
                     "assets/Logoes.png",
                     fit: BoxFit.contain,
@@ -75,7 +79,7 @@ class _RegisterState extends State<Register> {
                       BoxShadow(
                         color: Color(0x499c9c9c),
                         offset: Offset(0, 0),
-                        blurRadius: 27.7,
+                        blurRadius: 5,
                       ),
                     ],
                   ),
@@ -216,7 +220,7 @@ class _RegisterState extends State<Register> {
                               showDialog(
                                 context: context,
                                 builder: (context) => WarningDialog(
-                                  title: "Error",
+                                  title: "Warning",
                                   content:
                                       "Kamu belum mengisi atau melengkapi semua isian. Mohon isi semua kolom.",
                                   buttonConfirm: 'OK',

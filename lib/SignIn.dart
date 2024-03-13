@@ -69,7 +69,7 @@ class _SignScreenState extends State<SignScreen> {
                       BoxShadow(
                         color: Color(0x499c9c9c),
                         offset: Offset(0, 0),
-                        blurRadius: 27.7,
+                        blurRadius: 3,
                       ),
                     ],
                   ),
@@ -77,6 +77,7 @@ class _SignScreenState extends State<SignScreen> {
                     key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Container(
                           margin: EdgeInsets.fromLTRB(0, 5, 0, 5),

@@ -43,11 +43,13 @@ class _StokProdukState extends State<StokProduk> {
     _numberController.text = '$_number';
     produkStream = FirebaseFirestore.instance.collection('produk').snapshots();
     produkStream.listen((QuerySnapshot querySnapshot) {
-      setState(() {
-        isCheckedList =
-            List.generate(querySnapshot.docs.length, (index) => false);
-        produkList = querySnapshot.docs.toList();
-      });
+      if (_isMounted) {
+        setState(() {
+          isCheckedList =
+              List.generate(querySnapshot.docs.length, (index) => false);
+          produkList = querySnapshot.docs.toList();
+        });
+      }
     });
   }
 
@@ -279,6 +281,7 @@ class _StokProdukState extends State<StokProduk> {
             .doc(produkList[i].id)
             .update({
           'stok_produk': updatedStock,
+          'kategori_produk': produkList[i]['kategori_produk'] ?? 'DefaultCategory',
         });
       }
     }
@@ -573,7 +576,11 @@ class _StokProdukState extends State<StokProduk> {
                       // Ambil data produk dari snapshot
                       produkList = snapshot.data!.docs
                           .where((produk) =>
-                              produk['kategori_produk'] == selectedCategory &&
+                              (produk['kategori_produk'] as String?)
+                                      ?.isNotEmpty ==
+                                  true &&
+                              (produk['kategori_produk'] as String) ==
+                                  selectedCategory &&
                               (produk['nama_produk'] as String)
                                   .toLowerCase()
                                   .contains(searchQuery))

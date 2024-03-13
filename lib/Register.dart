@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -56,9 +55,6 @@ class _RegisterState extends State<Register> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                // SizedBox(
-                //   height: 10,
-                // ),
                 Container(
                   padding: EdgeInsets.fromLTRB(22, 0, 22, 0),
                   width: screenWidth,
@@ -184,12 +180,11 @@ class _RegisterState extends State<Register> {
                                   String uid = userCredential.user!.uid;
                                   insertUserToFirebase(
                                       enteredEmail, enteredUsername, uid);
-                                  // Jika berhasil, lakukan sesuatu (misalnya, navigasi ke halaman beranda)
-                                  // Di sini Anda juga dapat menambahkan logika untuk menyimpan informasi pengguna ke database Firestore
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => MenuUser(),
+                                      builder: (context) => MenuUser(
+                                      ),
                                     ),
                                   );
                                 } else {

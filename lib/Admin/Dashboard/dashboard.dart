@@ -34,7 +34,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   void _showLogoutBottomSheet(BuildContext context) {
-    LogoutBottomSheet.show(context);
+    LogoutBottomSheet.show(context, AuthService());
   }
 
   @override
@@ -58,43 +58,43 @@ class _DashboardState extends State<Dashboard> {
                 color: Colors.red,
               )),
           actions: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Riwayat(),
-                    ),
-                  );
-                },
-                child: Icon(
-                  Icons.history,
-                  size: 25,
-                  color: Colors.black,
-                ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Riwayat(),
+                  ),
+                );
+              },
+              child: Icon(
+                Icons.history,
+                size: 25,
+                color: Colors.black,
               ),
-              SizedBox(
-                width: 5,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Notifikasi(),
+                  ),
+                );
+              },
+              child: Icon(
+                Icons.notifications,
+                size: 25,
+                color: Colors.black,
               ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Notifikasi(),
-                    ),
-                  );
-                },
-                child: Icon(
-                  Icons.notifications,
-                  size: 25,
-                  color: Colors.black,
-                ),
-              ),
-              SizedBox(
-                width: 13,
-              )
-            ],
+            ),
+            SizedBox(
+              width: 13,
+            )
+          ],
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -164,7 +164,8 @@ class _DashboardState extends State<Dashboard> {
 
                     produkList = snapshot.data!.docs
                         .where((produk) =>
-                            produk['kategori_produk'] == selectedCategory)
+                            produk['kategori_produk'] == selectedCategory &&
+                            produk['kategori_produk'] != null)
                         .toList();
 
                     produkList.sort((a, b) {

@@ -22,10 +22,6 @@ class Keranjang extends StatefulWidget {
 class _KeranjangState extends State<Keranjang> {
   void tambahkanKeKeranjang() async {
     // Ambil informasi produk
-    String namaProduk = widget.produkData["nama_produk"];
-    String gambarProduk = widget.produkData["gambar_produk"];
-    String variasiRasa = widget.produkData["variasi_rasa"];
-    int hargaProduk = widget.produkData["harga_produk"];
     int jumlah = 1; // Jumlah awal produk dalam keranjang
 
     // Dapatkan user ID dari pengguna yang sedang diotentikasi

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,7 +7,7 @@ import 'package:lji/SignIn.dart';
 import 'package:lji/login01.dart';
 
 class LogoutBottomSheet {
-  static void show(BuildContext context) {
+  static void show(BuildContext context, AuthService authService) {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     showModalBottomSheet(
       context: context,
@@ -58,6 +59,7 @@ class LogoutBottomSheet {
                     onPressed: () async {
                       try {
                         await _auth.signOut(); // Sign out the user
+                        authService.logoutUser();
                         Navigator.pop(context); // Pop the bottom sheet
                         // Navigate to the sign-in page
                         Navigator.pushReplacement(
@@ -88,5 +90,19 @@ class LogoutBottomSheet {
         );
       },
     );
+  }
+}
+
+class AuthService {
+  bool isLoggedIn = false;
+
+  // Instance method to set the isLoggedIn status
+  void loginUserAndSetStatus(bool status) {
+    isLoggedIn = status;
+  }
+
+  // Instance method to update isLoggedIn status during logout
+  void logoutUser() {
+    isLoggedIn = false;
   }
 }

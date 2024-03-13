@@ -8,7 +8,7 @@ import 'package:lji/styles/bottomlogout.dart';
 class Header extends StatelessWidget {
   const Header({super.key});
   void _showLogoutBottomSheet(BuildContext context) {
-    LogoutBottomSheet.show(context);
+    LogoutBottomSheet.show(context, AuthService());
   }
 
   @override

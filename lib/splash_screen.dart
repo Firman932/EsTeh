@@ -69,11 +69,9 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-      // splashscreen5Vn (93:649)
       width: double.infinity,
       height: double.infinity,
       child: Container(
-        // splashcs18Y (9:726)
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
@@ -85,7 +83,6 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
         ),
         child: Center(
-          // logoestehnusantara2TWL (93:1434)
           child: Container(
               width: MediaQuery.of(context).size.width * .8,
               height: MediaQuery.of(context).size.height * .4,

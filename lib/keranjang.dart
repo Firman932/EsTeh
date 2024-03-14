@@ -20,13 +20,10 @@ class Keranjang extends StatefulWidget {
 }
 
 class _KeranjangState extends State<Keranjang> {
+  String? namaPembeli;
+  String? userID;
+  int jumlah = 1;
   void tambahkanKeKeranjang() async {
-    // Ambil informasi produk
-    int jumlah = 1; // Jumlah awal produk dalam keranjang
-
-    // Dapatkan user ID dari pengguna yang sedang diotentikasi
-    String? userID;
-
     // Mendapatkan informasi pengguna yang sedang diotentikasi
     User? user = FirebaseAuth.instance.currentUser;
 
@@ -58,36 +55,94 @@ class _KeranjangState extends State<Keranjang> {
   }
 
   void beliLangsung() async {
-    // Ambil informasi produk
-    String namaProduk = widget.produkData["nama_produk"];
-    String variasiRasa = widget.produkData["variasi_rasa"];
-    int hargaProduk = widget.produkData["harga_produk"];
-    int jumlah = 1; // Jumlah produk yang dibeli langsung
+    try {
+      // Ambil informasi produk
+      String namaProduk = widget.produkData["nama_produk"];
+      String variasiRasa = widget.produkData["variasi_rasa"];
+      int hargaProduk = widget.produkData["harga_produk"];
 
-    // Dapatkan user ID dari pengguna yang sedang diotentikasi
-    String? userID;
+      // Mendapatkan informasi pengguna yang sedang diotentikasi
+      User? user = FirebaseAuth.instance.currentUser;
 
-    // Mendapatkan informasi pengguna yang sedang diotentikasi
-    User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        userID = user.uid;
+        String? username = await getUsernameFromUserID(userID!);
+        // Gunakan username sebagai nama pembeli
+        namaPembeli = username;
+      } else {
+        // Handle case where the user is not authenticated
+        print('User not authenticated');
+        return;
+      }
 
-    if (user != null) {
-      userID = user.uid;
-    } else {
-      // Handle case where the user is not authenticated
-      print('User not authenticated');
-      return;
+      // Simpan pesanan ke Firebase
+      DocumentReference pesananRef =
+          await FirebaseFirestore.instance.collection('pesanan').add({
+        'nama_pembeli': namaPembeli, // Menyimpan nama pembeli
+        'id_pembeli': userID, // Menyimpan ID pembeli
+        'id_transaksi': '', // ID transaksi dapat diisi jika diperlukan
+        'tanggal': DateTime.now(), // Menyimpan tanggal transaksi
+        'produk': FieldValue.arrayUnion([
+          // Menyimpan detail pesanan dalam bentuk array
+          {
+            'nama_produk': namaProduk,
+            'variasi_rasa': variasiRasa,
+            'harga_produk': hargaProduk,
+            'jumlah': jumlah,
+          }
+        ]),
+        'status': 'pending', // Status pesanan menunggu persetujuan admin
+      });
+      // Setelah dokumen ditambahkan, dapatkan ID transaksi yang dihasilkan
+      String idTransaksi = pesananRef.id;
+
+// Kemudian, perbarui dokumen dengan ID transaksi yang dihasilkan
+      await pesananRef.update({'id_transaksi': idTransaksi});
+
+      print('Pesanan berhasil diproses');
+      showDialog(
+        context: context,
+        builder: (context) => SucessDialog(
+          title: 'Berhasil',
+          content: 'Pesanan berhasil diproses.',
+          buttonConfirm: 'Ok',
+          onButtonConfirm: () {
+            Navigator.pop(context);
+          },
+        ),
+      );
+    } catch (error) {
+      print('Error processing order: $error');
+      // Handle error, misalnya, menampilkan pesan kesalahan kepada pengguna
+      showDialog(
+        context: context,
+        builder: (context) => WarningDialog(
+          title: 'Error',
+          content: 'Gagal memproses pesanan.',
+          buttonConfirm: 'Ok',
+          onButtonConfirm: () {
+            Navigator.pop(context);
+          },
+        ),
+      );
     }
+  }
 
-    // Simpan pesanan ke Firebase
-    DocumentReference pesananRef =
-        await FirebaseFirestore.instance.collection('pesanan').add({
-      'nama_produk': namaProduk,
-      'variasi_rasa': variasiRasa,
-      'harga_produk': hargaProduk,
-      'jumlah': jumlah,
-      'userID': userID,
-      'status': 'pending', // Status pesanan menunggu persetujuan admin
-    });
+  Future<String?> getUsernameFromUserID(String userID) async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      DocumentSnapshot userSnapshot =
+          await firestore.collection('users').doc(userID).get();
+
+      if (userSnapshot.exists) {
+        return userSnapshot['username'];
+      } else {
+        return ''; // Atau nilai default jika pengguna tidak ditemukan
+      }
+    } catch (error) {
+      print('Error getting owner name: $error');
+      return ''; // Atau nilai default jika terjadi kesalahan
+    }
   }
 
   @override

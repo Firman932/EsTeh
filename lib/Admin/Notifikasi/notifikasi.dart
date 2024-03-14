@@ -1,19 +1,72 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lji/Admin/Notifikasi/listpesan.dart';
 
 class Notifikasi extends StatefulWidget {
-  const Notifikasi({Key? key}) : super(key: key);
+  const Notifikasi({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<Notifikasi> createState() => _NotifikasiState();
 }
 
 class _NotifikasiState extends State<Notifikasi> {
+  late List<DocumentSnapshot> pesananList = [];
   String status = '';
+  late int totalBarang = 0;
+  late int totalHarga = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Lakukan pengambilan data pesanan dari Firestore di sini
+    fetchDataPesanan();
+    calculateTotal();
+  }
+
+  void fetchDataPesanan() {
+    // Lakukan pengambilan data pesanan dari Firestore dan simpan ke dalam pesananList
+    // Misalnya:
+    FirebaseFirestore.instance
+        .collection('pesanan')
+        .get()
+        .then((querySnapshot) {
+      setState(() {
+        pesananList = querySnapshot.docs;
+        calculateTotal();
+      });
+    }).catchError((error) {
+      print("Error fetching pesanan: $error");
+    });
+  }
+
+  void calculateTotal() {
+    int jumlahTotalBarang = 0;
+    int jumlahTotalHarga = 0;
+    for (var pesanan in pesananList) {
+      List<dynamic> produkList = pesanan['produk'];
+      for (var produk in produkList) {
+        int jumlah =
+            produk['jumlah'] ?? 0; // Access 'jumlah' from the nested map
+        int hargaProduk = produk['total_harga'] ??
+            0; // Access 'total_harga' from the nested map
+        jumlahTotalBarang += jumlah;
+        jumlahTotalHarga += hargaProduk;
+      }
+    }
+    // Setel total barang dan total harga saat ini
+    setState(() {
+      totalBarang = jumlahTotalBarang;
+      totalHarga = jumlahTotalHarga;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -29,8 +82,13 @@ class _NotifikasiState extends State<Notifikasi> {
         ),
       ),
       body: ListView.builder(
-        itemCount: 20,
+        itemCount: pesananList.length,
         itemBuilder: (context, index) {
+          DocumentSnapshot pesanan = pesananList[index];
+          String namaPembeli = pesanan['nama_pembeli'];
+          String tanggal = pesanan['tanggal'];
+          String jam = pesanan['jam'];
+          List<dynamic> produkList = pesanan['produk'];
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Column(
@@ -67,7 +125,7 @@ class _NotifikasiState extends State<Notifikasi> {
                                 SizedBox(width: 2),
                                 Expanded(
                                   child: Text(
-                                    "Dari Maulana Ilham Sudrajat",
+                                    "Dari $namaPembeli",
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.poppins(
                                       fontSize: 12,
@@ -80,7 +138,7 @@ class _NotifikasiState extends State<Notifikasi> {
                             ),
                           ),
                           Text(
-                            "12 Jan 2024",
+                            tanggal,
                             style: GoogleFonts.poppins(
                               fontSize: 10,
                               fontWeight: FontWeight.w400,
@@ -90,7 +148,7 @@ class _NotifikasiState extends State<Notifikasi> {
                       ),
                       SizedBox(height: 10),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -116,9 +174,11 @@ class _NotifikasiState extends State<Notifikasi> {
                                     horizontal: 5, vertical: 5),
                                 child: ListView.builder(
                                   shrinkWrap: true,
-                                  itemCount: 10,
+                                  itemCount: produkList.length,
                                   physics: NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) => ListPesan(),
+                                  itemBuilder: (context, index) => ListPesan(
+                                    produk: produkList[index],
+                                  ),
                                 ),
                               ),
                             ),
@@ -131,12 +191,11 @@ class _NotifikasiState extends State<Notifikasi> {
                               ),
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 7.5),
+                                    const EdgeInsets.symmetric(horizontal: 15),
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    SizedBox(width: 15),
                                     Text(
                                       "Total :",
                                       style: GoogleFonts.poppins(
@@ -144,13 +203,26 @@ class _NotifikasiState extends State<Notifikasi> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    Text(
-                                      "8/pcs",
-                                      style: GoogleFonts.poppins(fontSize: 10),
-                                    ),
-                                    Text(
-                                      "Rp.88.000",
-                                      style: GoogleFonts.poppins(fontSize: 10),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "$totalBarang/pcs",
+                                          style:
+                                              GoogleFonts.poppins(fontSize: 10),
+                                        ),
+                                        SizedBox(
+                                          width: screenWidth * 0.05,
+                                        ),
+                                        Text(
+                                          NumberFormat.currency(
+                                                  locale: 'id',
+                                                  symbol: 'Rp ',
+                                                  decimalDigits: 0)
+                                              .format(totalHarga),
+                                          style:
+                                              GoogleFonts.poppins(fontSize: 10),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -163,6 +235,12 @@ class _NotifikasiState extends State<Notifikasi> {
                                 if (status.isEmpty)
                                   GestureDetector(
                                     onTap: () {
+                                      FirebaseFirestore.instance
+                                          .collection('pesanan')
+                                          .doc(pesanan.id)
+                                          .update({
+                                        'status': 'Ditolak',
+                                      });
                                       setState(() {
                                         status = 'Pesanan ditolak';
                                       });
@@ -180,6 +258,12 @@ class _NotifikasiState extends State<Notifikasi> {
                                 if (status.isEmpty)
                                   GestureDetector(
                                     onTap: () {
+                                      FirebaseFirestore.instance
+                                          .collection('pesanan')
+                                          .doc(pesanan.id)
+                                          .update({
+                                        'status': 'Diterima',
+                                      });
                                       setState(() {
                                         status = 'Pesanan diterima';
                                       });

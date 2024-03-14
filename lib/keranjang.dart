@@ -57,9 +57,11 @@ class _KeranjangState extends State<Keranjang> {
   void beliLangsung() async {
     try {
       // Ambil informasi produk
+      String gambarProduk = widget.produkData["gambar_produk"];
       String namaProduk = widget.produkData["nama_produk"];
       String variasiRasa = widget.produkData["variasi_rasa"];
       int hargaProduk = widget.produkData["harga_produk"];
+      String idProduk = widget.produkData.id;
 
       // Mendapatkan informasi pengguna yang sedang diotentikasi
       User? user = FirebaseAuth.instance.currentUser;
@@ -75,13 +77,24 @@ class _KeranjangState extends State<Keranjang> {
         return;
       }
 
+      // Dapatkan tanggal sekarang
+      DateTime now = DateTime.now();
+
+      // Format tanggal
+      String formattedDate =
+          DateFormat('d MMM, y').format(now); // Output: 1 Jan, 2024
+
+      // Format jam
+      String formattedTime = DateFormat('HH:mm').format(now); // Output: 09:15
+
       // Simpan pesanan ke Firebase
       DocumentReference pesananRef =
           await FirebaseFirestore.instance.collection('pesanan').add({
         'nama_pembeli': namaPembeli, // Menyimpan nama pembeli
         'id_pembeli': userID, // Menyimpan ID pembeli
         'id_transaksi': '', // ID transaksi dapat diisi jika diperlukan
-        'tanggal': DateTime.now(), // Menyimpan tanggal transaksi
+        'tanggal': formattedDate, // Menyimpan tanggal transaksi
+        'jam': formattedTime,
         'produk': FieldValue.arrayUnion([
           // Menyimpan detail pesanan dalam bentuk array
           {
@@ -89,6 +102,9 @@ class _KeranjangState extends State<Keranjang> {
             'variasi_rasa': variasiRasa,
             'harga_produk': hargaProduk,
             'jumlah': jumlah,
+            'id_produk': idProduk,
+            'gambar_produk': gambarProduk,
+            'total_harga': hargaProduk * jumlah
           }
         ]),
         'status': 'pending', // Status pesanan menunggu persetujuan admin

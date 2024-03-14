@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lji/Admin/History/list_history.dart';
 import 'package:lji/Admin/Notifikasi/listpesan.dart';
 
 class NotifDon extends StatelessWidget {
@@ -43,7 +44,7 @@ class NotifDon extends StatelessWidget {
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return ListPesan();
+                    return ListHistory();
                   },
                   itemCount: 6,
                 ),

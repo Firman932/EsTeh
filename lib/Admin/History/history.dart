@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lji/Admin/History/list_history.dart';
 import 'package:lji/Admin/Notifikasi/listpesan.dart';
 
 class Riwayat extends StatelessWidget {
@@ -90,7 +91,7 @@ class Riwayat extends StatelessWidget {
                                   shrinkWrap: true,
                                   itemCount: 10,
                                   physics: NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) => ListPesan(),
+                                  itemBuilder: (context, index) => ListHistory(),
                                 ),
                               ),
                             ),

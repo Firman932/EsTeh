@@ -106,7 +106,7 @@ class CustomCurrencyField extends StatelessWidget {
       fontWeight: FontWeight.w500,
       color: Colors.black,
     );
-    final numberFormat = NumberFormat.decimalPattern('id');
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -124,25 +124,6 @@ class CustomCurrencyField extends StatelessWidget {
           validator: validator,
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly,
-            TextInputFormatter.withFunction(
-              (oldValue, newValue) {
-                try {
-                  if (newValue.text.isEmpty) {
-                    return TextEditingValue(); // Handle empty input
-                  }
-                  final parsedValue = numberFormat.parse(newValue.text);
-                  final formattedValue = numberFormat.format(parsedValue);
-                  return TextEditingValue(
-                    text: formattedValue,
-                    selection: TextSelection.fromPosition(
-                      TextPosition(offset: formattedValue.length),
-                    ),
-                  );
-                } catch (e) {
-                  return oldValue;
-                }
-              },
-            ),
           ], // hanya angka
           keyboardType: TextInputType.number, // tipe keyboard angka
           decoration: InputDecoration(
@@ -162,8 +143,7 @@ class CustomCurrencyField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: const BorderSide(
-                color:
-                    const Color.fromRGBO(73, 160, 19, 1), // Desired focus color
+                color: const Color.fromRGBO(73, 160, 19, 1), // Desired focus color
               ),
               borderRadius: BorderRadius.circular(10),
             ),
@@ -174,6 +154,7 @@ class CustomCurrencyField extends StatelessWidget {
     );
   }
 }
+
 
 class CustomTextField extends StatelessWidget {
   final String labelText;

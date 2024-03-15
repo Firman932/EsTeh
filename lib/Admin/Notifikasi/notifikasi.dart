@@ -44,6 +44,7 @@ class _NotifikasiState extends State<Notifikasi> {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);

@@ -55,43 +55,55 @@ class KeranjangPage01 extends State<KeranjangPage02> {
           .doc(userID)
           .get();
 
-      List<CartItem> items = [];
-      List<dynamic> cart = userDoc['cart'];
+      // Periksa apakah bidang "cart" ada dalam dokumen dan tidak kosong
+      if (userDoc.exists && userDoc.data() is Map<String, dynamic>) {
+        Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+        if (userData.containsKey('cart')) {
+          List<CartItem> items = [];
+          List<dynamic> cart = userData['cart'];
 
-      for (var item in cart) {
-        DocumentSnapshot productDoc = await FirebaseFirestore.instance
-            .collection('produk')
-            .doc(item['product_id'])
-            .get();
+          for (var item in cart) {
+            DocumentSnapshot productDoc = await FirebaseFirestore.instance
+                .collection('produk')
+                .doc(item['product_id'])
+                .get();
 
-        // Check if the product document exists
-        if (productDoc.exists) {
-          items.add(CartItem(
-            productId: item['product_id'],
-            productName: productDoc['nama_produk'],
-            productVariation: productDoc['variasi_rasa'],
-            quantity: item['jumlah'],
-            price: productDoc['harga_produk'],
-            isChecked: false,
-            productImage: productDoc['gambar_produk'],
-          ));
-        } else {
-          // Handle the case where the product has been deleted
-          print('Product with ID ${item['product_id']} no longer exists');
+            // Check if the product document exists
+            if (productDoc.exists) {
+              items.add(CartItem(
+                productId: item['product_id'],
+                productName: productDoc['nama_produk'],
+                productVariation: productDoc['variasi_rasa'],
+                quantity: item['jumlah'],
+                price: productDoc['harga_produk'],
+                isChecked: false,
+                productImage: productDoc['gambar_produk'],
+              ));
+            } else {
+              // Handle the case where the product has been deleted
+              print('Product with ID ${item['product_id']} no longer exists');
 
-          // Optionally, remove the item from the user's cart in Firestore
-          await _removeProductFromCart(item['product_id']);
-        }
-      }
-
-      setState(() {
-        cartItems = items;
-        if (!_isEditing) {
-          for (var item in cartItems) {
-            item.isChecked = false;
+              // Optionally, remove the item from the user's cart in Firestore
+              await _removeProductFromCart(item['product_id']);
+            }
           }
+
+          setState(() {
+            cartItems = items;
+            if (!_isEditing) {
+              for (var item in cartItems) {
+                item.isChecked = false;
+              }
+            }
+          });
         }
-      });
+      } else {
+        Center(child: Text("Keranjang Kosong"));
+        // Tampilkan pesan "Keranjang Kosong" jika bidang "cart" tidak ada atau kosong
+        setState(() {
+          cartItems = []; // Kosongkan list cartItems
+        });
+      }
     }
   }
 
@@ -137,12 +149,6 @@ class KeranjangPage01 extends State<KeranjangPage02> {
   }
 
   void _updateTotalPrice() async {
-    if (cartItems.isEmpty) {
-      setState(() {
-        _isTotalDisabled = true;
-      });
-      return;
-    }
     // Calculate total price based on selected quantities
     int total = 0;
 
@@ -177,6 +183,114 @@ class KeranjangPage01 extends State<KeranjangPage02> {
       }
     });
   }
+
+  void _checkout() async {
+  try {
+    // Ambil informasi pengguna yang sedang diotentikasi
+    User? user = FirebaseAuth.instance.currentUser;
+    
+
+    if (user != null) {
+      String userID = user.uid;
+
+      // Ambil detail produk yang dipilih
+      List<Map<String, dynamic>> selectedProducts = [];
+
+      for (var item in cartItems) {
+        if (item.isChecked) {
+          selectedProducts.add({
+            'nama_produk': item.productName,
+            'variasi_rasa': item.productVariation,
+            'harga_produk': item.price,
+            'jumlah': item.quantity,
+            'id_produk': item.productId,
+            'gambar_produk': item.productImage,
+            'total_harga': item.price * item.quantity,
+          });
+        }
+      }
+
+      // Hitung total barang dan harga total
+      int totalBarang = 0;
+      int hargaTotal = 0;
+
+      for (var produk in selectedProducts) {
+        totalBarang += produk['jumlah'] as int;
+        hargaTotal += produk['total_harga'] as int;
+      }
+
+      String? namaPembeli = await getUsernameFromUserID(userID);
+
+      // Dapatkan tanggal dan waktu sekarang
+      DateTime now = DateTime.now();
+
+      // Format tanggal dan waktu
+      String formattedDate = DateFormat('d MMM, y').format(now);
+      String formattedTime = DateFormat('HH:mm').format(now);
+
+      // Simpan pesanan ke database Firestore
+      await FirebaseFirestore.instance.collection('pesanan').add({
+        'nama_pembeli': namaPembeli, // Gunakan nama pengguna sebagai nama pembeli
+        'id_pembeli': userID,
+        'tanggal': formattedDate,
+        'jam': formattedTime,
+        'produk': selectedProducts,
+        'status': 'pending',
+        'total_barang': totalBarang,
+        'harga_total': hargaTotal,
+      });
+
+      // Hapus produk yang telah dibeli dari keranjang
+      await _deleteSelectedProducts();
+
+      // Tampilkan dialog sukses
+      showDialog(
+        context: context,
+        builder: (context) => SucessDialog(
+          title: 'Berhasil',
+          content: 'Pesanan berhasil diproses.',
+          buttonConfirm: 'Ok',
+          onButtonConfirm: () {
+            Navigator.pop(context);
+          },
+        ),
+      );
+    } else {
+      print('User not authenticated');
+      // Handle case where the user is not authenticated
+    }
+  } catch (error) {
+    print('Error processing order: $error');
+    // Handle error, misalnya, menampilkan pesan kesalahan kepada pengguna
+    showDialog(
+      context: context,
+      builder: (context) => WarningDialog(
+        title: 'Error',
+        content: 'Gagal memproses pesanan.',
+        buttonConfirm: 'Ok',
+        onButtonConfirm: () {
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+}
+Future<String?> getUsernameFromUserID(String userID) async {
+  try {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    DocumentSnapshot userSnapshot =
+        await firestore.collection('users').doc(userID).get();
+
+    if (userSnapshot.exists) {
+      return userSnapshot['username'];
+    } else {
+      return null; // Atau nilai default jika pengguna tidak ditemukan
+    }
+  } catch (error) {
+    print('Error getting username: $error');
+    return null; // Atau nilai default jika terjadi kesalahan
+  }
+}
 
   Future<bool> _showDeleteConfirmationDialog(CartItem cartItem) async {
     bool deleteConfirmed = false;
@@ -244,7 +358,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
     });
   }
 
-  void _deleteSelectedProducts() async {
+  Future<void> _deleteSelectedProducts() async {
     List<String> selectedProductIds = [];
 
     for (var item in cartItems) {
@@ -261,71 +375,203 @@ class KeranjangPage01 extends State<KeranjangPage02> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        forceMaterialTransparency: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            size: 23,
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      forceMaterialTransparency: true,
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
+          size: 23,
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Keranjang',
+            style: GoogleFonts.poppins(
+              fontSize: 22,
+              fontWeight: FontWeight.w500,
+              height: 3,
+              color: Color(0xff000000),
+            ),
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Keranjang',
+          SizedBox(width: 3),
+          Container(
+            padding: EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: _isEditing ? Colors.red : Color(0xFF49A013),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              '${cartItems.where((item) => item.isChecked).length}',
               style: GoogleFonts.poppins(
-                fontSize: 22,
-                fontWeight: FontWeight.w500,
-                height: 3,
-                color: Color(0xff000000),
-              ),
-            ),
-            SizedBox(width: 3),
-            Container(
-              padding: EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: _isEditing ? Colors.red : Color(0xFF49A013),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                '${cartItems.where((item) => item.isChecked).length}',
-                style: GoogleFonts.poppins(
-                  fontSize: 13,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                _isEditing = !_isEditing;
-              });
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-              margin: EdgeInsets.only(right: 10),
-              child: Text(
-                _isEditing ? 'Selesai' : 'Ubah',
-                style: GoogleFonts.poppins(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xff000000),
-                ),
+                fontSize: 13,
+                color: Colors.white,
               ),
             ),
           ),
         ],
       ),
+      actions: [
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              _isEditing = !_isEditing;
+            });
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+            margin: EdgeInsets.only(right: 10),
+            child: Text(
+              _isEditing ? 'Selesai' : 'Ubah',
+              style: GoogleFonts.poppins(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Color(0xff000000),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBottomNavigationBar() {
+    return _isEditing
+        ? Container(
+            // Bottom navigation bar when editing
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Color(0x499c9c9c),
+                offset: Offset(0, 0),
+                blurRadius: 2,
+              ),
+            ]),
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(10), topLeft: Radius.circular(10)),
+              child: BottomAppBar(
+                height: 70,
+                surfaceTintColor: Colors.white,
+                shape: CircularNotchedRectangle(),
+                color: Colors.white,
+                elevation: 1,
+                notchMargin: 8,
+                clipBehavior: Clip.antiAlias,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => DeleteDialog(
+                            title: 'Peringatan',
+                            content:
+                                'Apakah kamu yakin ingin menghapus list keranjangmu ?',
+                            buttonConfirm: 'Ok',
+                            onButtonConfirm: () {
+                              _deleteSelectedProducts();
+                              Navigator.pop(context);
+                            },
+                            buttonCancel: 'Cancel',
+                            onButtonCancel: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                      ),
+                      child: Text(
+                        'Hapus',
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+        : Container(
+            // Bottom navigation bar when not editing
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Color(0x499c9c9c),
+                offset: Offset(0, 0),
+                blurRadius: 2,
+              ),
+            ]),
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+              child: BottomAppBar(
+                surfaceTintColor: Colors.white,
+                height: 70,
+                elevation: 1,
+                notchMargin: 8,
+                shape: CircularNotchedRectangle(),
+                color: Colors.white,
+                child: Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(children: [
+                        Text(
+                          'Total : ${NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(_calculateTotal())}',
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color:
+                                _isTotalDisabled ? Colors.grey : Colors.black,
+                          ),
+                        ),
+                      ]),
+                      _isTotalDisabled
+                          ? SizedBox.shrink()
+                          : ElevatedButton(
+                              onPressed: () {
+                                _checkout();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xff4fb60e),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              child: Text(
+                                'Checkout',
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: _buildAppBar(),
       body: Container(
         padding: EdgeInsets.all(6),
         child: Column(
@@ -337,15 +583,18 @@ class KeranjangPage01 extends State<KeranjangPage02> {
               child: Row(
                 children: [
                   Checkbox(
-                    value: cartItems.every((item) => item.isChecked),
-                    onChanged: (value) {
-                      setState(() {
-                        cartItems.forEach((item) {
-                          item.isChecked = value!;
-                        });
-                        _updateTotalPrice();
-                      });
-                    },
+                    value: cartItems.isNotEmpty &&
+                        cartItems.every((item) => item.isChecked),
+                    onChanged: cartItems.isNotEmpty
+                        ? (value) {
+                            setState(() {
+                              cartItems.forEach((item) {
+                                item.isChecked = value!;
+                              });
+                              _updateTotalPrice();
+                            });
+                          }
+                        : null, // Nonaktifkan checkbox jika keranjang kosong
                     visualDensity: VisualDensity(
                       horizontal: -0.0,
                       vertical: -0.0,
@@ -507,142 +756,10 @@ class KeranjangPage01 extends State<KeranjangPage02> {
           ],
         ),
       ),
-      bottomNavigationBar: _isEditing
-          ? Container(
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                  color: Color(0x499c9c9c),
-                  offset: Offset(0, 0),
-                  blurRadius: 2,
-                ),
-              ]),
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    topLeft: Radius.circular(10)),
-                child: BottomAppBar(
-                  height: 70,
-                  surfaceTintColor: Colors.white,
-                  shape: CircularNotchedRectangle(),
-                  color: Colors.white,
-                  elevation: 1,
-                  notchMargin: 8,
-                  clipBehavior: Clip.antiAlias,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => DeleteDialog(
-                              title: 'Peringatan',
-                              content:
-                                  'Apakah kamu yakin ingin menghapus list keranjangmu ?',
-                              buttonConfirm: 'Ok',
-                              onButtonConfirm: () {
-                                _deleteSelectedProducts();
-                                Navigator.pop(context);
-                              },
-                              buttonCancel: 'Cancel',
-                              onButtonCancel: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                        ),
-                        child: Text(
-                          'Hapus',
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            )
-          : Container(
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                  color: Color(0x499c9c9c),
-                  offset: Offset(0, 0),
-                  blurRadius: 2,
-                ),
-              ]),
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10)),
-                child: BottomAppBar(
-                  surfaceTintColor: Colors.white,
-                  height: 70,
-                  elevation: 1,
-                  notchMargin: 8,
-                  shape: CircularNotchedRectangle(),
-                  color: Colors.white,
-                  child: Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(children: [
-                          Text(
-                            'Total : ${NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(_isTotalDisabled ? 0 : _calculateTotal())}',
-                            style: GoogleFonts.poppins(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              color:
-                                  _isTotalDisabled ? Colors.grey : Colors.black,
-                            ),
-                          ),
-                        ]),
-                        _isTotalDisabled
-                            ? SizedBox.shrink()
-                            : ElevatedButton(
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => SucessDialog(
-                                      title: 'Sukses',
-                                      content:
-                                          'Transaksi telah berhasil terima kasih telah berbelanja di toko kami !',
-                                      buttonConfirm: 'Ok',
-                                      onButtonConfirm: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xff4fb60e),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                ),
-                                child: Text(
-                                  'Checkout',
-                                  style: GoogleFonts.poppins(
-                                    color: Colors.white,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
+    bottomNavigationBar: Visibility(
+  visible: _calculateTotal() > 0,
+  child: _buildBottomNavigationBar(),
+),
     );
   }
 

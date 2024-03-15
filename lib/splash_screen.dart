@@ -28,6 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
         setState(() {
           isLogin = true;
         });
+        navigateToNextScreen();
       }
     });
   }
@@ -47,7 +48,6 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       // If there's internet, continue with the app initialization
       checkIfLogin();
-      navigateToNextScreen();
     }
   }
 

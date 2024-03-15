@@ -3,9 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lji/Admin/Dashboard/dashboard.dart';
 import 'package:lji/FOR%20USER/BagianDashboard.dart';
-import 'package:lji/Register.dart';
 import 'package:lji/SignIn.dart';
-import 'login01.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -32,37 +30,37 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     // Simulate an asynchronous operation (e.g., fetching data) before navigating
-      // Simulate an asynchronous operation (e.g., fetching data) before navigating
-  Future.delayed(Duration(seconds: 4), () async {
-    User? user = auth.currentUser;
+    // Simulate an asynchronous operation (e.g., fetching data) before navigating
+    Future.delayed(Duration(seconds: 4), () async {
+      User? user = auth.currentUser;
 
-    if (user != null && isLogin) {
-      // User is logged in
-      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
+      if (user != null && isLogin) {
+        // User is logged in
+        DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
 
-      String role = userSnapshot['role'];
-      if (role == 'admin') {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Dashboard()),
-        );
+        String role = userSnapshot['role'];
+        if (role == 'admin') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => Dashboard()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MenuUser()),
+          );
+        }
       } else {
+        // User is not logged in
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MenuUser()),
+          MaterialPageRoute(builder: (context) => SignScreen()),
         );
       }
-    } else {
-      // User is not logged in
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => SignScreen()),
-      );
-    }
-  });
+    });
   }
 
   @override

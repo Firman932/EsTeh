@@ -281,7 +281,8 @@ class _StokProdukState extends State<StokProduk> {
             .doc(produkList[i].id)
             .update({
           'stok_produk': updatedStock,
-          'kategori_produk': produkList[i]['kategori_produk'] ?? 'DefaultCategory',
+          'kategori_produk':
+              produkList[i]['kategori_produk'] ?? 'DefaultCategory',
         });
       }
     }
@@ -468,7 +469,7 @@ class _StokProdukState extends State<StokProduk> {
                                     color: Color.fromRGBO(
                                         156, 156, 156, 0.28999999165534973),
                                     offset: Offset(0, 0),
-                                    blurRadius: 55.5,
+                                    blurRadius: 3,
                                   ),
                                 ],
                               ),

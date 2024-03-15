@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lji/Admin/Dashboard/filter.dart';
 import 'package:lji/Admin/Dashboard/search.dart';
 import 'package:lji/Admin/History/history.dart';
 import 'package:lji/FOR%20USER/NotifikasiUser.dart';
@@ -21,6 +20,7 @@ class MenuUser extends StatefulWidget {
 }
 
 class _MenuUserState extends State<MenuUser> {
+  String searchQuery = '';
   String selectedCategory = "Minuman";
   late Stream<QuerySnapshot> produkStream;
   List<DocumentSnapshot> produkList = [];
@@ -92,78 +92,73 @@ class _MenuUserState extends State<MenuUser> {
               ),
             ),
           ),
-          leading: Row(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  _showLogoutBottomSheet(context);
-                },
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  margin: EdgeInsets.only(
-                    left: 10 + MediaQuery.of(context).padding.left,
-                  ),
-                  child: Icon(
-                    Icons.logout, // Ganti dengan ikon yang sesuai
-                    size: 23,
-                    color: Colors.red,
-                  ),
-                ),
+          leading: GestureDetector(
+            onTap: () {
+              _showLogoutBottomSheet(context);
+            },
+            child: Container(
+              padding: EdgeInsets.only(bottom: 17, top: 17),
+              height: 25,
+              width: 25,
+              child: Image.asset(
+                "assets/logout.png",
               ),
-            ],
+            ),
           ),
           actions: [
             GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NotifUser()),
+                  MaterialPageRoute(
+                    builder: (context) => Riwayat(),
+                  ),
                 );
               },
               child: Icon(
-                Icons.notifications, // Ganti dengan ikon yang sesuai
-                size: 23,
+                Icons.history,
+                size: 25,
                 color: Colors.black,
               ),
             ),
             SizedBox(
-              width: 4,
+              width: 5,
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 3),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Riwayat()),
-                  );
-                },
-                child: Icon(
-                  Icons.history, // Ganti dengan ikon yang sesuai
-                  size: 23,
-                  color: Colors.black,
-                ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NotifUser(),
+                  ),
+                );
+              },
+              child: Icon(
+                Icons.notifications,
+                size: 25,
+                color: Colors.black,
               ),
             ),
             SizedBox(
-              width: 4,
+              width: 5,
             ),
-            Container(
-              margin: EdgeInsets.only(
-                  right: 15 + MediaQuery.of(context).padding.right),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => KeranjangPage02()),
-                  );
-                },
-                child: Icon(
-                  Icons.shopping_cart, // Ganti dengan ikon yang sesuai
-                  size: 23,
-                  color: Colors.black,
-                ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => KeranjangPage02(),
+                  ),
+                );
+              },
+              child: Icon(
+                Icons.shopping_cart,
+                size: 25,
+                color: Colors.black,
               ),
+            ),
+            SizedBox(
+              width: 13,
             ),
           ],
         ),
@@ -171,7 +166,37 @@ class _MenuUserState extends State<MenuUser> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              Search(),
+              Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.0),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromRGBO(156, 156, 156, 0.28999999165534973),
+                      offset: Offset(0, 0),
+                      blurRadius: 3,
+                    )
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: TextField(
+                    style: TextStyle(fontSize: 14),
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      hintStyle: TextStyle(fontSize: 14),
+                      border: InputBorder.none,
+                      icon: Icon(Icons.search),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        searchQuery = value.toLowerCase();
+                      });
+                    },
+                  ),
+                ),
+              ),
               SizedBox(height: 15),
               FilterUser(
                 onMinumanSelected: (category) {
@@ -204,9 +229,16 @@ class _MenuUserState extends State<MenuUser> {
                     }
                     produkList = snapshot.data!.docs
                         .where((produk) =>
-                            produk['kategori_produk'] == selectedCategory &&
-                            produk['kategori_produk'] != null)
+                            (produk['kategori_produk'] as String?)
+                                    ?.isNotEmpty ==
+                                true &&
+                            (produk['kategori_produk'] as String) ==
+                                selectedCategory &&
+                            (produk['nama_produk'] as String)
+                                .toLowerCase()
+                                .contains(searchQuery))
                         .toList();
+
                     return ListView.builder(
                       shrinkWrap: true,
                       itemCount: produkList.length,

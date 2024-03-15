@@ -20,6 +20,7 @@ class ListPesan extends StatelessWidget {
     int jumlah = produk['jumlah'];
     int totalHarga = produk['total_harga'];
     return Container(
+      padding: EdgeInsets.only(top: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
@@ -43,7 +44,9 @@ class ListPesan extends StatelessWidget {
                 ),
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.only(left: 10),
+                    padding: EdgeInsets.only(
+                      left: 10,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

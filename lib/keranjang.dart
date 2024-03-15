@@ -1,13 +1,10 @@
-import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lji/styles/color.dart';
 import 'package:lji/styles/dialog.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-
+import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -62,28 +59,28 @@ class _KeranjangState extends State<Keranjang> {
       String variasiRasa = widget.produkData["variasi_rasa"];
       int hargaProduk = widget.produkData["harga_produk"];
       String idProduk = widget.produkData.id;
-      
+
       // Hitung total barang dan harga total
       int totalBarang = 0;
       int hargaTotal = 0;
 
 // Iterasi melalui setiap produk yang dibeli
       for (var produk in [
-      {
-        'nama_produk': namaProduk,
-        'variasi_rasa': variasiRasa,
-        'harga_produk': hargaProduk,
-        'jumlah': jumlah,
-        'id_produk': idProduk,
-        'gambar_produk': gambarProduk,
-        'total_harga': hargaProduk * jumlah
+        {
+          'nama_produk': namaProduk,
+          'variasi_rasa': variasiRasa,
+          'harga_produk': hargaProduk,
+          'jumlah': jumlah,
+          'id_produk': idProduk,
+          'gambar_produk': gambarProduk,
+          'total_harga': hargaProduk * jumlah
+        }
+      ]) {
+        totalBarang += (produk['jumlah'] as num)
+            .toInt(); // Tambahkan jumlah produk ke total_barang
+        hargaTotal += (produk['total_harga'] as num)
+            .toInt(); // Tambahkan total harga produk ke harga_total
       }
-    ]) {
-        totalBarang += (produk['jumlah']as num).toInt(); // Tambahkan jumlah produk ke total_barang
-        hargaTotal += (produk['total_harga']as num).toInt(); // Tambahkan total harga produk ke harga_total
-      }
-
-      
 
       // Mendapatkan informasi pengguna yang sedang diotentikasi
       User? user = FirebaseAuth.instance.currentUser;

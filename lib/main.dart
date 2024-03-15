@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lji/dependency_injection.dart';
-// import 'package:lji/login01.dart';
 import 'package:lji/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'firebase/firebase_notification.dart';
 import 'firebase_options.dart';
 

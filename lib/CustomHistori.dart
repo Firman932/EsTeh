@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lji/Admin/History/list_history.dart';
-import 'package:lji/Admin/Notifikasi/listpesan.dart';
+import 'package:lji/FOR%20USER/History/list_history.dart';
 
 class NotifDon extends StatelessWidget {
   const NotifDon({Key? key}) : super(key: key);

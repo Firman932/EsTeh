@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Dashboard/analisis.dart';
-import 'package:lji/Admin/History/history.dart';
+import 'package:lji/Admin/HistoryAdmin/HistoryAdmin.dart';
 import 'package:lji/Admin/Notifikasi/notifikasi.dart';
 import 'package:lji/Admin/Dashboard/list_menu.dart';
 import 'package:lji/Admin/Stok/stok_produk.dart';
-import 'package:lji/dependency_injection.dart';
 import 'package:lji/filterUser.dart';
 import 'package:lji/styles/bottomlogout.dart'; // Sesuaikan dengan lokasi file FilterUser.dart
 
@@ -65,7 +64,7 @@ class _DashboardState extends State<Dashboard> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Riwayat(),
+                    builder: (context) => RiwayatAdmin(),
                   ),
                 );
               },

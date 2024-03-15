@@ -1,17 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lji/Admin/Dashboard/dashboard.dart';
 import 'package:lji/FOR%20USER/BagianDashboard.dart';
-import 'package:lji/dependency_injection.dart';
 import 'package:lji/styles/color.dart';
 import 'package:lji/DataBasePHPMYSQL/passwordtextfield.dart';
 import 'package:lji/DataBasePHPMYSQL/TextFieldLogin.dart';
 import 'package:lji/SignIn.dart';
-import 'package:lji/styles/dialog.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);

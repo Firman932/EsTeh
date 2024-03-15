@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:lji/Admin/History/history.dart';
+import 'package:lji/Admin/HistoryAdmin/HistoryAdmin.dart';
 import 'package:lji/Admin/Notifikasi/notifikasi.dart';
 import 'package:lji/styles/bottomlogout.dart';
 
@@ -42,7 +41,7 @@ class Header extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Riwayat(),
+                      builder: (context) => RiwayatAdmin(),
                     ),
                   );
                 },

@@ -2,8 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Create/create_produk.dart';
-import 'package:lji/Admin/Dashboard/filter.dart';
-import 'package:lji/Admin/History/history.dart';
+import 'package:lji/Admin/HistoryAdmin/HistoryAdmin.dart';
 import 'package:lji/Admin/Notifikasi/notifikasi.dart';
 import 'package:lji/Admin/Stok/list_produk.dart';
 import 'package:lji/filterUser.dart';
@@ -374,7 +373,7 @@ class _StokProdukState extends State<StokProduk> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Riwayat(),
+                      builder: (context) => RiwayatAdmin(),
                     ),
                   );
                 },

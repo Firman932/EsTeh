@@ -79,7 +79,7 @@ class _NotifikasiState extends State<Notifikasi> {
                         color:
                             Color.fromRGBO(156, 156, 156, 0.28999999165534972),
                         offset: Offset(0, 0),
-                        blurRadius: 55.5,
+                        blurRadius: 3,
                       ),
                     ],
                     borderRadius: BorderRadius.circular(10),
@@ -135,7 +135,7 @@ class _NotifikasiState extends State<Notifikasi> {
                                 fontSize: 12,
                               ),
                             ),
-                            SizedBox(height: 30),
+                            SizedBox(height: 20),
                             Text(
                               "List Pesanan: ",
                               style: GoogleFonts.poppins(
@@ -143,7 +143,7 @@ class _NotifikasiState extends State<Notifikasi> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(height: 10),
                             Container(
                               color: Colors.white,
                               child: Padding(
@@ -190,13 +190,13 @@ class _NotifikasiState extends State<Notifikasi> {
                                 ],
                               ),
                             ),
-                            SizedBox(height: 30),
+                            SizedBox(height: 20),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 if (status.isEmpty)
-                                  GestureDetector(
-                                    onTap: () {
+                                  ElevatedButton(
+                                    onPressed: () {
                                       FirebaseFirestore.instance
                                           .collection('pesanan')
                                           .doc(pesanan.id)
@@ -207,19 +207,27 @@ class _NotifikasiState extends State<Notifikasi> {
                                         status = 'Pesanan ditolak';
                                       });
                                     },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red,
+                                      minimumSize: Size(0, 40),
+                                      shape: RoundedRectangleBorder(
+                                        // Change your radius here
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
                                     child: Text(
                                       "Tolak",
                                       style: GoogleFonts.poppins(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600,
-                                        color: Colors.red,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
                                 SizedBox(width: 10),
                                 if (status.isEmpty)
-                                  GestureDetector(
-                                    onTap: () {
+                                  ElevatedButton(
+                                    onPressed: () {
                                       FirebaseFirestore.instance
                                           .collection('pesanan')
                                           .doc(pesanan.id)
@@ -230,15 +238,24 @@ class _NotifikasiState extends State<Notifikasi> {
                                         status = 'Pesanan diterima';
                                       });
                                     },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          Color.fromARGB(255, 73, 160, 19),
+                                      minimumSize: Size(0, 40),
+                                      shape: RoundedRectangleBorder(
+                                        // Change your radius here
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
                                     child: Text(
                                       "Terima",
                                       style: GoogleFonts.poppins(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600,
-                                        color: Color.fromARGB(255, 73, 160, 19),
+                                        color: Colors.white,
                                       ),
                                     ),
-                                  ),
+                                  )
                               ],
                             ),
                             if (status.isNotEmpty)
@@ -257,7 +274,7 @@ class _NotifikasiState extends State<Notifikasi> {
                               )
                             else
                               SizedBox.shrink(),
-                            SizedBox(height: 30),
+                            SizedBox(height: 15),
                           ],
                         ),
                       ),

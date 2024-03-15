@@ -16,15 +16,12 @@ class Notifikasi extends StatefulWidget {
 class _NotifikasiState extends State<Notifikasi> {
   late List<DocumentSnapshot> pesananList = [];
   String status = '';
-  late int totalBarang = 0;
-  late int totalHarga = 0;
 
   @override
   void initState() {
     super.initState();
     // Lakukan pengambilan data pesanan dari Firestore di sini
     fetchDataPesanan();
-    calculateTotal();
   }
 
   void fetchDataPesanan() {
@@ -36,31 +33,9 @@ class _NotifikasiState extends State<Notifikasi> {
         .then((querySnapshot) {
       setState(() {
         pesananList = querySnapshot.docs;
-        calculateTotal();
       });
     }).catchError((error) {
       print("Error fetching pesanan: $error");
-    });
-  }
-
-  void calculateTotal() {
-    int jumlahTotalBarang = 0;
-    int jumlahTotalHarga = 0;
-    for (var pesanan in pesananList) {
-      List<dynamic> produkList = pesanan['produk'];
-      for (var produk in produkList) {
-        int jumlah =
-            produk['jumlah'] ?? 0; // Access 'jumlah' from the nested map
-        int hargaProduk = produk['total_harga'] ??
-            0; // Access 'total_harga' from the nested map
-        jumlahTotalBarang += jumlah;
-        jumlahTotalHarga += hargaProduk;
-      }
-    }
-    // Setel total barang dan total harga saat ini
-    setState(() {
-      totalBarang = jumlahTotalBarang;
-      totalHarga = jumlahTotalHarga;
     });
   }
 
@@ -88,6 +63,8 @@ class _NotifikasiState extends State<Notifikasi> {
           String namaPembeli = pesanan['nama_pembeli'];
           String tanggal = pesanan['tanggal'];
           String jam = pesanan['jam'];
+          int totalHarga = pesanan['harga_total'];
+          int totalBarang = pesanan['total_barang'];
           List<dynamic> produkList = pesanan['produk'];
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
@@ -182,6 +159,7 @@ class _NotifikasiState extends State<Notifikasi> {
                                 ),
                               ),
                             ),
+                            Divider(),
                             Container(
                               width: MediaQuery.of(context).size.width,
                               height: 30,
@@ -189,43 +167,27 @@ class _NotifikasiState extends State<Notifikasi> {
                                 borderRadius: BorderRadius.circular(10),
                                 color: Colors.white,
                               ),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Total :",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Total : ",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "$totalBarang/pcs",
-                                          style:
-                                              GoogleFonts.poppins(fontSize: 10),
-                                        ),
-                                        SizedBox(
-                                          width: screenWidth * 0.05,
-                                        ),
-                                        Text(
-                                          NumberFormat.currency(
-                                                  locale: 'id',
-                                                  symbol: 'Rp ',
-                                                  decimalDigits: 0)
-                                              .format(totalHarga),
-                                          style:
-                                              GoogleFonts.poppins(fontSize: 10),
-                                        ),
-                                      ],
+                                  ),
+                                  Text(
+                                    NumberFormat.currency(
+                                            locale: 'id',
+                                            symbol: 'Rp ',
+                                            decimalDigits: 0)
+                                        .format(totalHarga),
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                             SizedBox(height: 30),

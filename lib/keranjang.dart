@@ -62,6 +62,28 @@ class _KeranjangState extends State<Keranjang> {
       String variasiRasa = widget.produkData["variasi_rasa"];
       int hargaProduk = widget.produkData["harga_produk"];
       String idProduk = widget.produkData.id;
+      
+      // Hitung total barang dan harga total
+      int totalBarang = 0;
+      int hargaTotal = 0;
+
+// Iterasi melalui setiap produk yang dibeli
+      for (var produk in [
+      {
+        'nama_produk': namaProduk,
+        'variasi_rasa': variasiRasa,
+        'harga_produk': hargaProduk,
+        'jumlah': jumlah,
+        'id_produk': idProduk,
+        'gambar_produk': gambarProduk,
+        'total_harga': hargaProduk * jumlah
+      }
+    ]) {
+        totalBarang += (produk['jumlah']as num).toInt(); // Tambahkan jumlah produk ke total_barang
+        hargaTotal += (produk['total_harga']as num).toInt(); // Tambahkan total harga produk ke harga_total
+      }
+
+      
 
       // Mendapatkan informasi pengguna yang sedang diotentikasi
       User? user = FirebaseAuth.instance.currentUser;
@@ -108,6 +130,8 @@ class _KeranjangState extends State<Keranjang> {
           }
         ]),
         'status': 'pending', // Status pesanan menunggu persetujuan admin
+        'total_barang': totalBarang, // Menambahkan field total_barang
+        'harga_total': hargaTotal, // Menambahkan field harga_total
       });
       // Setelah dokumen ditambahkan, dapatkan ID transaksi yang dihasilkan
       String idTransaksi = pesananRef.id;

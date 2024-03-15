@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lji/FOR%20USER/History/list_history.dart';
+import 'package:lji/FOR%20USER/HistoryUser/list_history.dart';
 
 class RiwayatAdmin extends StatefulWidget {
   const RiwayatAdmin({Key? key}) : super(key: key);

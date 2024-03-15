@@ -50,14 +50,19 @@ class _DashboardState extends State<Dashboard> {
                 GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w500),
           ),
           centerTitle: true,
-          leading: IconButton(
-              onPressed: () {
-                _showLogoutBottomSheet(context);
-              },
-              icon: Icon(
-                Icons.logout,
-                color: Colors.red,
-              )),
+          leading: GestureDetector(
+            onTap: () {
+              _showLogoutBottomSheet(context);
+            },
+            child: Container(
+              padding: EdgeInsets.only(bottom: 17, top: 17),
+              height: 25,
+              width: 25,
+              child: Image.asset(
+                "assets/logout.png",
+              ),
+            ),
+          ),
           actions: [
             GestureDetector(
               onTap: () {
@@ -94,7 +99,7 @@ class _DashboardState extends State<Dashboard> {
             ),
             SizedBox(
               width: 13,
-            )
+            ),
           ],
         ),
         body: SingleChildScrollView(

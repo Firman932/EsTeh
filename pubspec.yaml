@@ -24,6 +24,8 @@ dependencies:
   persistent_bottom_nav_bar: ^5.0.2
   flutter_neumorphic_plus: ^3.3.0
   firebase_messaging: ^14.7.17
+  connectivity_plus: ^5.0.2
+  
   
 
 dev_dependencies:
@@ -74,6 +76,7 @@ flutter:
     - assets/Warning.png
     - assets/1024.png
     # - assets/512.png
+    - assets/lost.png
     
 
   uses-material-design: true

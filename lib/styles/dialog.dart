@@ -97,6 +97,72 @@ class DeleteDialog extends StatelessWidget {
   }
 }
 
+class LostConnect extends StatelessWidget {
+  final String title;
+  final String content;
+
+  const LostConnect({
+    super.key,
+    required this.title,
+    required this.content,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Kotak atas dengan logo peringatan
+            Container(
+                padding: EdgeInsets.symmetric(vertical: 22),
+                height: 110,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10)),
+                  color: Colors.red, // Ganti warna sesuai keinginan
+                ),
+                child: Image.asset(
+                  "assets/lost.png",
+                )),
+            SizedBox(height: 16), // Spasi antara kotak atas dan bawah
+            // Kotak bawah dengan konfirmasi dan deskripsi peringatan
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 8, left: 20, right: 20, bottom: 16),
+              child: Column(
+                children: [
+                  Text(title,
+                      style: GoogleFonts.poppins(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.red)),
+                  SizedBox(height: 10),
+                  Text(
+                    content,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class SucessDialog extends StatelessWidget {
   final String title;
   final String content;

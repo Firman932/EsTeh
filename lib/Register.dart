@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lji/Admin/Dashboard/dashboard.dart';
 import 'package:lji/FOR%20USER/BagianDashboard.dart';
+import 'package:lji/dependency_injection.dart';
 import 'package:lji/styles/color.dart';
 import 'package:lji/DataBasePHPMYSQL/passwordtextfield.dart';
 import 'package:lji/DataBasePHPMYSQL/TextFieldLogin.dart';
@@ -183,8 +184,7 @@ class _RegisterState extends State<Register> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => MenuUser(
-                                      ),
+                                      builder: (context) => MenuUser(),
                                     ),
                                   );
                                 } else {

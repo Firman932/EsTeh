@@ -6,6 +6,7 @@ import 'package:lji/Admin/Dashboard/search.dart';
 import 'package:lji/Admin/History/history.dart';
 import 'package:lji/FOR%20USER/NotifikasiUser.dart';
 import 'package:lji/TampilanUserKeranjang.dart';
+import 'package:lji/dependency_injection.dart';
 import 'package:lji/filterUser.dart';
 import 'package:lji/FOR%20USER/listMenuUser.dart';
 import 'package:lji/styles/bottomlogout.dart';
@@ -26,8 +27,8 @@ class _MenuUserState extends State<MenuUser> {
   List<DocumentSnapshot> produkList = [];
 
   void initState() {
-    super
-        .initState(); // Panggil fungsi untuk mengambil data produk saat widget diinisialisasi
+    super.initState();
+    // Panggil fungsi untuk mengambil data produk saat widget diinisialisasi
     produkStream = FirebaseFirestore.instance.collection('produk').snapshots();
     produkStream.listen((QuerySnapshot querySnapshot) {
       setState(() {

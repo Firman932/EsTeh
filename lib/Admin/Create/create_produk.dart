@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Create/textField.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lji/dependency_injection.dart';
 import 'package:lji/styles/color.dart';
 import 'package:lji/styles/dialog.dart';
 import 'package:flutter/services.dart';
@@ -18,6 +19,11 @@ class TambahProduk extends StatefulWidget {
 }
 
 class _TambahProdukState extends State<TambahProduk> {
+  void initState() {
+    super.initState();
+    DependencyInjection.Init();
+  }
+
   final _formCreateKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
@@ -75,10 +81,6 @@ class _TambahProdukState extends State<TambahProduk> {
       // Handle kesalahan jika diperlukan
       print('Error: $e');
     }
-  }
-
-  void initState() {
-    super.initState();
   }
 
   @override

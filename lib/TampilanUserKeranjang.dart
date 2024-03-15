@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lji/styles/dialog.dart';
+import 'package:lji/dependency_injection.dart';
 
 class CartItem {
   bool isChecked;
@@ -450,8 +451,8 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 12),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
                                       ),
                                     ],
                                   ),
@@ -605,37 +606,38 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                             ),
                           ),
                         ]),
-                        _isTotalDisabled ? SizedBox.shrink() 
-                        : ElevatedButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => SucessDialog(
-                                title: 'Sukses',
-                                content:
-                                    'Transaksi telah berhasil terima kasih telah berbelanja di toko kami !',
-                                buttonConfirm: 'Ok',
-                                onButtonConfirm: () {
-                                  Navigator.pop(context);
+                        _isTotalDisabled
+                            ? SizedBox.shrink()
+                            : ElevatedButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => SucessDialog(
+                                      title: 'Sukses',
+                                      content:
+                                          'Transaksi telah berhasil terima kasih telah berbelanja di toko kami !',
+                                      buttonConfirm: 'Ok',
+                                      onButtonConfirm: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  );
                                 },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xff4fb60e),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Checkout',
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                               ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xff4fb60e),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                          ),
-                          child: Text(
-                            'Checkout',
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ),

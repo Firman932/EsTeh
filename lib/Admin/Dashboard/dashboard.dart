@@ -6,6 +6,7 @@ import 'package:lji/Admin/History/history.dart';
 import 'package:lji/Admin/Notifikasi/notifikasi.dart';
 import 'package:lji/Admin/Dashboard/list_menu.dart';
 import 'package:lji/Admin/Stok/stok_produk.dart';
+import 'package:lji/dependency_injection.dart';
 import 'package:lji/filterUser.dart';
 import 'package:lji/styles/bottomlogout.dart'; // Sesuaikan dengan lokasi file FilterUser.dart
 
@@ -24,6 +25,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
+
     // Panggil fungsi untuk mengambil data produk saat widget diinisialisasi
     produkStream = FirebaseFirestore.instance.collection('produk').snapshots();
     produkStream.listen((QuerySnapshot querySnapshot) {

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/History/list_history.dart';
 
-class RiwayatUser extends StatefulWidget {
-  const RiwayatUser({Key? key}) : super(key: key);
+class Riwayat extends StatefulWidget {
+  const Riwayat({Key? key}) : super(key: key);
 
   @override
-  _RiwayatUserState createState() => _RiwayatUserState();
+  _RiwayatState createState() => _RiwayatState();
 }
 
-class _RiwayatUserState extends State<RiwayatUser> {
+class _RiwayatState extends State<Riwayat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +23,7 @@ class _RiwayatUserState extends State<RiwayatUser> {
         ),
         centerTitle: true,
         title: Text(
-          "RiwayatUser",
+          "Riwayat",
           style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w500),
         ),
       ),

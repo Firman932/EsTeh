@@ -2,11 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lji/Admin/Dashboard/search.dart';
+
 import 'package:lji/Admin/History/history.dart';
 import 'package:lji/FOR%20USER/NotifikasiUser.dart';
 import 'package:lji/TampilanUserKeranjang.dart';
-import 'package:lji/dependency_injection.dart';
 import 'package:lji/filterUser.dart';
 import 'package:lji/FOR%20USER/listMenuUser.dart';
 import 'package:lji/styles/bottomlogout.dart';
@@ -112,7 +111,7 @@ class _MenuUserState extends State<MenuUser> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Riwayat(),
+                    builder: (context) => RiwayatUser(),
                   ),
                 );
               },

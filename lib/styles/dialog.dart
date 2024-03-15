@@ -139,11 +139,14 @@ class LostConnect extends StatelessWidget {
                   top: 8, left: 20, right: 20, bottom: 16),
               child: Column(
                 children: [
-                  Text(title,
-                      style: GoogleFonts.poppins(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.red)),
+                  Text(
+                    title,
+                    style: GoogleFonts.poppins(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.red),
+                    textAlign: TextAlign.center,
+                  ),
                   SizedBox(height: 10),
                   Text(
                     content,

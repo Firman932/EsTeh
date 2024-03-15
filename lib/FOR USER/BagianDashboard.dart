@@ -2,8 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'package:lji/FOR%20USER/History/HistoryUser.dart';
+import 'package:lji/FOR%20USER/HistoryUser/HistoryUser.dart';
 import 'package:lji/FOR%20USER/NotifikasiUser.dart';
 import 'package:lji/TampilanUserKeranjang.dart';
 import 'package:lji/filterUser.dart';

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/FOR%20USER/NotifUser/CustomDonNotif.dart';
@@ -6,13 +7,24 @@ import 'package:lji/FOR%20USER/NotifUser/CustomDelNotif.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class NotifUser extends StatefulWidget {
-  const NotifUser({Key? key});
+   final String userId;
+  const NotifUser({Key? key, required this.userId});
 
   @override
   State<NotifUser> createState() => _NotifUserState();
 }
 
 class _NotifUserState extends State<NotifUser> {
+  late Stream<QuerySnapshot> _pesananStream;
+
+  @override
+  void initState() {
+    super.initState();
+    _pesananStream = FirebaseFirestore.instance
+        .collection('pesanan')
+        .where('id_pembeli', isEqualTo: widget.userId)
+        .snapshots();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,19 +50,42 @@ class _NotifUserState extends State<NotifUser> {
           ),
         ),
       ),
-      body: ListView.builder(
-        itemCount: 10, // Jumlah item dalam daftar
-        itemBuilder: (BuildContext context, int index) {
-          // Pembangunan item berdasarkan indeks
-          if (index % 2 == 0) {
-            // Menampilkan NotifReq untuk indeks genap
-            return NotifReq();
-          } else if (index == 1 || index == 3) {
-            // Menampilkan NotifDel untuk indeks 1 dan 3
-            return NotifDel();
-          } else {
-            return NotifS();
+      body: StreamBuilder<QuerySnapshot>(
+        stream: _pesananStream,
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
           }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          // List of pesanan
+          final List<DocumentSnapshot> pesananList = snapshot.data!.docs;
+
+          return ListView.builder(
+            itemCount: pesananList.length,
+            itemBuilder: (BuildContext context, int index) {
+              final pesanan = pesananList[index];
+              final status = pesanan['status'];
+
+              // Menentukan jenis notifikasi berdasarkan status pesanan
+              Widget notifWidget;
+              if (status == 'pending') {
+                notifWidget = NotifReq();
+              } else if (status == 'Ditolak') {
+                notifWidget = NotifDel();
+              } else if (status == 'Diterima') {
+                notifWidget = NotifS();
+              } else {
+                // Tampilkan widget default jika status tidak dikenali
+                notifWidget = SizedBox();
+              }
+
+              return notifWidget;
+            },
+          );
         },
       ),
     );

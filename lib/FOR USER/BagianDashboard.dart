@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,6 +24,7 @@ class _MenuUserState extends State<MenuUser> {
   String selectedCategory = "Minuman";
   late Stream<QuerySnapshot> produkStream;
   List<DocumentSnapshot> produkList = [];
+  User? user = FirebaseAuth.instance.currentUser;
 
   void initState() {
     super.initState();
@@ -128,7 +130,9 @@ class _MenuUserState extends State<MenuUser> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => NotifUser(),
+                    builder: (context) => NotifUser(
+                      userId: user!.uid,
+                    ),
                   ),
                 );
               },

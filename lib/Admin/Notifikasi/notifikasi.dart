@@ -15,20 +15,17 @@ class Notifikasi extends StatefulWidget {
 
 class _NotifikasiState extends State<Notifikasi> {
   late List<DocumentSnapshot> pesananList = [];
-  String status = '';
 
   @override
   void initState() {
     super.initState();
-    // Lakukan pengambilan data pesanan dari Firestore di sini
     fetchDataPesanan();
   }
 
   void fetchDataPesanan() {
-    // Lakukan pengambilan data pesanan dari Firestore dan simpan ke dalam pesananList
-    // Misalnya:
     FirebaseFirestore.instance
         .collection('pesanan')
+        .where('status', isEqualTo: 'pending')
         .get()
         .then((querySnapshot) {
       setState(() {
@@ -67,6 +64,7 @@ class _NotifikasiState extends State<Notifikasi> {
           int totalHarga = pesanan['harga_total'];
           int totalBarang = pesanan['total_barang'];
           List<dynamic> produkList = pesanan['produk'];
+          String statusPesanan = pesanan['status'];
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Column(
@@ -128,156 +126,144 @@ class _NotifikasiState extends State<Notifikasi> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Apakah kamu mau menerima pesanan dari user yang mau membeli produk kamu ?",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                            Text(
-                              "List Pesanan: ",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              color: Colors.white,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 5, vertical: 5),
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: produkList.length,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) => ListPesan(
-                                    produk: produkList[index],
-                                  ),
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Apakah kamu mau menerima pesanan dari user yang mau membeli produk kamu ?",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 12,
                                 ),
                               ),
-                            ),
-                            Divider(),
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
+                              SizedBox(height: 20),
+                              Text(
+                                "List Pesanan: ",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Container(
                                 color: Colors.white,
-                              ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "Total : ",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 5, vertical: 5),
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: produkList.length,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) => ListPesan(
+                                      produk: produkList[index],
                                     ),
-                                  ),
-                                  Text(
-                                    NumberFormat.currency(
-                                            locale: 'id',
-                                            symbol: 'Rp ',
-                                            decimalDigits: 0)
-                                        .format(totalHarga),
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                if (status.isEmpty)
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      FirebaseFirestore.instance
-                                          .collection('pesanan')
-                                          .doc(pesanan.id)
-                                          .update({
-                                        'status': 'Ditolak',
-                                      });
-                                      setState(() {
-                                        status = 'Pesanan ditolak';
-                                      });
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.red,
-                                      minimumSize: Size(0, 40),
-                                      shape: RoundedRectangleBorder(
-                                        // Change your radius here
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      "Tolak",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                SizedBox(width: 10),
-                                if (status.isEmpty)
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      FirebaseFirestore.instance
-                                          .collection('pesanan')
-                                          .doc(pesanan.id)
-                                          .update({
-                                        'status': 'Diterima',
-                                      });
-                                      setState(() {
-                                        status = 'Pesanan diterima';
-                                      });
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          Color.fromARGB(255, 73, 160, 19),
-                                      minimumSize: Size(0, 40),
-                                      shape: RoundedRectangleBorder(
-                                        // Change your radius here
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      "Terima",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  )
-                              ],
-                            ),
-                            if (status.isNotEmpty)
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: Text(
-                                  status,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: status == 'Pesanan ditolak'
-                                        ? Colors.red
-                                        : Color.fromARGB(255, 73, 160, 19),
                                   ),
                                 ),
-                              )
-                            else
-                              SizedBox.shrink(),
-                            SizedBox(height: 15),
-                          ],
-                        ),
+                              ),
+                              Divider(),
+                              Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "Total : ",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Text(
+                                      NumberFormat.currency(
+                                              locale: 'id',
+                                              symbol: 'Rp ',
+                                              decimalDigits: 0)
+                                          .format(totalHarga),
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              if (statusPesanan == 'pending')
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        FirebaseFirestore.instance
+                                            .collection('pesanan')
+                                            .doc(pesanan.id)
+                                            .update({'status': 'Ditolak'}).then(
+                                                (_) {
+                                          setState(() {
+                                            // Menghilangkan tombol setelah status diperbarui
+                                            pesananList.removeAt(index);
+                                          });
+                                        });
+                                        ;
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.red,
+                                        minimumSize: Size(0, 40),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        "Tolak",
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    if (statusPesanan ==
+                                        'pending') // Tampilkan tombol berdasarkan status pesanan
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          FirebaseFirestore.instance
+                                              .collection('pesanan')
+                                              .doc(pesanan.id)
+                                              .update({
+                                            'status': 'Diterima'
+                                          }).then((_) {
+                                            setState(() {
+                                              // Menghilangkan tombol setelah status diperbarui
+                                              pesananList.removeAt(index);
+                                            });
+                                          });
+                                          ;
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              Color.fromARGB(255, 73, 160, 19),
+                                          minimumSize: Size(0, 40),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          "Terima",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      )
+                                  ],
+                                ),
+                            ]),
                       ),
                     ],
                   ),

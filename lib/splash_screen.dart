@@ -80,7 +80,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void navigateToNextScreen() async {
     User? user = auth.currentUser;
     if (user != null && isLogin) {
-      // User is logged in
       DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
@@ -99,10 +98,11 @@ class _SplashScreenState extends State<SplashScreen> {
         );
       }
     } else {
-      // User is not logged in
-      Navigator.pushReplacement(
+      // Clear all existing routes and navigate to the SignScreen
+      Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => SignScreen()),
+        (Route<dynamic> route) => false,
       );
     }
   }

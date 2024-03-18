@@ -109,6 +109,7 @@ class _KeranjangState extends State<Keranjang> {
       // Simpan pesanan ke Firebase
       DocumentReference pesananRef =
           await FirebaseFirestore.instance.collection('pesanan').add({
+        'waktu_pesanan': Timestamp.now(),
         'nama_pembeli': namaPembeli, // Menyimpan nama pembeli
         'id_pembeli': userID, // Menyimpan ID pembeli
         'id_transaksi': '', // ID transaksi dapat diisi jika diperlukan

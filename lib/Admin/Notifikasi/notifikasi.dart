@@ -26,6 +26,7 @@ class _NotifikasiState extends State<Notifikasi> {
     FirebaseFirestore.instance
         .collection('pesanan')
         .where('status', isEqualTo: 'pending')
+        .orderBy('waktu_pesanan', descending: true)
         .get()
         .then((querySnapshot) {
       setState(() {

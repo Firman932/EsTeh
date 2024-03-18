@@ -53,7 +53,9 @@ class ListUser extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(width: 5,),
+            SizedBox(
+              width: 5,
+            ),
             _buildActions(context),
           ],
         ),
@@ -81,10 +83,12 @@ class ListUser extends StatelessWidget {
             ],
           ),
           Text(
-              NumberFormat.currency(locale: 'id', symbol: 'Rp ',decimalDigits: 0)
-                  .format(produkData['harga_produk']),
-              style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500, fontSize: 13)),
+            NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0)
+                .format(produkData['harga_produk']),
+            style:
+                GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 13),
+            overflow: TextOverflow.ellipsis,
+          ),
         ],
       ),
     );

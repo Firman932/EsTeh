@@ -37,6 +37,27 @@ class _NotifikasiState extends State<Notifikasi> {
     });
   }
 
+  String getDayName(DateTime date) {
+    switch (date.weekday) {
+      case 1:
+        return 'Senin';
+      case 2:
+        return 'Selasa';
+      case 3:
+        return 'Rabu';
+      case 4:
+        return 'Kamis';
+      case 5:
+        return 'Jumat';
+      case 6:
+        return 'Sabtu';
+      case 7:
+        return 'Minggu';
+      default:
+        return '';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -199,6 +220,7 @@ class _NotifikasiState extends State<Notifikasi> {
                                       onPressed: () {
                                         // Mengatur waktu sekarang
                                         DateTime now = DateTime.now();
+                                        String hariPesanan = getDayName(now);
                                         // Format tanggal dan waktu
                                         String formattedDate =
                                             DateFormat('d MMM, y').format(now);
@@ -212,6 +234,7 @@ class _NotifikasiState extends State<Notifikasi> {
                                           'tanggal': formattedDate,
                                           'jam': formattedTime,
                                           'waktu_pesanan': Timestamp.now(),
+                                          'hari': hariPesanan,
                                         }).then((_) {
                                           setState(() {
                                             // Menghilangkan tombol setelah status diperbarui
@@ -243,19 +266,22 @@ class _NotifikasiState extends State<Notifikasi> {
                                       ElevatedButton(
                                         onPressed: () {
                                           DateTime now = DateTime.now();
-                                        // Format tanggal dan waktu
-                                        String formattedDate =
-                                            DateFormat('d MMM, y').format(now);
-                                        String formattedTime =
-                                            DateFormat('HH:mm').format(now);
-                                        FirebaseFirestore.instance
-                                            .collection('pesanan')
-                                            .doc(pesanan.id)
-                                            .update({
-                                          'status': 'Diterima',
-                                          'tanggal': formattedDate,
-                                          'jam': formattedTime,
-                                          'waktu_pesanan': Timestamp.now(),
+                                          String hariPesanan = getDayName(now);
+                                          // Format tanggal dan waktu
+                                          String formattedDate =
+                                              DateFormat('d MMM, y')
+                                                  .format(now);
+                                          String formattedTime =
+                                              DateFormat('HH:mm').format(now);
+                                          FirebaseFirestore.instance
+                                              .collection('pesanan')
+                                              .doc(pesanan.id)
+                                              .update({
+                                            'status': 'Diterima',
+                                            'tanggal': formattedDate,
+                                            'jam': formattedTime,
+                                            'waktu_pesanan': Timestamp.now(),
+                                            'hari': hariPesanan,
                                           }).then((_) {
                                             setState(() {
                                               // Menghilangkan tombol setelah status diperbarui

@@ -197,11 +197,22 @@ class _NotifikasiState extends State<Notifikasi> {
                                   children: [
                                     ElevatedButton(
                                       onPressed: () {
+                                        // Mengatur waktu sekarang
+                                        DateTime now = DateTime.now();
+                                        // Format tanggal dan waktu
+                                        String formattedDate =
+                                            DateFormat('d MMM, y').format(now);
+                                        String formattedTime =
+                                            DateFormat('HH:mm').format(now);
                                         FirebaseFirestore.instance
                                             .collection('pesanan')
                                             .doc(pesanan.id)
-                                            .update({'status': 'Ditolak'}).then(
-                                                (_) {
+                                            .update({
+                                          'status': 'Ditolak',
+                                          'tanggal': formattedDate,
+                                          'jam': formattedTime,
+                                          'waktu_pesanan': Timestamp.now(),
+                                        }).then((_) {
                                           setState(() {
                                             // Menghilangkan tombol setelah status diperbarui
                                             pesananList.removeAt(index);
@@ -231,11 +242,20 @@ class _NotifikasiState extends State<Notifikasi> {
                                         'pending') // Tampilkan tombol berdasarkan status pesanan
                                       ElevatedButton(
                                         onPressed: () {
-                                          FirebaseFirestore.instance
-                                              .collection('pesanan')
-                                              .doc(pesanan.id)
-                                              .update({
-                                            'status': 'Diterima'
+                                          DateTime now = DateTime.now();
+                                        // Format tanggal dan waktu
+                                        String formattedDate =
+                                            DateFormat('d MMM, y').format(now);
+                                        String formattedTime =
+                                            DateFormat('HH:mm').format(now);
+                                        FirebaseFirestore.instance
+                                            .collection('pesanan')
+                                            .doc(pesanan.id)
+                                            .update({
+                                          'status': 'Diterima',
+                                          'tanggal': formattedDate,
+                                          'jam': formattedTime,
+                                          'waktu_pesanan': Timestamp.now(),
                                           }).then((_) {
                                             setState(() {
                                               // Menghilangkan tombol setelah status diperbarui

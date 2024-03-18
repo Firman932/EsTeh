@@ -28,19 +28,19 @@ class _SplashScreenState extends State<SplashScreen> {
         setState(() {
           isLogin = true;
         });
+        navigateToNextScreen(
+            user); // Panggil fungsi navigateToNextScreen dengan user yang diterima
+      } else {
+        navigateToNextScreen(
+            null); // Panggil fungsi navigateToNextScreen dengan null jika user null atau belum login
       }
     });
-    navigateToNextScreen();
   }
 
   @override
   void initState() {
     super.initState();
     initializeApp();
-  }
-
-  void logout() {
-    FirebaseAuth.instance.signOut();
   }
 
   // Function to initialize the app and handle navigation
@@ -81,8 +81,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   // Function to navigate to the next screen based on user authentication
-  void navigateToNextScreen() async {
-    User? user = auth.currentUser;
+  void navigateToNextScreen(User? user) async {
     if (user != null && isLogin) {
       DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
           .collection('users')
@@ -103,7 +102,6 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     } else {
       // Clear all existing routes and navigate to the SignScreen
-      logout(); // Clear authentication cache
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => SignScreen()),

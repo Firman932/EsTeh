@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-final DateTime timestamp = DateTime.now();
-
 class NotifReq extends StatelessWidget {
+  final String tanggal;
+  final String waktu;
+
+  const NotifReq({required this.tanggal, required this.waktu});
+
   @override
   Widget build(BuildContext context) {
-    String formattedDate =
-        DateFormat.yMMMd().format(timestamp); // Format tanggal
-    String formattedTime = DateFormat.Hm().format(timestamp); // Format waktu
-
     return Container(
       margin: EdgeInsets.all(10),
       width: double.infinity,
@@ -34,10 +33,12 @@ class NotifReq extends StatelessWidget {
             width: 10,
             height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    bottomLeft: Radius.circular(10)),
-                color: Color(0xffA5CD14)),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                bottomLeft: Radius.circular(10),
+              ),
+              color: Color(0xffA5CD14),
+            ),
           ),
           Container(
             margin: EdgeInsets.all(10),
@@ -63,7 +64,7 @@ class NotifReq extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '$formattedDate   $formattedTime',
+                        '$tanggal   $waktu',
                         style: GoogleFonts.poppins(
                           fontSize: 10,
                           fontWeight: FontWeight.w400,
@@ -91,3 +92,4 @@ class NotifReq extends StatelessWidget {
     );
   }
 }
+

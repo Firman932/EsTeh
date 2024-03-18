@@ -240,6 +240,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
           'status': 'pending',
           'total_barang': totalBarang,
           'harga_total': hargaTotal,
+          'waktu_pesanan': Timestamp.now()
         });
 
         // Hapus produk yang telah dibeli dari keranjang

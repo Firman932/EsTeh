@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-final DateTime timestamp = DateTime.now();
 
 class NotifS extends StatelessWidget {
+  final String tanggal;
+  final String waktu;
+
+  const NotifS({required this.tanggal, required this.waktu});
   @override
   Widget build(BuildContext context) {
-    String formattedDate =
-        DateFormat.yMMMd().format(timestamp); // Format tanggal
-    String formattedTime = DateFormat.Hm().format(timestamp); // Format waktu
     return Container(
       margin: EdgeInsets.all(10),
       width: double.infinity,
@@ -62,7 +62,7 @@ class NotifS extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '$formattedDate   $formattedTime',
+                        '$tanggal   $waktu',
                         style: GoogleFonts.poppins(
                           fontSize: 10,
                           fontWeight: FontWeight.w400,

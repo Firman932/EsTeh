@@ -5,9 +5,10 @@ import 'package:lji/FOR%20USER/NotifUser/CustomDonNotif.dart';
 import 'package:lji/FOR%20USER/NotifUser/CustomReqNotif.dart';
 import 'package:lji/FOR%20USER/NotifUser/CustomDelNotif.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:lji/styles/dialog.dart';
 
 class NotifUser extends StatefulWidget {
-   final String userId;
+  final String userId;
   const NotifUser({Key? key, required this.userId});
 
   @override
@@ -23,8 +24,10 @@ class _NotifUserState extends State<NotifUser> {
     _pesananStream = FirebaseFirestore.instance
         .collection('pesanan')
         .where('id_pembeli', isEqualTo: widget.userId)
+        .orderBy('waktu_pesanan', descending: true)
         .snapshots();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,15 +72,20 @@ class _NotifUserState extends State<NotifUser> {
             itemBuilder: (BuildContext context, int index) {
               final pesanan = pesananList[index];
               final status = pesanan['status'];
+              final tanggal = pesanan['tanggal'];
+              final jam = pesanan['jam'];
 
               // Menentukan jenis notifikasi berdasarkan status pesanan
               Widget notifWidget;
               if (status == 'pending') {
-                notifWidget = NotifReq();
+                notifWidget = NotifReq(
+                  tanggal: tanggal,
+                  waktu: jam,
+                );
               } else if (status == 'Ditolak') {
-                notifWidget = NotifDel();
+                notifWidget = NotifDel(tanggal: tanggal, waktu: jam,);
               } else if (status == 'Diterima') {
-                notifWidget = NotifS();
+                notifWidget = NotifS(tanggal: tanggal, waktu: jam,);
               } else {
                 // Tampilkan widget default jika status tidak dikenali
                 notifWidget = SizedBox();

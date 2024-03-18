@@ -23,7 +23,7 @@ class _RiwayatState extends State<RiwayatAdmin> {
         ),
         centerTitle: true,
         title: Text(
-          "RiwayatAdmin",
+          "Riwayat",
           style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w500),
         ),
       ),

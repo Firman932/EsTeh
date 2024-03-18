@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/widgets.dart';
@@ -185,112 +187,113 @@ class KeranjangPage01 extends State<KeranjangPage02> {
   }
 
   void _checkout() async {
-  try {
-    // Ambil informasi pengguna yang sedang diotentikasi
-    User? user = FirebaseAuth.instance.currentUser;
-    
+    try {
+      // Ambil informasi pengguna yang sedang diotentikasi
+      User? user = FirebaseAuth.instance.currentUser;
 
-    if (user != null) {
-      String userID = user.uid;
+      if (user != null) {
+        String userID = user.uid;
 
-      // Ambil detail produk yang dipilih
-      List<Map<String, dynamic>> selectedProducts = [];
+        // Ambil detail produk yang dipilih
+        List<Map<String, dynamic>> selectedProducts = [];
 
-      for (var item in cartItems) {
-        if (item.isChecked) {
-          selectedProducts.add({
-            'nama_produk': item.productName,
-            'variasi_rasa': item.productVariation,
-            'harga_produk': item.price,
-            'jumlah': item.quantity,
-            'id_produk': item.productId,
-            'gambar_produk': item.productImage,
-            'total_harga': item.price * item.quantity,
-          });
+        for (var item in cartItems) {
+          if (item.isChecked) {
+            selectedProducts.add({
+              'nama_produk': item.productName,
+              'variasi_rasa': item.productVariation,
+              'harga_produk': item.price,
+              'jumlah': item.quantity,
+              'id_produk': item.productId,
+              'gambar_produk': item.productImage,
+              'total_harga': item.price * item.quantity,
+            });
+          }
         }
+
+        // Hitung total barang dan harga total
+        int totalBarang = 0;
+        int hargaTotal = 0;
+
+        for (var produk in selectedProducts) {
+          totalBarang += produk['jumlah'] as int;
+          hargaTotal += produk['total_harga'] as int;
+        }
+
+        String? namaPembeli = await getUsernameFromUserID(userID);
+
+        // Dapatkan tanggal dan waktu sekarang
+        DateTime now = DateTime.now();
+
+        // Format tanggal dan waktu
+        String formattedDate = DateFormat('d MMM, y').format(now);
+        String formattedTime = DateFormat('HH:mm').format(now);
+
+        // Simpan pesanan ke database Firestore
+        await FirebaseFirestore.instance.collection('pesanan').add({
+          'nama_pembeli':
+              namaPembeli, // Gunakan nama pengguna sebagai nama pembeli
+          'id_pembeli': userID,
+          'tanggal': formattedDate,
+          'jam': formattedTime,
+          'produk': selectedProducts,
+          'status': 'pending',
+          'total_barang': totalBarang,
+          'harga_total': hargaTotal,
+        });
+
+        // Hapus produk yang telah dibeli dari keranjang
+        await _deleteSelectedProducts();
+
+        // Tampilkan dialog sukses
+        showDialog(
+          context: context,
+          builder: (context) => SucessDialog(
+            title: 'Berhasil',
+            content: 'Pesanan berhasil diproses.',
+            buttonConfirm: 'Ok',
+            onButtonConfirm: () {
+              Navigator.pop(context);
+            },
+          ),
+        );
+      } else {
+        print('User not authenticated');
+        // Handle case where the user is not authenticated
       }
-
-      // Hitung total barang dan harga total
-      int totalBarang = 0;
-      int hargaTotal = 0;
-
-      for (var produk in selectedProducts) {
-        totalBarang += produk['jumlah'] as int;
-        hargaTotal += produk['total_harga'] as int;
-      }
-
-      String? namaPembeli = await getUsernameFromUserID(userID);
-
-      // Dapatkan tanggal dan waktu sekarang
-      DateTime now = DateTime.now();
-
-      // Format tanggal dan waktu
-      String formattedDate = DateFormat('d MMM, y').format(now);
-      String formattedTime = DateFormat('HH:mm').format(now);
-
-      // Simpan pesanan ke database Firestore
-      await FirebaseFirestore.instance.collection('pesanan').add({
-        'nama_pembeli': namaPembeli, // Gunakan nama pengguna sebagai nama pembeli
-        'id_pembeli': userID,
-        'tanggal': formattedDate,
-        'jam': formattedTime,
-        'produk': selectedProducts,
-        'status': 'pending',
-        'total_barang': totalBarang,
-        'harga_total': hargaTotal,
-      });
-
-      // Hapus produk yang telah dibeli dari keranjang
-      await _deleteSelectedProducts();
-
-      // Tampilkan dialog sukses
+    } catch (error) {
+      print('Error processing order: $error');
+      // Handle error, misalnya, menampilkan pesan kesalahan kepada pengguna
       showDialog(
         context: context,
-        builder: (context) => SucessDialog(
-          title: 'Berhasil',
-          content: 'Pesanan berhasil diproses.',
+        builder: (context) => WarningDialog(
+          title: 'Error',
+          content: 'Gagal memproses pesanan.',
           buttonConfirm: 'Ok',
           onButtonConfirm: () {
             Navigator.pop(context);
           },
         ),
       );
-    } else {
-      print('User not authenticated');
-      // Handle case where the user is not authenticated
     }
-  } catch (error) {
-    print('Error processing order: $error');
-    // Handle error, misalnya, menampilkan pesan kesalahan kepada pengguna
-    showDialog(
-      context: context,
-      builder: (context) => WarningDialog(
-        title: 'Error',
-        content: 'Gagal memproses pesanan.',
-        buttonConfirm: 'Ok',
-        onButtonConfirm: () {
-          Navigator.pop(context);
-        },
-      ),
-    );
   }
-}
-Future<String?> getUsernameFromUserID(String userID) async {
-  try {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    DocumentSnapshot userSnapshot =
-        await firestore.collection('users').doc(userID).get();
 
-    if (userSnapshot.exists) {
-      return userSnapshot['username'];
-    } else {
-      return null; // Atau nilai default jika pengguna tidak ditemukan
+  Future<String?> getUsernameFromUserID(String userID) async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      DocumentSnapshot userSnapshot =
+          await firestore.collection('users').doc(userID).get();
+
+      if (userSnapshot.exists) {
+        return userSnapshot['username'];
+      } else {
+        return null; // Atau nilai default jika pengguna tidak ditemukan
+      }
+    } catch (error) {
+      print('Error getting username: $error');
+      return null; // Atau nilai default jika terjadi kesalahan
     }
-  } catch (error) {
-    print('Error getting username: $error');
-    return null; // Atau nilai default jika terjadi kesalahan
   }
-}
 
   Future<bool> _showDeleteConfirmationDialog(CartItem cartItem) async {
     bool deleteConfirmed = false;
@@ -436,6 +439,9 @@ Future<String?> getUsernameFromUserID(String userID) async {
             ),
           ),
         ),
+        SizedBox(
+          width: 10,
+        ),
       ],
     );
   }
@@ -524,44 +530,42 @@ Future<String?> getUsernameFromUserID(String userID) async {
                 notchMargin: 8,
                 shape: CircularNotchedRectangle(),
                 color: Colors.white,
-                child: Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(children: [
-                        Text(
-                          'Total : ${NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(_calculateTotal())}',
-                          style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color:
-                                _isTotalDisabled ? Colors.grey : Colors.black,
-                          ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Total : ${NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(_calculateTotal())}',
+                        style: GoogleFonts.poppins(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: _isTotalDisabled ? Colors.grey : Colors.black,
                         ),
-                      ]),
-                      _isTotalDisabled
-                          ? SizedBox.shrink()
-                          : ElevatedButton(
-                              onPressed: () {
-                                _checkout();
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xff4fb60e),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                              ),
-                              child: Text(
-                                'Checkout',
-                                style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    _isTotalDisabled
+                        ? SizedBox.shrink()
+                        : ElevatedButton(
+                            onPressed: () {
+                              _checkout();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xff4fb60e),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
                               ),
                             ),
-                    ],
-                  ),
+                            child: Text(
+                              'Checkout',
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                  ],
                 ),
               ),
             ),
@@ -756,10 +760,10 @@ Future<String?> getUsernameFromUserID(String userID) async {
           ],
         ),
       ),
-    bottomNavigationBar: Visibility(
-  visible: _calculateTotal() > 0,
-  child: _buildBottomNavigationBar(),
-),
+      bottomNavigationBar: Visibility(
+        visible: _calculateTotal() > 0,
+        child: _buildBottomNavigationBar(),
+      ),
     );
   }
 

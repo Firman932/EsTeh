@@ -44,6 +44,7 @@ class _DashboardState extends State<Dashboard> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
+          forceMaterialTransparency: true,
           title: Text(
             "Dashboard",
             style:

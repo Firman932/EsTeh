@@ -20,7 +20,7 @@ class NotifReq extends StatelessWidget {
           BoxShadow(
             color: Color.fromRGBO(156, 156, 156, 0.29),
             offset: Offset(0, 0),
-            blurRadius: 5,
+            blurRadius: 3,
           ),
         ],
         color: Colors.white,
@@ -35,7 +35,7 @@ class NotifReq extends StatelessWidget {
             height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(5),
+                    topLeft: Radius.circular(10),
                     bottomLeft: Radius.circular(10)),
                 color: Color(0xffA5CD14)),
           ),

@@ -19,7 +19,7 @@ class NotifS extends StatelessWidget {
           BoxShadow(
             color: Color.fromRGBO(156, 156, 156, 0.29),
             offset: Offset(0, 0),
-            blurRadius: 5,
+            blurRadius: 3,
           ),
         ],
         color: Colors.white,
@@ -34,7 +34,7 @@ class NotifS extends StatelessWidget {
             height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(5),
+                    topLeft: Radius.circular(10),
                     bottomLeft: Radius.circular(10)),
                 color: Color.fromARGB(255, 73, 160, 19)),
           ),

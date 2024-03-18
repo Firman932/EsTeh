@@ -61,10 +61,8 @@ class LogoutBottomSheet {
                         authService.logoutUser();
                         Navigator.pop(context); // Pop the bottom sheet
                         // Navigate to the sign-in page
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => SignScreen()),
-                        );
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/login', (route) => false);
                       } catch (e) {
                         print("Error signing out: $e");
                         // Handle sign-out errors

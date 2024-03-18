@@ -28,15 +28,19 @@ class _SplashScreenState extends State<SplashScreen> {
         setState(() {
           isLogin = true;
         });
-        navigateToNextScreen();
       }
     });
+    navigateToNextScreen();
   }
 
   @override
   void initState() {
     super.initState();
     initializeApp();
+  }
+
+  void logout() {
+    FirebaseAuth.instance.signOut();
   }
 
   // Function to initialize the app and handle navigation
@@ -99,10 +103,10 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     } else {
       // Clear all existing routes and navigate to the SignScreen
-      Navigator.pushAndRemoveUntil(
+      logout(); // Clear authentication cache
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => SignScreen()),
-        (Route<dynamic> route) => false,
       );
     }
   }

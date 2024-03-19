@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lji/Admin/Notifikasi/listpesan.dart';
+import 'package:lji/styles/dialog.dart';
 
 class Notifikasi extends StatefulWidget {
   const Notifikasi({
@@ -86,7 +87,6 @@ class _NotifikasiState extends State<Notifikasi> {
           int totalHarga = pesanan['harga_total'];
           int totalBarang = pesanan['total_barang'];
           List<dynamic> produkList = pesanan['produk'];
-          String idProduk = produkList[index]['id_produk'];
           String statusPesanan = pesanan['status'];
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
@@ -266,6 +266,7 @@ class _NotifikasiState extends State<Notifikasi> {
                                         'pending') // Tampilkan tombol berdasarkan status pesanan
                                       ElevatedButton(
                                         onPressed: () {
+                                          String idProduk = produkList[index]['id_produk'];
                                           DateTime now = DateTime.now();
                                           String hariPesanan = getDayName(now);
                                           // Format tanggal dan waktu
@@ -318,6 +319,21 @@ class _NotifikasiState extends State<Notifikasi> {
                                                 // Jika stok tidak mencukupi, tampilkan pesan kesalahan atau lakukan tindakan yang sesuai
                                                 print(
                                                     'Stok produk tidak mencukupi');
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return WarningDialog(
+                                                        title: "Peringatan",
+                                                        content:
+                                                            "Stok tidak mencukupi",
+                                                        buttonConfirm: "Ok",
+                                                        onButtonConfirm: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        });
+                                                  },
+                                                );
                                               }
                                             } else {
                                               // Jika dokumen produk tidak ditemukan, tampilkan pesan kesalahan atau lakukan tindakan yang sesuai

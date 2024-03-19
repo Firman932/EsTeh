@@ -755,8 +755,8 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                                         iconSize: 22,
                                         color: cartItems[index].quantity >=
                                                 cartItems[index].productStock
-                                            ? Colors
-                                                .transparent // Ubah warna menjadi abu-abu jika melebihi stok_produk
+                                            ? Colors.grey[
+                                                350] // Ubah warna menjadi abu-abu jika melebihi stok_produk
                                             : Color(0xFF49A013),
                                         onPressed: () {
                                           setState(() {

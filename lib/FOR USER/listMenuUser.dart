@@ -107,7 +107,7 @@ class ListUser extends StatelessWidget {
           'Stock Habis',
           style: GoogleFonts.poppins(
             color: Colors.red,
-            fontSize: 14,
+            fontSize: 12,
           ),
         ),
       );

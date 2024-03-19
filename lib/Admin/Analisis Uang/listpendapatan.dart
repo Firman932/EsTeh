@@ -1,25 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ListPendapatan extends StatelessWidget {
-  const ListPendapatan({super.key});
+class ListPendapatan extends StatefulWidget {
+  final String tanggal;
+  final String waktu;
 
+  const ListPendapatan({required this.tanggal, required this.waktu});
+
+  @override
+  _ListPendapatanState createState() => _ListPendapatanState();
+}
+
+class _ListPendapatanState extends State<ListPendapatan> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 15),
+      margin: EdgeInsets.all(10),
       width: double.infinity,
-      height: 80,
+      height: 120,
       decoration: BoxDecoration(
-        color: Color(0xffffffff),
-        borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Color(0x499c9c9c),
+            color: Color.fromRGBO(156, 156, 156, 0.29),
             offset: Offset(0, 0),
-            blurRadius: 5,
+            blurRadius: 3,
           ),
         ],
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -29,10 +37,12 @@ class ListPendapatan extends StatelessWidget {
             width: 10,
             height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    bottomLeft: Radius.circular(10)),
-                color: Color.fromARGB(255, 73, 160, 19)),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                bottomLeft: Radius.circular(10),
+              ),
+              color: Color.fromARGB(255, 73, 160, 19),
+            ),
           ),
           Container(
             margin: EdgeInsets.all(10),
@@ -50,15 +60,15 @@ class ListPendapatan extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Pendapatan kemarin',
+                        'Pesan',
                         style: GoogleFonts.poppins(
-                          fontSize: 13,
+                          fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: Color(0xff000000),
                         ),
                       ),
                       Text(
-                        '31-07-2024',
+                        '$tanggal   $waktu',
                         style: GoogleFonts.poppins(
                           fontSize: 10,
                           fontWeight: FontWeight.w400,
@@ -70,9 +80,9 @@ class ListPendapatan extends StatelessWidget {
                 ),
                 Container(
                   child: Text(
-                    'Total: Rp 600.000',
+                    'Pesananmu diterima oleh admin, Terima Kasih atas kesabaran anda',
                     style: GoogleFonts.poppins(
-                      fontSize: 18,
+                      fontSize: 12,
                       fontWeight: FontWeight.w500,
                       color: Color(0xff000000),
                     ),

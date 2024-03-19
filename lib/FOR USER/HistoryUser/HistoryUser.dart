@@ -38,7 +38,7 @@ class _RiwayatUserState extends State<RiwayatUser> {
           ),
           centerTitle: true,
           title: Text(
-            "RiwayatUser",
+            "Riwayat",
             style:
                 GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w500),
           ),
@@ -161,11 +161,11 @@ class _RiwayatUserState extends State<RiwayatUser> {
                                         ],
                                       ),
                                       Text(
-                                         NumberFormat.currency(
-                                              locale: 'id',
-                                              symbol: 'Rp ',
-                                              decimalDigits: 0)
-                                          .format(totalHarga),
+                                        NumberFormat.currency(
+                                                locale: 'id',
+                                                symbol: 'Rp ',
+                                                decimalDigits: 0)
+                                            .format(totalHarga),
                                         style: GoogleFonts.poppins(
                                             fontSize: 10,
                                             fontWeight: FontWeight.w500),
@@ -177,43 +177,43 @@ class _RiwayatUserState extends State<RiwayatUser> {
                               SizedBox(height: 20),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                ],
+                                children: [],
                               ),
                               Container(
                                 margin: EdgeInsets.only(right: 10, bottom: 10),
                                 child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  tanggal,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          tanggal,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          jam,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      "Pesan DIterima",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color.fromARGB(255, 73, 160, 19),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(width: 10),
-                                Text(
-                                  jam,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
-                            ),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              "Pesan DIterima",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Color.fromARGB(255, 73, 160, 19),
-                              ),
-                            ),
-                          ],
-                        ),
                               ),
                             ],
                           ),

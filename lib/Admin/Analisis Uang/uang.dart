@@ -16,6 +16,7 @@ class _PendapatanState extends State<Pendapatan> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
         actions: [
           GestureDetector(
             onTap: () {
@@ -69,7 +70,8 @@ class _PendapatanState extends State<Pendapatan> {
         children: [
           // Your existing widgets inside the Column
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.05),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [

@@ -43,8 +43,17 @@ class _KeranjangState extends State<Keranjang> {
       ])
     }).then((value) {
       print('Produk ditambahkan ke keranjang');
-      Navigator.pop(
-          context); // Kembali ke halaman sebelumnya setelah menambahkan ke keranjang
+      showDialog(
+        context: context,
+        builder: (context) => SucessDialog(
+          title: 'Sukses',
+          content: 'Dimasukkan ke keranjang',
+          buttonConfirm: 'Oke',
+          onButtonConfirm: () {
+            Navigator.pop(context);
+          },
+        ),
+      );
     }).catchError((error) {
       print('Gagal menambahkan produk ke keranjang: $error');
       // Handle error, misalnya, menampilkan pesan kesalahan kepada pengguna

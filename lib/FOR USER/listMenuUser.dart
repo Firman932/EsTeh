@@ -21,7 +21,7 @@ class ListUser extends StatelessWidget {
           BoxShadow(
             color: Color.fromRGBO(156, 156, 156, 0.29),
             offset: Offset(0, 0),
-            blurRadius: 5,
+            blurRadius: 3,
           ),
         ],
         color: Colors.white,
@@ -95,33 +95,50 @@ class ListUser extends StatelessWidget {
   }
 
   Widget _buildActions(BuildContext context) {
-    double iconSize =
-        MediaQuery.of(context).size.width * 0.04; // Adjust the size as needed
+    double iconSize = MediaQuery.of(context).size.width * 0.04;
 
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Keranjang(
-              produkData: produkData,
-            ),
+    // Periksa apakah stok produk kosong
+    bool stockEmpty = produkData['stok_produk'] == 0;
+
+    // Jika stok kosong, tampilkan teks 'Habis' dan nonaktifkan tombol
+    if (stockEmpty) {
+      return Center(
+        child: Text(
+          'Stock Habis',
+          style: GoogleFonts.poppins(
+            color: Colors.red,
+            fontSize: 14,
           ),
-        );
-      },
-      child: Container(
-        constraints: BoxConstraints(
-            maxWidth: 40, maxHeight: 40, minWidth: 30, minHeight: 30),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: Color.fromRGBO(73, 160, 19, 1),
         ),
-        child: Icon(
-          Icons.shopping_cart,
-          color: Colors.white,
-          size: iconSize,
+      );
+    } else {
+      // Jika stok tersedia, tampilkan tombol keranjang
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Keranjang(
+                produkData: produkData,
+              ),
+            ),
+          );
+        },
+        child: Container(
+          constraints: BoxConstraints(
+              maxWidth: 40, maxHeight: 40, minWidth: 30, minHeight: 30),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: Color.fromRGBO(
+                73, 160, 19, 1), // Warna hijau untuk tombol keranjang
+          ),
+          child: Icon(
+            Icons.shopping_cart,
+            color: Colors.white,
+            size: iconSize,
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 }

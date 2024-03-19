@@ -16,6 +16,7 @@ class CartItem {
   String productVariation;
   int quantity;
   int price;
+  int productStock;
 
   CartItem({
     required this.isChecked,
@@ -25,6 +26,7 @@ class CartItem {
     required this.productVariation,
     required this.quantity,
     required this.price,
+    required this.productStock,
   });
 }
 
@@ -73,14 +75,14 @@ class KeranjangPage01 extends State<KeranjangPage02> {
             // Check if the product document exists
             if (productDoc.exists) {
               items.add(CartItem(
-                productId: item['product_id'],
-                productName: productDoc['nama_produk'],
-                productVariation: productDoc['variasi_rasa'],
-                quantity: item['jumlah'],
-                price: productDoc['harga_produk'],
-                isChecked: false,
-                productImage: productDoc['gambar_produk'],
-              ));
+                  productId: item['product_id'],
+                  productName: productDoc['nama_produk'],
+                  productVariation: productDoc['variasi_rasa'],
+                  quantity: item['jumlah'],
+                  price: productDoc['harga_produk'],
+                  isChecked: false,
+                  productImage: productDoc['gambar_produk'],
+                  productStock: productDoc['stok_produk']));
             } else {
               // Handle the case where the product has been deleted
               print('Product with ID ${item['product_id']} no longer exists');
@@ -715,39 +717,60 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                           ),
                           Row(
                             children: [
-                              IconButton(
-                                icon: Icon(Icons.do_not_disturb_on_outlined),
-                                iconSize: 22,
-                                color: Color(0xFF49A013),
-                                onPressed: () {
-                                  if (cartItems[index].quantity > 0) {
-                                    setState(() {
-                                      cartItems[index].quantity--;
-                                      _updateTotalPrice();
-                                    });
-                                  }
-                                },
-                              ),
-                              IntrinsicWidth(
-                                child: Text(
-                                  '${cartItems[index].quantity}',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color(0xFF49A013),
+                              Row(
+                                children: [
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        highlightColor: Colors.transparent,
+                                        icon: Icon(
+                                            Icons.do_not_disturb_on_outlined),
+                                        iconSize: 22,
+                                        color: Color(0xFF49A013),
+                                        onPressed: () {
+                                          if (cartItems[index].quantity > 0) {
+                                            setState(() {
+                                              cartItems[index].quantity--;
+                                              _updateTotalPrice();
+                                            });
+                                          }
+                                        },
+                                      ),
+                                      IntrinsicWidth(
+                                        child: Text(
+                                          '${cartItems[index].quantity}',
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              color: cartItems[index].quantity <
+                                                      cartItems[index]
+                                                          .productStock
+                                                  ? Color(0xFF49A013)
+                                                  : Colors.grey[350]),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        highlightColor: Colors.transparent,
+                                        icon: Icon(Icons.add_circle_outline),
+                                        iconSize: 22,
+                                        color: cartItems[index].quantity >=
+                                                cartItems[index].productStock
+                                            ? Colors
+                                                .transparent // Ubah warna menjadi abu-abu jika melebihi stok_produk
+                                            : Color(0xFF49A013),
+                                        onPressed: () {
+                                          setState(() {
+                                            if (cartItems[index].quantity <
+                                                cartItems[index].productStock) {
+                                              cartItems[index].quantity++;
+                                            }
+                                            _updateTotalPrice();
+                                          });
+                                        },
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.add_circle_outline),
-                                iconSize: 22,
-                                color: Color(0xFF49A013),
-                                onPressed: () {
-                                  setState(() {
-                                    cartItems[index].quantity++;
-                                    _updateTotalPrice();
-                                  });
-                                },
+                                ],
                               ),
                             ],
                           ),

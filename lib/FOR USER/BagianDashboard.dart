@@ -112,7 +112,7 @@ class _MenuUserState extends State<MenuUser> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => RiwayatUser(),
+                    builder: (context) => RiwayatUser(userId: user!.uid,),
                   ),
                 );
               },

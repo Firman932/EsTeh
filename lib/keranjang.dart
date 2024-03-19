@@ -194,6 +194,11 @@ class _KeranjangState extends State<Keranjang> {
 
   @override
   Widget build(BuildContext context) {
+          String gambarProduk = widget.produkData["gambar_produk"];
+      String namaProduk = widget.produkData["nama_produk"];
+      String variasiRasa = widget.produkData["variasi_rasa"];
+      int hargaProduk = widget.produkData["harga_produk"];
+      int stokProduk = widget.produkData["stok_produk"];
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -223,82 +228,72 @@ class _KeranjangState extends State<Keranjang> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Container(
+                margin: EdgeInsets.fromLTRB(5, 0, 5, 20),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context)
+                        .size
+                        .width, // Sesuaikan tinggi dengan lebar untuk membuat gambar persegi
+                    child: AspectRatio(
+                      aspectRatio:
+                          1, // Memastikan gambar tetap berbentuk persegi
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.network(
+                          gambarProduk,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: EdgeInsets.fromLTRB(5, 0, 5, 20),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context)
-                            .size
-                            .width, // Sesuaikan tinggi dengan lebar untuk membuat gambar persegi
-                        child: AspectRatio(
-                          aspectRatio:
-                              1, // Memastikan gambar tetap berbentuk persegi
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.network(
-                              widget.produkData["gambar_produk"],
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(10, 0, 0, 20),
                     width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: EdgeInsets.only(top: 3),
-                          child: Text(
-                            widget.produkData["nama_produk"],
-                            style: GoogleFonts.poppins(
-                              fontSize: 27,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xff030303),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: EdgeInsets.only(
-                              left: 2 + MediaQuery.of(context).padding.left),
-                          child: Text(
-                            widget.produkData["variasi_rasa"],
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xff000000),
-                            ),
-                          ),
-                        ),
-                      ],
+                    margin: EdgeInsets.only(top: 3),
+                    child: Text(
+                      namaProduk,
+                      style: GoogleFonts.poppins(
+                        fontSize: 27,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xff030303),
+                      ),
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    width: 800,
-                    height: 30,
-                    child: Text(
-                      NumberFormat.currency(
-                              locale: 'id', symbol: 'Rp ', decimalDigits: 0)
-                          .format(widget.produkData['harga_produk']),
-                      style: GoogleFonts.poppins(
-                        fontSize: 21,
-                        fontWeight: FontWeight.w600,
-                        height: 1.5,
-                        color: Color(0xff49a013),
-                      ),
+                  Text(
+                    variasiRasa,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xff000000),
                     ),
                   ),
                 ],
+              ),
+              SizedBox(height: 5,),
+              Text("Stok: $stokProduk",style: GoogleFonts.poppins(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey,
+                    ),),
+              SizedBox(height: 10,),
+              Text(
+                NumberFormat.currency(
+                        locale: 'id', symbol: 'Rp ', decimalDigits: 0)
+                    .format(hargaProduk),
+                    textAlign: TextAlign.start,
+                style: GoogleFonts.poppins(
+                  fontSize: 21,
+                  fontWeight: FontWeight.w600,
+                  height: 1.5,
+                  color: Color(0xff49a013),
+                ),
               ), //kedua
               SizedBox(height: 20),
             ],

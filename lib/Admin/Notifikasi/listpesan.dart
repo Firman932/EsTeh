@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -18,7 +16,6 @@ class ListPesan extends StatelessWidget {
     String variasiRasa = produk['variasi_rasa'];
     int hargaProduk = produk['harga_produk'];
     int jumlah = produk['jumlah'];
-    int totalHarga = produk['total_harga'];
     return Container(
       padding: EdgeInsets.only(top: 10),
       decoration: BoxDecoration(

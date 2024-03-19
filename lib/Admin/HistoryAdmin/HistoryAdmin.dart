@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lji/FOR%20USER/HistoryUser/list_history.dart';
 
 class RiwayatAdmin extends StatefulWidget {
@@ -10,6 +12,28 @@ class RiwayatAdmin extends StatefulWidget {
 }
 
 class _RiwayatState extends State<RiwayatAdmin> {
+  late List<DocumentSnapshot> pesananList = [];
+
+  void initState() {
+    super.initState();
+    fetchDataPesanan();
+  }
+
+  void fetchDataPesanan() {
+    FirebaseFirestore.instance
+        .collection('pesanan')
+        .where('status', isEqualTo: 'Diterima')
+        .orderBy('waktu_pesanan', descending: true)
+        .get()
+        .then((querySnapshot) {
+      setState(() {
+        pesananList = querySnapshot.docs;
+      });
+    }).catchError((error) {
+      print("Error fetching pesanan: $error");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,8 +52,14 @@ class _RiwayatState extends State<RiwayatAdmin> {
         ),
       ),
       body: ListView.builder(
-        itemCount: 20,
+        itemCount: pesananList.length,
         itemBuilder: (context, index) {
+          DocumentSnapshot pesanan = pesananList[index];
+          String namaPembeli = pesanan['nama_pembeli'];
+          int totalHarga = pesanan['harga_total'];
+          String tanggal = pesanan['tanggal'];
+          String jam = pesanan['jam'];
+          List<dynamic> produkList = pesanan['produk'];
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Column(
@@ -73,7 +103,7 @@ class _RiwayatState extends State<RiwayatAdmin> {
                           ),
                           SizedBox(width: 5),
                           Text(
-                            "List Pesanan Maulana Ilham",
+                            "List Pesanan $namaPembeli",
                             style: GoogleFonts.poppins(
                                 fontSize: 12, fontWeight: FontWeight.w600),
                           ),
@@ -87,13 +117,14 @@ class _RiwayatState extends State<RiwayatAdmin> {
                               EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                           child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: 10,
+                            itemCount: produkList.length,
                             physics: NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) => ListHistory(),
+                            itemBuilder: (context, index) =>
+                                ListHistory(produk: produkList[index]),
                           ),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      Divider(),
                       Container(
                         width: MediaQuery.of(context).size.width,
                         height: 30,
@@ -119,49 +150,22 @@ class _RiwayatState extends State<RiwayatAdmin> {
                                   ),
                                 ],
                               ),
-                              Row(
-                                children: [
-                                  Text(
-                                    "8/pcs",
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    "Rp.88.000",
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
+                              Text(
+                                NumberFormat.currency(
+                                        locale: 'id',
+                                        symbol: 'Rp ',
+                                        decimalDigits: 0)
+                                    .format(totalHarga),
+                                style: GoogleFonts.poppins(
+                                    fontSize: 10, fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
                         ),
                       ),
                       SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.only(bottom: 15, top: 15),
-                            margin: EdgeInsets.only(right: 10),
-                            child: Text(
-                              "Pesan DIterima",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Color.fromARGB(255, 73, 160, 19),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                       Container(
+                        width: double.infinity,
                         margin: EdgeInsets.only(right: 10, bottom: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -169,15 +173,29 @@ class _RiwayatState extends State<RiwayatAdmin> {
                             Row(
                               children: [
                                 Text(
-                                  "12 Jan 2024",
-                                  style: TextStyle(fontSize: 10),
+                                  tanggal,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                                 SizedBox(width: 10),
                                 Text(
-                                  "09:15",
-                                  style: TextStyle(fontSize: 10),
+                                  jam,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w400,
+                            ),
                                 ),
                               ],
+                            ),
+                            Text(
+                              "Pesan DIterima",
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Color.fromARGB(255, 73, 160, 19),
+                              ),
                             ),
                           ],
                         ),

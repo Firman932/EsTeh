@@ -275,75 +275,62 @@ class _NotifikasiState extends State<Notifikasi> {
                                                   .format(now);
                                           String formattedTime =
                                               DateFormat('HH:mm').format(now);
-                                          FirebaseFirestore.instance
-                                              .collection('produk')
-                                              .doc(idProduk)
-                                              .get()
-                                              .then((produkDoc) {
-                                            if (produkDoc.exists) {
-                                              int stokAwal =
-                                                  produkDoc['stok_produk'];
-                                              int jumlahDipesan =
-                                                  totalBarang; // Menggunakan jumlah barang dari pesanan
-                                              int stokSisa =
-                                                  stokAwal - jumlahDipesan;
+  // Iterasi melalui daftar produk untuk pesanan ini
+  for (var produk in produkList) {
+    String idProduk = produk['id_produk'];
+    int jumlahDipesan = produk['jumlah']; // Menggunakan jumlah barang dari pesanan
 
-                                              // Pastikan stok tidak negatif
-                                              if (stokSisa >= 0) {
-                                                // Kurangi stok produk
-                                                FirebaseFirestore.instance
-                                                    .collection('produk')
-                                                    .doc(idProduk)
-                                                    .update({
-                                                  'stok_produk': stokSisa
-                                                }).then((_) {
-                                                  // Jika berhasil mengurangi stok, lanjutkan dengan memperbarui status pesanan
-                                                  FirebaseFirestore.instance
-                                                      .collection('pesanan')
-                                                      .doc(pesanan.id)
-                                                      .update({
-                                                    'status': 'Diterima',
-                                                    'tanggal': formattedDate,
-                                                    'jam': formattedTime,
-                                                    'waktu_pesanan':
-                                                        Timestamp.now(),
-                                                    'hari': hariPesanan,
-                                                  }).then((_) {
-                                                    setState(() {
-                                                      pesananList
-                                                          .removeAt(index);
-                                                    });
-                                                  });
-                                                });
-                                              } else {
-                                                // Jika stok tidak mencukupi, tampilkan pesan kesalahan atau lakukan tindakan yang sesuai
-                                                print(
-                                                    'Stok produk tidak mencukupi');
-                                                showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return WarningDialog(
-                                                        title: "Peringatan",
-                                                        content:
-                                                            "Stok tidak mencukupi",
-                                                        buttonConfirm: "Ok",
-                                                        onButtonConfirm: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        });
-                                                  },
-                                                );
-                                              }
-                                            } else {
-                                              // Jika dokumen produk tidak ditemukan, tampilkan pesan kesalahan atau lakukan tindakan yang sesuai
-                                              print('Produk tidak ditemukan');
-                                            }
-                                          }).catchError((error) {
-                                            // Tangani kesalahan saat mengambil dokumen produk
-                                            print(
-                                                'Error fetching produk: $error');
-                                          });
+    // Mengambil stok produk dari Firestore
+    FirebaseFirestore.instance.collection('produk').doc(idProduk).get().then((produkDoc) {
+      if (produkDoc.exists) {
+        int stokAwal = produkDoc['stok_produk'];
+        int stokSisa = stokAwal - jumlahDipesan;
+
+        // Pastikan stok tidak negatif
+        if (stokSisa >= 0) {
+          // Kurangi stok produk
+          FirebaseFirestore.instance.collection('produk').doc(idProduk).update({
+            'stok_produk': stokSisa
+          }).then((_) {
+            // Jika berhasil mengurangi stok, lanjutkan dengan memperbarui status pesanan
+            FirebaseFirestore.instance.collection('pesanan').doc(pesanan.id).update({
+              'status': 'Diterima',
+              'tanggal': formattedDate,
+              'jam': formattedTime,
+              'waktu_pesanan': Timestamp.now(),
+              'hari': hariPesanan,
+            }).then((_) {
+              setState(() {
+                pesananList.removeAt(index);
+              });
+            });
+          });
+        } else {
+          // Jika stok tidak mencukupi, tampilkan pesan kesalahan atau lakukan tindakan yang sesuai
+          print('Stok produk tidak mencukupi');
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return WarningDialog(
+                title: "Peringatan",
+                content: "Stok tidak mencukupi",
+                buttonConfirm: "Ok",
+                onButtonConfirm: () {
+                  Navigator.pop(context);
+                },
+              );
+            },
+          );
+        }
+      } else {
+        // Jika dokumen produk tidak ditemukan, tampilkan pesan kesalahan atau lakukan tindakan yang sesuai
+        print('Produk tidak ditemukan');
+      }
+    }).catchError((error) {
+      // Tangani kesalahan saat mengambil dokumen produk
+      print('Error fetching produk: $error');
+    });
+  }
                                         },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor:

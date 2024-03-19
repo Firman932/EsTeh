@@ -12,8 +12,11 @@ class ListPendapatan extends StatefulWidget {
 }
 
 class _ListPendapatanState extends State<ListPendapatan> {
+
   @override
   Widget build(BuildContext context) {
+    var tanggal;
+    var waktu;
     return Container(
       margin: EdgeInsets.all(10),
       width: double.infinity,

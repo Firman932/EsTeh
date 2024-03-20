@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/styles/button.dart';
 import 'package:lji/styles/color.dart';
 import 'package:lji/styles/font.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class DeleteDialog extends StatelessWidget {
   final String title;
@@ -247,6 +249,70 @@ class SucessDialog extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class Loading extends StatelessWidget {
+  final String title;
+  final bool isLoading; // Add isLoading as a parameter
+
+  const Loading({
+    Key? key,
+    required this.title,
+    required this.isLoading, // Pass isLoading to the constructor
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Show loading dialog when isLoading is true
+    if (isLoading) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 140,
+                height: 140,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: greenPrimary,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SpinKitWave(
+                      color: Colors.white,
+                      size: 40,
+                    ),
+                    SizedBox(height: 10), // Spacer antara SpinKitWave dan teks
+                    Text(
+                      title,
+                      style: GoogleFonts.poppins(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+
+              // Kotak atas dengan logo peringatan
+              // Spasi antara kotak atas dan bawah
+              // Kotak bawah dengan konfirmasi dan deskripsi peringatan
+            ],
+          ),
+        ),
+      );
+    } else {
+      return SizedBox
+          .shrink(); // Return an empty SizedBox when isLoading is false
+    }
   }
 }
 

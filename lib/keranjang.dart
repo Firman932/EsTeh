@@ -32,6 +32,19 @@ class _KeranjangState extends State<Keranjang> {
       return;
     }
 
+    // Tampilkan dialog "Loading"
+    showDialog(
+      context: context,
+      barrierDismissible:
+          false, // Mencegah dialog ditutup dengan mengetuk di luar area dialog
+      builder: (BuildContext context) {
+        return Loading(
+          isLoading: true,
+          title: 'Loading',
+        );
+      },
+    );
+
     // Update cart di dalam dokumen pengguna
     await FirebaseFirestore.instance.collection('users').doc(userID).update({
       'cart': FieldValue.arrayUnion([
@@ -43,6 +56,10 @@ class _KeranjangState extends State<Keranjang> {
       ])
     }).then((value) {
       print('Produk ditambahkan ke keranjang');
+      // Tutup dialog "Loading"
+      Navigator.pop(context);
+
+      // Tampilkan dialog "Sukses"
       showDialog(
         context: context,
         builder: (context) => SucessDialog(
@@ -57,11 +74,27 @@ class _KeranjangState extends State<Keranjang> {
     }).catchError((error) {
       print('Gagal menambahkan produk ke keranjang: $error');
       // Handle error, misalnya, menampilkan pesan kesalahan kepada pengguna
+
+      // Tutup dialog "Loading"
+      Navigator.pop(context);
     });
   }
 
   void beliLangsung() async {
     try {
+      // Tampilkan dialog "Loading"
+      showDialog(
+        context: context,
+        barrierDismissible:
+            false, // Mencegah dialog ditutup dengan mengetuk di luar area dialog
+        builder: (BuildContext context) {
+          return Loading(
+            isLoading: true,
+            title: 'Loading',
+          );
+        },
+      );
+
       // Ambil informasi produk
       String gambarProduk = widget.produkData["gambar_produk"];
       String namaProduk = widget.produkData["nama_produk"];
@@ -73,7 +106,7 @@ class _KeranjangState extends State<Keranjang> {
       int totalBarang = 0;
       int hargaTotal = 0;
 
-// Iterasi melalui setiap produk yang dibeli
+      // Iterasi melalui setiap produk yang dibeli
       for (var produk in [
         {
           'nama_produk': namaProduk,
@@ -143,10 +176,14 @@ class _KeranjangState extends State<Keranjang> {
       // Setelah dokumen ditambahkan, dapatkan ID transaksi yang dihasilkan
       String idTransaksi = pesananRef.id;
 
-// Kemudian, perbarui dokumen dengan ID transaksi yang dihasilkan
+      // Kemudian, perbarui dokumen dengan ID transaksi yang dihasilkan
       await pesananRef.update({'id_transaksi': idTransaksi});
 
       print('Pesanan berhasil diproses');
+      // Tutup dialog "Loading"
+      Navigator.pop(context);
+
+      // Tampilkan dialog "Sukses"
       showDialog(
         context: context,
         builder: (context) => SucessDialog(
@@ -161,6 +198,10 @@ class _KeranjangState extends State<Keranjang> {
     } catch (error) {
       print('Error processing order: $error');
       // Handle error, misalnya, menampilkan pesan kesalahan kepada pengguna
+      // Tutup dialog "Loading"
+      Navigator.pop(context);
+
+      // Tampilkan dialog "Error"
       showDialog(
         context: context,
         builder: (context) => WarningDialog(
@@ -194,11 +235,11 @@ class _KeranjangState extends State<Keranjang> {
 
   @override
   Widget build(BuildContext context) {
-          String gambarProduk = widget.produkData["gambar_produk"];
-      String namaProduk = widget.produkData["nama_produk"];
-      String variasiRasa = widget.produkData["variasi_rasa"];
-      int hargaProduk = widget.produkData["harga_produk"];
-      int stokProduk = widget.produkData["stok_produk"];
+    String gambarProduk = widget.produkData["gambar_produk"];
+    String namaProduk = widget.produkData["nama_produk"];
+    String variasiRasa = widget.produkData["variasi_rasa"];
+    int hargaProduk = widget.produkData["harga_produk"];
+    int stokProduk = widget.produkData["stok_produk"];
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -276,18 +317,25 @@ class _KeranjangState extends State<Keranjang> {
                   ),
                 ],
               ),
-              SizedBox(height: 5,),
-              Text("Stok: $stokProduk",style: GoogleFonts.poppins(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey,
-                    ),),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                "Stok: $stokProduk",
+                style: GoogleFonts.poppins(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey,
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
               Text(
                 NumberFormat.currency(
                         locale: 'id', symbol: 'Rp ', decimalDigits: 0)
                     .format(hargaProduk),
-                    textAlign: TextAlign.start,
+                textAlign: TextAlign.start,
                 style: GoogleFonts.poppins(
                   fontSize: 21,
                   fontWeight: FontWeight.w600,

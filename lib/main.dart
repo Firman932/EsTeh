@@ -17,6 +17,7 @@ Future<void> main() async {
   await firebaseNotification.configure();
 
   runApp(MyApp());
+  // Panggil fungsi untuk mengatur tampilan loading
 }
 
 class MyApp extends StatelessWidget {

@@ -101,7 +101,7 @@ class _PendapatanState extends State<Pendapatan> {
                 SizedBox(
                   height: 20,
                 ),
-                ListPendapatan(tanggal: '', waktu: '',),
+                ListPendapatan(tanggal: ''),
                 SizedBox(
                   height: 10,
                 ),
@@ -120,7 +120,7 @@ class _PendapatanState extends State<Pendapatan> {
                   shrinkWrap: true,
                   itemCount: 6,
                   itemBuilder: (context, index) {
-                    return ListPendapatan(tanggal: '', waktu: '',);
+                    return ListPendapatan(tanggal: '');
                   },
                 ),
               ],

@@ -65,6 +65,15 @@ class _NotifUserState extends State<NotifUser> {
           // List of pesanan
           final List<DocumentSnapshot> pesananList = snapshot.data!.docs;
 
+          if (pesananList.isEmpty) {
+            return Center(
+              child: Text(
+                'Belum ada notifikasi',
+                style: GoogleFonts.poppins(color: Colors.black, fontSize: 15),
+              ),
+            );
+          }
+
           return ListView.builder(
             itemCount: pesananList.length,
             itemBuilder: (BuildContext context, int index) {
@@ -81,9 +90,9 @@ class _NotifUserState extends State<NotifUser> {
                   waktu: jam,
                 );
               } else if (status == 'Ditolak') {
-                notifWidget = NotifDel(tanggal: tanggal, waktu: jam,);
+                notifWidget = NotifDel(tanggal: tanggal, waktu: jam);
               } else if (status == 'Diterima') {
-                notifWidget = NotifS(tanggal: tanggal, waktu: jam,);
+                notifWidget = NotifS(tanggal: tanggal, waktu: jam);
               } else {
                 // Tampilkan widget default jika status tidak dikenali
                 notifWidget = SizedBox();

@@ -588,6 +588,13 @@ class _StokProdukState extends State<StokProduk> {
                                   .contains(searchQuery))
                           .toList();
 
+                      // Jika hasil pencarian kosong, tampilkan pesan
+                      if (produkList.isEmpty) {
+                        return Center(
+                          child: Text('Tidak ada produk atau keyword salah', style: GoogleFonts.poppins(),),
+                        );
+                      }
+
                       produkList.sort((a, b) {
                         int stokA = a['stok_produk'] as int;
                         int stokB = b['stok_produk'] as int;

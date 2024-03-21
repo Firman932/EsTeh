@@ -136,7 +136,7 @@ class _DashboardState extends State<Dashboard> {
                         });
 
                         // Simulate async operation, for example fetching data
-                        Future.delayed(Duration(seconds: 2), () {
+                        Future.delayed(Duration(seconds: 1), () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(

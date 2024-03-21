@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Dashboard/analisis.dart';
 import 'package:lji/Admin/HistoryAdmin/HistoryAdmin.dart';
@@ -8,6 +9,8 @@ import 'package:lji/Admin/Dashboard/list_menu.dart';
 import 'package:lji/Admin/Stok/stok_produk.dart';
 import 'package:lji/filterUser.dart';
 import 'package:lji/styles/bottomlogout.dart'; // Sesuaikan dengan lokasi file FilterUser.dart
+import 'package:lji/styles/color.dart';
+import 'package:lji/styles/dialog.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -20,6 +23,7 @@ class _DashboardState extends State<Dashboard> {
   String selectedCategory = "Minuman";
   late Stream<QuerySnapshot> produkStream;
   List<DocumentSnapshot> produkList = [];
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -81,7 +85,7 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             SizedBox(
-              width: 5,
+              width: 13,
             ),
             GestureDetector(
               onTap: () {
@@ -99,7 +103,7 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             SizedBox(
-              width: 13,
+              width: 16,
             ),
           ],
         ),
@@ -122,22 +126,41 @@ class _DashboardState extends State<Dashboard> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => StokProduk()),
-                        );
-                      },
-                      child: Text(
-                        "Tampilkan Semua",
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          decoration: TextDecoration.underline,
-                          decorationThickness: 2,
-                        ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
                       ),
+                      onPressed: () {
+                        setState(() {
+                          isLoading = true; // Set loading state to true
+                        });
+
+                        // Simulate async operation, for example fetching data
+                        Future.delayed(Duration(seconds: 2), () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => StokProduk()),
+                          );
+                        }).whenComplete(() {
+                          setState(() {
+                            isLoading =
+                                false; // Set loading state to false when operation completes
+                          });
+                        });
+                      },
+                      child: isLoading
+                          ? SpinKitWave(
+                              size: 25,
+                              color: greenPrimary,
+                            ) // Show loading indicator if isLoading is true
+                          : Text(
+                              "Tampilkan Semua",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: greenPrimary),
+                            ),
                     ),
                   ],
                 ),
@@ -162,7 +185,25 @@ class _DashboardState extends State<Dashboard> {
                     }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                      return Center(
+                          child: Column(
+                        children: [
+                          SpinKitWave(
+                            size: 43,
+                            color: greenPrimary,
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Text(
+                            'Loading',
+                            style: GoogleFonts.poppins(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                                color: greenPrimary),
+                          )
+                        ],
+                      ));
                     }
 
                     if (produkList.isEmpty) {

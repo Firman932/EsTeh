@@ -559,12 +559,6 @@ class _StokProdukState extends State<StokProduk> {
                           ),
                   ],
                 ),
-                // SearchFilter(
-                //   isChecklistMode: isChecklistMode,
-                //   onCheckAll: toggleCheckAll,
-                //   onCancel: deactivateChecklistMode,
-                //   a: false,
-                // ),
                 SizedBox(
                   height: 10,
                 ),

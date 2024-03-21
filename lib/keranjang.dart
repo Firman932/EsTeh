@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Keranjang extends StatefulWidget {
   final DocumentSnapshot produkData;
@@ -188,13 +189,16 @@ class _KeranjangState extends State<Keranjang> {
         context: context,
         builder: (context) => SucessDialog(
           title: 'Berhasil',
-          content: 'Pesanan berhasil diproses.',
+          content: 'Pesanan berhasil diproses. Tunggu konfirmasi admin.',
           buttonConfirm: 'Ok',
           onButtonConfirm: () {
             Navigator.pop(context);
           },
         ),
       );
+
+      // Tampilkan notifikasi lokal
+      await _tampilkanNotifikasi();
     } catch (error) {
       print('Error processing order: $error');
       // Handle error, misalnya, menampilkan pesan kesalahan kepada pengguna
@@ -214,6 +218,60 @@ class _KeranjangState extends State<Keranjang> {
         ),
       );
     }
+  }
+
+  Future<void> _tampilkanNotifikasi() async {
+    // Inisialisasi FlutterLocalNotificationsPlugin
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+
+    // Konfigurasi untuk Android
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('logoes');
+
+    // Konfigurasi untuk platform
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+
+    // Inisialisasi plugin
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    // Konstruksi pesan notifikasi
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      '1',
+      'Channel Name',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: true, // Menampilkan waktu notifikasi
+      enableLights: true,
+      enableVibration: true,
+      playSound: true,
+      styleInformation: BigTextStyleInformation(
+        'Kamu telah checkout pesananmu, tunggu konfirmasi dari admin dulu ya........!!!!!!!', // Pesan utama
+        contentTitle: 'Checkout pesanan', // Judul notifikasi
+        htmlFormatContent: true, // Mengizinkan konten dalam format HTML
+        htmlFormatTitle: true, // Mengizinkan judul dalam format HTML
+      ),
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    // Mendapatkan tanggal dan waktu sekarang
+    DateTime now = DateTime.now();
+
+    // Tampilkan notifikasi
+    await flutterLocalNotificationsPlugin.show(
+      0, // ID notifikasi
+      'Checkout pesanan', // Judul notifikasi
+      'Kamu telah checkout pesananmu, tunggu konfirmasi dari admin dulu ya........!!!!!!!\n\n${DateFormat('dd MMMM yyyy, HH:mm').format(now)}', // Pesan notifikasi dengan tanggal
+      platformChannelSpecifics,
+      payload:
+          'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
+    );
   }
 
   Future<String?> getUsernameFromUserID(String userID) async {

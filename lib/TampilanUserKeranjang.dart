@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -272,6 +273,8 @@ class KeranjangPage01 extends State<KeranjangPage02> {
             },
           ),
         );
+        // Tampilkan notifikasi lokal
+        await _tampilkanNotifikasi();
       } else {
         // Handle case where the user is not authenticated
         print('User not authenticated');
@@ -351,6 +354,60 @@ class KeranjangPage01 extends State<KeranjangPage02> {
     );
 
     return deleteConfirmed;
+  }
+
+  Future<void> _tampilkanNotifikasi() async {
+    // Inisialisasi FlutterLocalNotificationsPlugin
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+
+    // Konfigurasi untuk Android
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('logoes');
+
+    // Konfigurasi untuk platform
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+
+    // Inisialisasi plugin
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    // Konstruksi pesan notifikasi
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      '1',
+      'Channel Name',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: true, // Menampilkan waktu notifikasi
+      enableLights: true,
+      enableVibration: true,
+      playSound: true,
+      styleInformation: BigTextStyleInformation(
+        'Kamu telah checkout pesananmu, tunggu konfirmasi dari admin dulu ya........!!!!!!!', // Pesan utama
+        contentTitle: 'Checkout pesanan', // Judul notifikasi
+        htmlFormatContent: true, // Mengizinkan konten dalam format HTML
+        htmlFormatTitle: true, // Mengizinkan judul dalam format HTML
+      ),
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    // Mendapatkan tanggal dan waktu sekarang
+    DateTime now = DateTime.now();
+
+    // Tampilkan notifikasi
+    await flutterLocalNotificationsPlugin.show(
+      0, // ID notifikasi
+      'Checkout pesanan', // Judul notifikasi
+      'Kamu telah checkout pesananmu, tunggu konfirmasi dari admin dulu ya........!!!!!!!\n\n${DateFormat('dd MMMM yyyy, HH:mm').format(now)}', // Pesan notifikasi dengan tanggal
+      platformChannelSpecifics,
+      payload:
+          'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
+    );
   }
 
   Future<void> _deleteProductsFromFirestore(List<String> productIds) async {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lji/Register.dart';
 import 'package:lji/SignIn.dart';
 import 'package:lji/splash_screen.dart';
@@ -7,6 +8,25 @@ import 'firebase/firebase_notification.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Initialize FlutterLocalNotificationsPlugin
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  // Android initialization
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('logoes');
+
+  // Initialize settings for Android
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  // Initialize the plugin with the appropriate settings
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(

@@ -27,6 +27,7 @@ dependencies:
   connectivity_plus: ^5.0.2
   loading_animation_widget: ^1.2.1
   flutter_spinkit: ^5.2.0
+  flutter_local_notifications: ^17.0.0
   
   
   

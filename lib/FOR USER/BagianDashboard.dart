@@ -112,7 +112,9 @@ class _MenuUserState extends State<MenuUser> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => RiwayatUser(userId: user!.uid,),
+                    builder: (context) => RiwayatUser(
+                      userId: user!.uid,
+                    ),
                   ),
                 );
               },
@@ -185,7 +187,8 @@ class _MenuUserState extends State<MenuUser> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: TextField(
-                    style: TextStyle(fontSize: 14),
+                    cursorColor: Colors.green,
+                    style: GoogleFonts.poppins(fontSize: 14),
                     decoration: InputDecoration(
                       hintText: 'Search',
                       hintStyle: TextStyle(fontSize: 14),
@@ -227,10 +230,11 @@ class _MenuUserState extends State<MenuUser> {
                     }
                     if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                       return Center(
-                        child: Text("Tidak ada produk yang tersedia."),
+                        child: Text("Tidak ada produk yang tersedia.", style: GoogleFonts.poppins(),),
                       );
                     }
-                    produkList = snapshot.data!.docs
+                    List<DocumentSnapshot> filteredProdukList = snapshot
+                        .data!.docs
                         .where((produk) =>
                             (produk['kategori_produk'] as String?)
                                     ?.isNotEmpty ==
@@ -242,11 +246,17 @@ class _MenuUserState extends State<MenuUser> {
                                 .contains(searchQuery))
                         .toList();
 
+                    if (filteredProdukList.isEmpty) {
+                      return Center(
+                        child: Text("Tidak ditemukan atau keyword salah.", style: GoogleFonts.poppins(),),
+                      );
+                    }
+
                     return ListView.builder(
                       shrinkWrap: true,
-                      itemCount: produkList.length,
+                      itemCount: filteredProdukList.length,
                       itemBuilder: (context, index) {
-                        DocumentSnapshot produk = produkList[index];
+                        DocumentSnapshot produk = filteredProdukList[index];
                         return ListUser(produkData: produk);
                       },
                     );

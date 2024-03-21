@@ -189,6 +189,15 @@ class KeranjangPage01 extends State<KeranjangPage02> {
   }
 
   void _checkout() async {
+    // Tampilkan dialog "Loading"
+    showDialog(
+      context: context,
+      builder: (context) => Loading(
+        isLoading: true,
+        title: 'Sedang diproses',
+      ),
+    );
+
     try {
       // Ambil informasi pengguna yang sedang diotentikasi
       User? user = FirebaseAuth.instance.currentUser;
@@ -248,6 +257,9 @@ class KeranjangPage01 extends State<KeranjangPage02> {
         // Hapus produk yang telah dibeli dari keranjang
         await _deleteSelectedProducts();
 
+        // Tutup dialog "Loading"
+        Navigator.pop(context);
+
         // Tampilkan dialog sukses
         showDialog(
           context: context,
@@ -261,8 +273,8 @@ class KeranjangPage01 extends State<KeranjangPage02> {
           ),
         );
       } else {
-        print('User not authenticated');
         // Handle case where the user is not authenticated
+        print('User not authenticated');
       }
     } catch (error) {
       print('Error processing order: $error');

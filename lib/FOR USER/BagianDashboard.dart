@@ -125,7 +125,7 @@ class _MenuUserState extends State<MenuUser> {
               ),
             ),
             SizedBox(
-              width: 5,
+              width: 13,
             ),
             GestureDetector(
               onTap: () {
@@ -145,7 +145,7 @@ class _MenuUserState extends State<MenuUser> {
               ),
             ),
             SizedBox(
-              width: 5,
+              width: 13,
             ),
             GestureDetector(
               onTap: () {
@@ -163,7 +163,7 @@ class _MenuUserState extends State<MenuUser> {
               ),
             ),
             SizedBox(
-              width: 13,
+              width: 16,
             ),
           ],
         ),
@@ -230,7 +230,10 @@ class _MenuUserState extends State<MenuUser> {
                     }
                     if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                       return Center(
-                        child: Text("Tidak ada produk yang tersedia.", style: GoogleFonts.poppins(),),
+                        child: Text(
+                          "Tidak ada produk yang tersedia.",
+                          style: GoogleFonts.poppins(),
+                        ),
                       );
                     }
                     List<DocumentSnapshot> filteredProdukList = snapshot
@@ -248,7 +251,10 @@ class _MenuUserState extends State<MenuUser> {
 
                     if (filteredProdukList.isEmpty) {
                       return Center(
-                        child: Text("Tidak ditemukan atau keyword salah.", style: GoogleFonts.poppins(),),
+                        child: Text(
+                          "Tidak ditemukan atau keyword salah.",
+                          style: GoogleFonts.poppins(),
+                        ),
                       );
                     }
 

@@ -393,7 +393,7 @@ class _StokProdukState extends State<StokProduk> {
                 ),
               ),
               SizedBox(
-                width: 13,
+                width: 5,
               ),
               GestureDetector(
                 onTap: () {
@@ -411,7 +411,7 @@ class _StokProdukState extends State<StokProduk> {
                 ),
               ),
               SizedBox(
-                width: 16,
+                width: 13,
               )
             ],
             centerTitle: true,
@@ -438,13 +438,13 @@ class _StokProdukState extends State<StokProduk> {
                   onMinumanSelected: (category) {
                     setState(() {
                       selectedCategory = "Minuman";
-                      clearChecklist();
+                      deactivateChecklistMode(); // Menambahkan pemanggilan fungsi deactivateChecklistMode
                     });
                   },
                   onMakananSelected: (category) {
                     setState(() {
                       selectedCategory = "Makanan";
-                      clearChecklist();
+                      deactivateChecklistMode(); // Menambahkan pemanggilan fungsi deactivateChecklistMode
                     });
                   },
                 ),
@@ -559,6 +559,12 @@ class _StokProdukState extends State<StokProduk> {
                           ),
                   ],
                 ),
+                // SearchFilter(
+                //   isChecklistMode: isChecklistMode,
+                //   onCheckAll: toggleCheckAll,
+                //   onCancel: deactivateChecklistMode,
+                //   a: false,
+                // ),
                 SizedBox(
                   height: 10,
                 ),

@@ -117,7 +117,7 @@ class _NotifikasiState extends State<Notifikasi> {
               }
               final pesananList = snapshot.data!.docs;
               if (pesananList.isEmpty) {
-                return Center(child: Text('Belum ada notifikasi'));
+                return Center(child: Text('Belum ada notifikasi', style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w500),));
               }
               return ListView.builder(
                 itemCount: pesananList.length,

@@ -388,7 +388,7 @@ class _StokProdukState extends State<StokProduk> {
                 ),
               ),
               SizedBox(
-                width: 5,
+                width: 13,
               ),
               GestureDetector(
                 onTap: () {
@@ -406,7 +406,7 @@ class _StokProdukState extends State<StokProduk> {
                 ),
               ),
               SizedBox(
-                width: 13,
+                width: 16,
               )
             ],
             centerTitle: true,

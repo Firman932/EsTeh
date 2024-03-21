@@ -87,6 +87,53 @@ class _NotifikasiState extends State<Notifikasi> {
     }
   }
 
+  Future<void> tambahkanPendapatanMingguan(
+      DateTime tanggal, int totalHarga, String tanggal_pendapatan) async {
+    DateTime now = DateTime.now();
+    String formattedDate =
+    DateFormat('d MMM, y')
+        .format(now);
+    try {
+      // Mengambil tanggal awal dan akhir minggu dari tanggal yang diberikan
+      DateTime awalMinggu =
+          tanggal.subtract(Duration(days: tanggal.weekday - 1));
+      DateTime akhirMinggu = awalMinggu.add(Duration(days: 6));
+
+      // Membuat format string untuk tanggal awal dan akhir minggu
+      String awalMingguStr = _formatTanggal(awalMinggu);
+      String akhirMingguStr = _formatTanggal(akhirMinggu);
+
+      // Cek apakah dokumen pendapatan mingguan untuk minggu ini sudah ada
+      final snapshot = await FirebaseFirestore.instance
+          .collection('pendapatan_mingguan')
+          .doc('$awalMingguStr-$akhirMingguStr')
+          .get();
+
+      if (snapshot.exists) {
+        // Jika dokumen sudah ada, tambahkan total harga baru ke total yang ada
+        int totalSaatIni = snapshot['total_harga'];
+        await snapshot.reference
+            .update({'total_harga': totalSaatIni + totalHarga, 'tanggal': now, 'tanggal_pendapatan': formattedDate});
+      } else {
+        // Jika dokumen belum ada, buat dokumen baru dengan total harga pesanan
+        await FirebaseFirestore.instance
+            .collection('pendapatan_mingguan')
+            .doc('$awalMingguStr-$akhirMingguStr')
+            .set({
+          'awal_minggu': awalMinggu,
+          'akhir_minggu': akhirMinggu,
+          'total_harga': totalHarga,
+          'tanggal': now,
+          'tanggal_pendapatan': formattedDate
+        });
+      }
+
+      print('Pendapatan mingguan berhasil ditambahkan!');
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -382,6 +429,10 @@ class _NotifikasiState extends State<Notifikasi> {
                                                                     now,
                                                                     totalHarga,
                                                                     formattedDate));
+                                                            tambahkanPendapatanMingguan(
+                                                                DateTime.now(),
+                                                                totalHarga,
+                                                                formattedDate);
                                                           });
                                                         } else {
                                                           // Jika stok tidak mencukupi, tampilkan pesan kesalahan atau lakukan tindakan yang sesuai

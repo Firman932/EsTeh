@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 
 import 'package:lji/Admin/Update/update.dart';
 
-
 class ListMenu extends StatelessWidget {
   final DocumentSnapshot produkData;
   const ListMenu({super.key, required this.produkData});
@@ -41,7 +40,7 @@ class ListMenu extends StatelessWidget {
             BoxShadow(
               color: Color.fromRGBO(156, 156, 156, 0.29),
               offset: Offset(0, 0),
-              blurRadius: 5,
+              blurRadius: 3,
             ),
           ],
           color: Colors.white,

@@ -272,7 +272,7 @@ class _TambahProdukState extends State<TambahProduk> {
                       height: 20,
                     ),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (imagePath == null) {
                           // Tampilkan pesan kesalahan jika gambar tidak dipilih
                           showDialog(
@@ -288,20 +288,54 @@ class _TambahProdukState extends State<TambahProduk> {
                           );
                         } else if (_formCreateKey.currentState?.validate() ??
                             false) {
-                          // Form valid, proceed with further actions
-                          Navigator.pop(context);
-                          tambahProduk();
+                          // Tampilkan dialog loading
                           showDialog(
                             context: context,
-                            builder: (context) => SucessDialog(
-                              title: "Berhasil",
-                              content: "Item berhasil ditambahkan",
-                              buttonConfirm: "Ok",
-                              onButtonConfirm: () {
-                                Navigator.pop(context);
-                              },
+                            builder: (context) => Loading(
+                              title: 'Loading',
+                              isLoading: true,
                             ),
                           );
+
+                          try {
+                            // Lakukan operasi tambah produk
+                            await tambahProduk();
+
+                            // Tutup dialog loading
+                            Navigator.pop(context);
+
+                            // Tampilkan dialog sukses
+                            showDialog(
+                              context: context,
+                              builder: (context) => SucessDialog(
+                                title: "Berhasil",
+                                content: "Item berhasil ditambahkan",
+                                buttonConfirm: "Ok",
+                                onButtonConfirm: () {
+                                  Navigator.pop(context); // Tutup dialog sukses
+                                  Navigator.pop(context); // Tutup dialog sukses
+                                },
+                              ),
+                            );
+                          } catch (e) {
+                            // Tangani kesalahan jika ada
+                            print('Error: $e');
+                            // Tutup dialog loading
+                            Navigator.pop(context);
+                            // Tampilkan pesan kesalahan
+                            showDialog(
+                              context: context,
+                              builder: (context) => WarningDialog(
+                                title: "Error",
+                                content:
+                                    "Terjadi kesalahan saat menambahkan produk.",
+                                buttonConfirm: "Ok",
+                                onButtonConfirm: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            );
+                          }
                         }
                       },
                       child: Text(
@@ -313,12 +347,10 @@ class _TambahProdukState extends State<TambahProduk> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(
-                            255, 73, 160, 19), // Warna teks pada tombol
-                        padding: EdgeInsets.all(16.0), // Padding tombol
+                        backgroundColor: Color.fromARGB(255, 73, 160, 19),
+                        padding: EdgeInsets.all(16.0),
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(15), // Bentuk tepi tombol
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         minimumSize: Size(screenWidth, 60),
                       ),

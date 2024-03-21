@@ -37,164 +37,184 @@ class _RiwayatState extends State<RiwayatAdmin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        forceMaterialTransparency: true,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back),
+        appBar: AppBar(
+          forceMaterialTransparency: true,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back),
+          ),
+          centerTitle: true,
+          title: Text(
+            "Riwayat",
+            style:
+                GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w500),
+          ),
         ),
-        centerTitle: true,
-        title: Text(
-          "Riwayat",
-          style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w500),
-        ),
-      ),
-      body: ListView.builder(
-        itemCount: pesananList.length,
-        itemBuilder: (context, index) {
-          DocumentSnapshot pesanan = pesananList[index];
-          String namaPembeli = pesanan['nama_pembeli'];
-          int totalHarga = pesanan['harga_total'];
-          String tanggal = pesanan['tanggal'];
-          String jam = pesanan['jam'];
-          List<dynamic> produkList = pesanan['produk'];
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 20),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color:
-                            Color.fromRGBO(156, 156, 156, 0.28999999165534972),
-                        offset: Offset(0, 0),
-                        blurRadius: 2,
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  width: MediaQuery.of(context).size.width,
+        body: Builder(builder: (context) {
+          if (pesananList.isEmpty) {
+            return Center(
+              child: Text(
+                'Belum ada riwayat',
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            );
+          }
+          return ListView.builder(
+              itemCount: pesananList.length,
+              itemBuilder: (context, index) {
+                DocumentSnapshot pesanan = pesananList[index];
+                String namaPembeli = pesanan['nama_pembeli'];
+                int totalHarga = pesanan['harga_total'];
+                String tanggal = pesanan['tanggal'];
+                String jam = pesanan['jam'];
+                List<dynamic> produkList = pesanan['produk'];
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Column(
                     children: [
-                      Row(
-                        children: [
-                          Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Container(
-                                  height: 20,
-                                  width: 20,
-                                  color: Color.fromARGB(255, 73, 160, 19),
-                                ),
-                              ),
-                              Icon(
-                                Icons.history,
-                                size: 19,
-                                color: Colors.white,
-                              ),
-                            ],
-                          ),
-                          SizedBox(width: 5),
-                          Text(
-                            "List Pesanan $namaPembeli",
-                            style: GoogleFonts.poppins(
-                                fontSize: 12, fontWeight: FontWeight.w600),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
                       Container(
-                        color: Colors.white,
-                        child: Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: produkList.length,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) =>
-                                ListHistory(produk: produkList[index]),
-                          ),
-                        ),
-                      ),
-                      Divider(),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 30,
+                        margin: EdgeInsets.only(top: 20),
+                        padding: EdgeInsets.all(10),
                         decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromRGBO(
+                                  156, 156, 156, 0.28999999165534972),
+                              offset: Offset(0, 0),
+                              blurRadius: 2,
+                            ),
+                          ],
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.white,
                         ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 100,
-                                    child: Text(
-                                      "Total :",
-                                      style: GoogleFonts.poppins(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                NumberFormat.currency(
-                                        locale: 'id',
-                                        symbol: 'Rp ',
-                                        decimalDigits: 0)
-                                    .format(totalHarga),
-                                style: GoogleFonts.poppins(
-                                    fontSize: 10, fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Container(
-                        width: double.infinity,
-                        margin: EdgeInsets.only(right: 10, bottom: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
                           children: [
                             Row(
                               children: [
-                                Text(
-                                  tanggal,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                                Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Container(
+                                        height: 20,
+                                        width: 20,
+                                        color: Color.fromARGB(255, 73, 160, 19),
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.history,
+                                      size: 19,
+                                      color: Colors.white,
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(width: 10),
+                                SizedBox(width: 5),
                                 Text(
-                                  jam,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
-                            ),
+                                  "List Pesanan $namaPembeli",
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600),
                                 ),
                               ],
                             ),
-                            Text(
-                              "Pesan DIterima",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Color.fromARGB(255, 73, 160, 19),
+                            SizedBox(height: 20),
+                            Container(
+                              color: Colors.white,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 5),
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: produkList.length,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) =>
+                                      ListHistory(produk: produkList[index]),
+                                ),
+                              ),
+                            ),
+                            Divider(),
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 100,
+                                          child: Text(
+                                            "Total :",
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      NumberFormat.currency(
+                                              locale: 'id',
+                                              symbol: 'Rp ',
+                                              decimalDigits: 0)
+                                          .format(totalHarga),
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            Container(
+                              width: double.infinity,
+                              margin: EdgeInsets.only(right: 10, bottom: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        tanggal,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        jam,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    "Pesan DIterima",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color.fromARGB(255, 73, 160, 19),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -202,12 +222,8 @@ class _RiwayatState extends State<RiwayatAdmin> {
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
+                );
+              });
+        }));
   }
 }

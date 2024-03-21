@@ -99,6 +99,12 @@ class _NotifikasiState extends State<Notifikasi> {
           tanggal.subtract(Duration(days: tanggal.weekday - 1));
       DateTime akhirMinggu = awalMinggu.add(Duration(days: 6));
 
+      // Menetapkan jam, menit, dan detik menjadi 00:00 untuk tanggal awal minggu
+      awalMinggu = DateTime(awalMinggu.year, awalMinggu.month, awalMinggu.day, 0, 0, 0);
+
+      // Menetapkan jam, menit, dan detik menjadi 23:59 untuk tanggal akhir minggu
+      akhirMinggu = DateTime(akhirMinggu.year, akhirMinggu.month, akhirMinggu.day, 23, 59, 59);
+
       // Membuat format string untuk tanggal awal dan akhir minggu
       String awalMingguStr = _formatTanggal(awalMinggu);
       String akhirMingguStr = _formatTanggal(akhirMinggu);

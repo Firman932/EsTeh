@@ -15,12 +15,6 @@ class Analisis extends StatefulWidget {
 class _AnalisisState extends State<Analisis> {
   late Stream<QuerySnapshot> produkStream;
 
-  String _formatCurrency(int number) {
-    NumberFormat currencyFormat =
-        NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0);
-    String formattedCurrency = currencyFormat.format(number);
-    return formattedCurrency;
-  }
 
   void initState() {
     super
@@ -64,12 +58,25 @@ class _AnalisisState extends State<Analisis> {
                           padding: const EdgeInsets.only(bottom: 16),
                           child: Align(
                             alignment: Alignment.bottomCenter,
-                            child: Text(
-                              "${_formatCurrency(1354543435)}",
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12,
-                              ),
+                            child: StreamBuilder<int>(
+                              stream: getTotalPendapatanMingguan(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                } else {
+                                  return Text(
+                                    NumberFormat.currency(
+                                            locale: 'id',
+                                            symbol: 'Rp ',
+                                            decimalDigits: 0)
+                                        .format(snapshot.data ?? 0),
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500),
+                                  );
+                                }
+                              },
                             ),
                           ),
                         )),
@@ -96,7 +103,7 @@ class _AnalisisState extends State<Analisis> {
                               style: GoogleFonts.poppins(
                                   color: Colors.white,
                                   fontSize: 12,
-                                  fontWeight: FontWeight.w500),
+                                  fontWeight: FontWeight.w600),
                             )
                           ],
                         ),
@@ -193,5 +200,49 @@ class _AnalisisState extends State<Analisis> {
         ],
       ),
     );
+  }
+  // Ubah dari Future menjadi Stream
+  Stream<int> getTotalPendapatanMingguan() async* {
+    // Mengambil tanggal awal dan akhir minggu saat ini
+    DateTime now = DateTime.now();
+    DateTime awalMinggu = now.subtract(Duration(days: now.weekday - 1));
+    DateTime akhirMinggu = awalMinggu.add(Duration(days: 6));
+
+    // Menetapkan jam, menit, dan detik menjadi 00:00 untuk tanggal awal minggu
+    awalMinggu =
+        DateTime(awalMinggu.year, awalMinggu.month, awalMinggu.day, 0, 0, 0);
+
+    // Menetapkan jam, menit, dan detik menjadi 23:59 untuk tanggal akhir minggu
+    akhirMinggu = DateTime(
+        akhirMinggu.year, akhirMinggu.month, akhirMinggu.day, 23, 59, 59);
+
+    // Membuat format string untuk tanggal awal dan akhir minggu
+    String awalMingguStr = _formatTanggal(awalMinggu);
+    String akhirMingguStr = _formatTanggal(akhirMinggu);
+
+    try {
+      // Mengambil data pendapatan mingguan dari Firestore
+      final snapshot = await FirebaseFirestore.instance
+          .collection('pendapatan_mingguan')
+          .doc('$awalMingguStr-$akhirMingguStr')
+          .get();
+
+      if (snapshot.exists) {
+        // Jika dokumen ditemukan, kembalikan nilai total_harga
+        yield snapshot['total_harga'];
+      } else {
+        // Jika dokumen tidak ditemukan, kembalikan nilai 0
+        yield 0;
+      }
+    } catch (e) {
+      // Jika terjadi kesalahan, tangani kesalahan
+      print('Error: $e');
+      yield 0;
+    }
+  }
+
+    // Fungsi untuk memformat tanggal menjadi string (YYYY-MM-DD)
+  String _formatTanggal(DateTime tanggal) {
+    return '${tanggal.year}-${tanggal.month}-${tanggal.day}';
   }
 }

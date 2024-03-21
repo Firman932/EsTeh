@@ -141,13 +141,22 @@ class _SignScreenState extends State<SignScreen> {
                         ElevatedButton(
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
+                              showDialog(
+                                context: context,
+                                barrierDismissible:
+                                    false, // prevents the dialog from being dismissed by tapping outside
+                                builder: (BuildContext context) {
+                                  return Loading(
+                                      title: 'Loading', isLoading: true);
+                                },
+                              );
+
                               try {
                                 String enteredEmail =
                                     emailController.text.trim();
                                 String enteredPassword =
                                     passwordController.text.trim();
 
-                                // Check if the user exists in the database
                                 final userSnapshot = await FirebaseFirestore
                                     .instance
                                     .collection('users')
@@ -155,33 +164,30 @@ class _SignScreenState extends State<SignScreen> {
                                     .get();
 
                                 if (userSnapshot.docs.isEmpty) {
-                                  // If user is not found in the database, display an error message
+                                  Navigator.pop(
+                                      context); // Close the loading dialog
                                   showDialog(
                                     context: context,
                                     builder: (context) => WarningDialog(
                                       title: "Warning",
                                       content:
                                           "Email atau kata sandi Anda salah. Silakan coba lagi atau daftar jika Anda belum memiliki akun",
-                                      buttonConfirm: 'OK',
+                                      buttonConfirm: 'Tutup',
                                       onButtonConfirm: () {
                                         Navigator.pop(context);
                                       },
                                     ),
                                   );
-
                                   return;
                                 }
 
-                                // Sign in user with email and password
                                 UserCredential userCredential =
                                     await _auth.signInWithEmailAndPassword(
                                   email: enteredEmail,
                                   password: enteredPassword,
                                 );
 
-                                // Check if user is authenticated successfully
                                 if (userCredential.user != null) {
-                                  // Insert user to Firebase
                                   DocumentSnapshot userSnapshot =
                                       await FirebaseFirestore.instance
                                           .collection('users')
@@ -189,9 +195,7 @@ class _SignScreenState extends State<SignScreen> {
                                           .get();
 
                                   String role = userSnapshot['role'];
-                                  // Check if the user is an admin or a regular user
                                   if (role == 'admin') {
-                                    // Navigate to admin dashboard
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -199,7 +203,6 @@ class _SignScreenState extends State<SignScreen> {
                                       ),
                                     );
                                   } else {
-                                    // Navigate to regular user menu
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -209,8 +212,20 @@ class _SignScreenState extends State<SignScreen> {
                                   }
                                 }
                               } catch (e) {
-                                // Print the error to console for debugging
                                 print('Error: $e');
+                                Navigator.pop(context);
+                                // Close the loading dialog
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => WarningDialog(
+                                          title: "Error",
+                                          content:
+                                              "Email atau kata sandi Anda salah",
+                                          buttonConfirm: 'OK',
+                                          onButtonConfirm: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ));
                               }
                             }
                           },

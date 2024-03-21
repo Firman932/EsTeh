@@ -159,7 +159,7 @@ class _UpdateProdukState extends State<UpdateProduk> {
                 children: [
                   image != null
                       ? Container(
-                          height: 350,
+                          height: 325,
                           width: screenWidth,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
@@ -351,12 +351,19 @@ class _UpdateProdukState extends State<UpdateProduk> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          content: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.network(
-              widget.gambarUrl,
-              fit: BoxFit.cover,
+        return Dialog(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    widget.gambarUrl,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ],
             ),
           ),
         );

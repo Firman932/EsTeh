@@ -185,26 +185,26 @@ class _RegisterState extends State<Register> {
                                   );
                                 } else {
                                   // Jika gagal, tampilkan pesan kesalahan
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Text('Gagal Membuat Akun'),
-                                        content: Text(
-                                            'Terjadi kesalahan saat membuat akun. Silakan coba lagi.'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text('OK'),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
                                 }
                               } catch (e) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Gagal Membuat Akun'),
+                                      content: Text(
+                                          'Terjadi kesalahan saat membuat akun. Silakan coba lagi.'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('OK'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                                 print('Error: $e');
                                 // Handle error, seperti menampilkan pesan kesalahan kepada pengguna
                               }

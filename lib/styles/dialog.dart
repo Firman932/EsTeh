@@ -275,31 +275,23 @@ class Loading extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                width: 140,
-                height: 140,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: greenPrimary,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SpinKitWave(
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SpinKitWave(
+                    color: Colors.white,
+                    size: 40,
+                  ),
+                  SizedBox(height: 30), // Spacer antara SpinKitWave dan teks
+                  Text(
+                    title,
+                    style: GoogleFonts.poppins(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
                       color: Colors.white,
-                      size: 40,
                     ),
-                    SizedBox(height: 10), // Spacer antara SpinKitWave dan teks
-                    Text(
-                      title,
-                      style: GoogleFonts.poppins(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               )
 
               // Kotak atas dengan logo peringatan

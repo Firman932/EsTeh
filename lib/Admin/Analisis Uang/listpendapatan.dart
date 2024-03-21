@@ -1,27 +1,19 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/styles/color.dart';
 
-class ListPendapatan extends StatefulWidget {
+class ListPendapatan extends StatelessWidget {
   final String tanggal;
+  final int totalHarga;
 
-  const ListPendapatan({required this.tanggal, });
+  const ListPendapatan({required this.tanggal, required this.totalHarga});
 
-  @override
-  _ListPendapatanState createState() => _ListPendapatanState();
-}
-
-class _ListPendapatanState extends State<ListPendapatan> {
   @override
   Widget build(BuildContext context) {
-    var tanggal;
-    var waktu;
     return Container(
       margin: EdgeInsets.only(bottom: 10, top: 10),
       width: double.infinity,
-      height: MediaQuery.of(context).size.height*0.1,
+      height: MediaQuery.of(context).size.height * 0.1,
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -80,7 +72,7 @@ class _ListPendapatanState extends State<ListPendapatan> {
                     ),
                   ),
                   Text(
-                    'Rp 500.000',
+                    'Rp $totalHarga',
                     style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -104,12 +96,12 @@ class _ListPendapatanState extends State<ListPendapatan> {
                       color: Color(0xff000000),
                     ),
                   ),
-                                    SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
-                      )
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.02,
+                  )
                 ],
               ),
-              SizedBox(width: MediaQuery.of(context).size.width*0.03),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.03),
             ],
           )
         ],

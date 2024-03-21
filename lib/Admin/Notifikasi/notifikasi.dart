@@ -2,9 +2,11 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lji/Admin/Notifikasi/listpesan.dart';
+import 'package:lji/styles/color.dart';
 import 'package:lji/styles/dialog.dart';
 
 class Notifikasi extends StatefulWidget {
@@ -90,14 +92,18 @@ class _NotifikasiState extends State<Notifikasi> {
   Future<void> tambahkanPendapatanMingguan(
       DateTime tanggal, int totalHarga, String tanggal_pendapatan) async {
     DateTime now = DateTime.now();
-    String formattedDate =
-    DateFormat('d MMM, y')
-        .format(now);
+    String formattedDate = DateFormat('d MMM, y').format(now);
     try {
       // Mengambil tanggal awal dan akhir minggu dari tanggal yang diberikan
       DateTime awalMinggu =
           tanggal.subtract(Duration(days: tanggal.weekday - 1));
       DateTime akhirMinggu = awalMinggu.add(Duration(days: 6));
+
+      // Menetapkan jam, menit, dan detik menjadi 00:00 untuk tanggal awal minggu
+      awalMinggu = DateTime(awalMinggu.year, awalMinggu.month, awalMinggu.day, 0, 0, 0);
+
+      // Menetapkan jam, menit, dan detik menjadi 23:59 untuk tanggal akhir minggu
+      akhirMinggu = DateTime(akhirMinggu.year, akhirMinggu.month, akhirMinggu.day, 23, 59, 59);
 
       // Membuat format string untuk tanggal awal dan akhir minggu
       String awalMingguStr = _formatTanggal(awalMinggu);
@@ -112,8 +118,11 @@ class _NotifikasiState extends State<Notifikasi> {
       if (snapshot.exists) {
         // Jika dokumen sudah ada, tambahkan total harga baru ke total yang ada
         int totalSaatIni = snapshot['total_harga'];
-        await snapshot.reference
-            .update({'total_harga': totalSaatIni + totalHarga, 'tanggal': now, 'tanggal_pendapatan': formattedDate});
+        await snapshot.reference.update({
+          'total_harga': totalSaatIni + totalHarga,
+          'tanggal': now,
+          'tanggal_pendapatan': formattedDate
+        });
       } else {
         // Jika dokumen belum ada, buat dokumen baru dengan total harga pesanan
         await FirebaseFirestore.instance
@@ -157,14 +166,37 @@ class _NotifikasiState extends State<Notifikasi> {
             stream: pesananStream,
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SpinKitWave(
+                        size: 43,
+                        color: greenPrimary,
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Text(
+                        'Loading',
+                        style: GoogleFonts.poppins(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                            color: greenPrimary),
+                      )
+                    ]);
               }
               if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               }
               final pesananList = snapshot.data!.docs;
               if (pesananList.isEmpty) {
-                return Center(child: Text('Belum ada notifikasi', style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w500),));
+                return Center(
+                    child: Text(
+                  'Belum ada notifikasi',
+                  style: GoogleFonts.poppins(
+                    fontSize: 15,
+                  ),
+                ));
               }
               return ListView.builder(
                 itemCount: pesananList.length,

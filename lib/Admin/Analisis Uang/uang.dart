@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Analisis%20Uang/listpendapatan.dart';
@@ -83,10 +84,19 @@ class _PendapatanState extends State<Pendapatan> {
                 SizedBox(
                   height: 20,
                 ),
-                Text(
-                  "Rp 500.000",
-                  style: GoogleFonts.poppins(
-                      fontSize: 25, fontWeight: FontWeight.w500),
+                FutureBuilder<int>(
+                  future: getTotalPendapatanMingguan(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else {
+                      return Text(
+                        "Rp ${snapshot.data ?? 0}",
+                        style: GoogleFonts.poppins(
+                            fontSize: 25, fontWeight: FontWeight.w500),
+                      );
+                    }
+                  },
                 ),
                 SizedBox(
                   height: 80,
@@ -101,7 +111,28 @@ class _PendapatanState extends State<Pendapatan> {
                 SizedBox(
                   height: 20,
                 ),
-                ListPendapatan(tanggal: ''),
+                FutureBuilder<List<Map<String, dynamic>>>(
+                  future: getLatestPendapatanHarian(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else {
+                      List<Map<String, dynamic>> latestData =
+                          snapshot.data ?? [];
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount:
+                            latestData.length > 3 ? 3 : latestData.length,
+                        itemBuilder: (context, index) {
+                          return ListPendapatan(
+                            tanggal: latestData[index]['tanggal'],
+                            totalHarga: latestData[index]['total_harga'],
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -115,12 +146,29 @@ class _PendapatanState extends State<Pendapatan> {
                 SizedBox(
                   height: 20,
                 ),
-                ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: 6,
-                  itemBuilder: (context, index) {
-                    return ListPendapatan(tanggal: '');
+                FutureBuilder<List<Map<String, dynamic>>>(
+                  future: getPreviousPendapatanMingguan(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else {
+                      List<Map<String, dynamic>> previousData =
+                          snapshot.data ?? [];
+                      if (previousData.isEmpty) {
+                        return Text('Pendapatan minggu sebelumnya kosong');
+                      } else {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: previousData.length,
+                          itemBuilder: (context, index) {
+                            return ListPendapatan(
+                              tanggal: previousData[index]['tanggal'],
+                              totalHarga: previousData[index]['total_harga'],
+                            );
+                          },
+                        );
+                      }
+                    }
                   },
                 ),
               ],
@@ -129,5 +177,124 @@ class _PendapatanState extends State<Pendapatan> {
         ],
       ),
     );
+  }
+
+  // TODO: Implement method to get total pendapatan mingguan
+  Future<int> getTotalPendapatanMingguan() async {
+    // Mengambil tanggal awal dan akhir minggu saat ini
+    DateTime now = DateTime.now();
+    DateTime awalMinggu = now.subtract(Duration(days: now.weekday - 1));
+    DateTime akhirMinggu = awalMinggu.add(Duration(days: 6));
+
+    // Menetapkan jam, menit, dan detik menjadi 00:00 untuk tanggal awal minggu
+    awalMinggu =
+        DateTime(awalMinggu.year, awalMinggu.month, awalMinggu.day, 0, 0, 0);
+
+    // Menetapkan jam, menit, dan detik menjadi 23:59 untuk tanggal akhir minggu
+    akhirMinggu = DateTime(
+        akhirMinggu.year, akhirMinggu.month, akhirMinggu.day, 23, 59, 59);
+
+    // Membuat format string untuk tanggal awal dan akhir minggu
+    String awalMingguStr = _formatTanggal(awalMinggu);
+    String akhirMingguStr = _formatTanggal(akhirMinggu);
+
+    try {
+      // Mengambil data pendapatan mingguan dari Firestore
+      final snapshot = await FirebaseFirestore.instance
+          .collection('pendapatan_mingguan')
+          .doc('$awalMingguStr-$akhirMingguStr')
+          .get();
+
+      if (snapshot.exists) {
+        // Jika dokumen ditemukan, kembalikan nilai total_harga
+        return snapshot['total_harga'];
+      } else {
+        // Jika dokumen tidak ditemukan, kembalikan nilai 0
+        return 0;
+      }
+    } catch (e) {
+      // Jika terjadi kesalahan, tangani kesalahan
+      print('Error: $e');
+      return 0;
+    }
+  }
+
+    // TODO: Implement method to get previous pendapatan mingguan
+  Future<List<Map<String, dynamic>>> getPreviousPendapatanMingguan() async {
+    try {
+      // Mendapatkan tanggal awal minggu sebelumnya
+      DateTime now = DateTime.now();
+      DateTime awalMingguSebelumnya =
+          now.subtract(Duration(days: now.weekday + 6));
+
+      // Mendapatkan tanggal akhir minggu sebelumnya
+      DateTime akhirMingguSebelumnya =
+          now.subtract(Duration(days: now.weekday));
+
+      // Membuat format string untuk tanggal awal dan akhir minggu sebelumnya
+      String awalMingguSebelumnyaStr = _formatTanggal(awalMingguSebelumnya);
+      String akhirMingguSebelumnyaStr = _formatTanggal(akhirMingguSebelumnya);
+
+      // Mengambil data pendapatan mingguan sebelumnya dari Firestore
+      final snapshots = await FirebaseFirestore.instance
+          .collection('pendapatan_mingguan')
+          .where('awal_minggu', isGreaterThanOrEqualTo: awalMingguSebelumnyaStr)
+          .where('akhir_minggu', isLessThanOrEqualTo: akhirMingguSebelumnyaStr)
+          .orderBy('awal_minggu', descending: true)
+          .get();
+
+      // Membuat list untuk menyimpan data pendapatan mingguan sebelumnya
+      List<Map<String, dynamic>> pendapatanMingguanSebelumnya = [];
+
+      // Mengambil data dari setiap dokumen
+      snapshots.docs.forEach((doc) {
+        pendapatanMingguanSebelumnya.add({
+          'tanggal': doc['tanggal_pendapatan'],
+          'total_harga': doc['total_harga']
+        });
+      });
+
+      // Kembalikan data pendapatan mingguan sebelumnya
+      return pendapatanMingguanSebelumnya;
+    } catch (e) {
+      // Jika terjadi kesalahan, tangani kesalahan
+      print('Error: $e');
+      return [];
+    }
+  }
+
+  // TODO: Implement method to get latest pendapatan harian
+  Future<List<Map<String, dynamic>>> getLatestPendapatanHarian() async {
+    try {
+      // Mengambil data pendapatan harian terbaru dari Firestore
+      final snapshots = await FirebaseFirestore.instance
+          .collection('pendapatan_harian')
+          .orderBy('tanggal', descending: true)
+          .get();
+
+      // List untuk menyimpan data pendapatan harian terbaru
+      List<Map<String, dynamic>> latestPendapatanHarian = [];
+
+      // Iterasi melalui setiap dokumen dalam snapshots
+      snapshots.docs.forEach((doc) {
+        // Menambahkan data dari setiap dokumen ke dalam list
+        latestPendapatanHarian.add({
+          'tanggal': doc['tanggal_pendapatan'],
+          'total_harga': doc['total_harga']
+        });
+      });
+
+      // Kembalikan data pendapatan harian terbaru dalam list
+      return latestPendapatanHarian;
+    } catch (e) {
+      // Jika terjadi kesalahan, tangani kesalahan
+      print('Error: $e');
+      return []; // Kembalikan list kosong jika terjadi kesalahan
+    }
+  }
+
+  // Fungsi untuk memformat tanggal menjadi string (YYYY-MM-DD)
+  String _formatTanggal(DateTime tanggal) {
+    return '${tanggal.year}-${tanggal.month}-${tanggal.day}';
   }
 }

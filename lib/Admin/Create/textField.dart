@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:lji/styles/color.dart';
 import 'package:flutter/services.dart';
 

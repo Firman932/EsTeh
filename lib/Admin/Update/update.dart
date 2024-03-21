@@ -83,7 +83,7 @@ class _UpdateProdukState extends State<UpdateProduk> {
         'nama_produk': nameController.text,
         'kategori_produk': categoryController.text,
         'variasi_rasa': variationController.text,
-        'harga_produk' : int.parse(hargaController.text),
+        'harga_produk': int.parse(hargaController.text),
         'stok_produk': int.parse(stockController.text),
         'gambar_produk': imageUrl,
         // Tambahkan field lain sesuai kebutuhan
@@ -159,7 +159,7 @@ class _UpdateProdukState extends State<UpdateProduk> {
                 children: [
                   image != null
                       ? Container(
-                          height: 325,
+                          height: 350,
                           width: screenWidth,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
@@ -169,15 +169,25 @@ class _UpdateProdukState extends State<UpdateProduk> {
                             ),
                           ),
                         )
-                      : Container(
-                          height: 325,
-                          width: screenWidth,
-                          child: ClipRRect(
+                      : InkWell(
+                          onTap: () async {
+                            await _showImageDetailDialog(context);
+                          },
+                          child: Container(
+                            height: 325,
+                            width: screenWidth,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.black),
+                            ),
+                            child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Image.network(
                                 widget.gambarUrl,
                                 fit: BoxFit.cover,
-                              )),
+                              ),
+                            ),
+                          ),
                         ),
                   SizedBox(height: 20),
                   InkWell(
@@ -268,7 +278,7 @@ class _UpdateProdukState extends State<UpdateProduk> {
                     },
                   ),
                   SizedBox(height: 10),
-                    CustomCurrencyField(
+                  CustomCurrencyField(
                     labelText: "Harga",
                     hintText: "8000",
                     controller: hargaController,
@@ -334,6 +344,23 @@ class _UpdateProdukState extends State<UpdateProduk> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _showImageDetailDialog(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.network(
+              widget.gambarUrl,
+              fit: BoxFit.cover,
+            ),
+          ),
+        );
+      },
     );
   }
 }

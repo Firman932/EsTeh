@@ -1,9 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lji/Register.dart';
-import 'package:lji/SignIn.dart';
 
 class LogoutBottomSheet {
 static void show(BuildContext context, AuthService authService) {

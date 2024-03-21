@@ -8,6 +8,7 @@ import 'package:lji/styles/color.dart';
 import 'package:lji/DataBasePHPMYSQL/passwordtextfield.dart';
 import 'package:lji/DataBasePHPMYSQL/TextFieldLogin.dart';
 import 'package:lji/SignIn.dart';
+import 'package:lji/styles/dialog.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -158,6 +159,18 @@ class _RegisterState extends State<Register> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               try {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible:
+                                      false, // Prevent user from dismissing the dialog
+                                  builder: (BuildContext context) {
+                                    return Loading(
+                                      title: 'Sedang Membuat Akun',
+                                      isLoading: true,
+                                    );
+                                  },
+                                );
+
                                 String enteredUsername =
                                     usernameController.text.trim();
                                 String enteredEmail =
@@ -177,6 +190,8 @@ class _RegisterState extends State<Register> {
                                   String uid = userCredential.user!.uid;
                                   insertUserToFirebase(
                                       enteredEmail, enteredUsername, uid);
+                                  Navigator.pop(
+                                      context); // Remove the loading dialog
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -187,6 +202,8 @@ class _RegisterState extends State<Register> {
                                   // Jika gagal, tampilkan pesan kesalahan
                                 }
                               } catch (e) {
+                                Navigator.pop(
+                                    context); // Remove the loading dialog
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {

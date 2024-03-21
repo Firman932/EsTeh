@@ -4,8 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lji/Admin/Stok/stok_produk.dart';
 import 'package:lji/Admin/Update/update.dart';
-
-import '../../styles/dialog.dart';
+import 'package:lji/styles/dialog.dart';
 
 class ListProduk extends StatefulWidget {
   final bool isChecklistMode;
@@ -187,34 +186,7 @@ class _ListProdukState extends State<ListProduk> {
       ),
       child: IconButton(
         onPressed: () async {
-          await showDialog(
-            context: context,
-            builder: (context) => DeleteDialog(
-              title: 'Peringatan',
-              content: 'Apakah anda yakin menghapus produk ini?',
-              buttonCancel: 'Batal',
-              onButtonCancel: () {
-                Navigator.pop(context);
-              },
-              buttonConfirm: 'Hapus',
-              onButtonConfirm: () async {
-                final String documentId = widget.produkData.id;
-                await deleteProduct(documentId, context);
-                setState(() {
-                  _deleteSuccess = true;
-                });
-                Navigator.pop(context);
-              },
-            ),
-          );
-          if (_deleteSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Produk berhasil dihapus'),
-                duration: Duration(seconds: 3),
-              ),
-            );
-          }
+          _showDeleteConfirmationDialog(context, documentId);
         },
         icon: Icon(
           icon,
@@ -226,15 +198,56 @@ class _ListProdukState extends State<ListProduk> {
     );
   }
 
-  Future<void> deleteProduct(String documentId, BuildContext context) async {
-    try {
-      final CollectionReference produkCollection =
-          FirebaseFirestore.instance.collection('produk');
+  Future<void> _showDeleteConfirmationDialog(
+      BuildContext context, String documentId) async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Peringatan'),
+        content: Text('Apakah Anda yakin ingin menghapus produk ini?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Batal'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              await _deleteProduct(documentId, context);
+            },
+            child: Text('Hapus'),
+          ),
+        ],
+      ),
+    );
+  }
 
-      await produkCollection.doc(documentId).delete();
-      print('Produk berhasil dihapus');
+  Future<void> _deleteProduct(String documentId, BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text('Loading...'),
+        content: CircularProgressIndicator(),
+      ),
+    );
+    try {
+      await FirebaseFirestore.instance
+          .collection('produk')
+          .doc(documentId)
+          .delete();
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Produk berhasil dihapus'),
+          duration: Duration(seconds: 3),
+        ),
+      );
     } catch (error) {
       print('Error deleting product: $error');
+      Navigator.pop(context);
       showDialog(
         context: context,
         builder: (context) => WarningDialog(

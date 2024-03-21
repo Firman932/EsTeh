@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lji/styles/color.dart';
 
 class ListPendapatan extends StatelessWidget {
@@ -29,59 +32,66 @@ class ListPendapatan extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              Container(
-                margin: EdgeInsets.fromLTRB(0, 0, 6, 0),
-                width: 10,
-                height: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    bottomLeft: Radius.circular(10),
+          Expanded(
+            child: Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.fromLTRB(0, 0, 6, 0),
+                  width: 10,
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      bottomLeft: Radius.circular(10),
+                    ),
+                    color: Color.fromARGB(255, 73, 160, 19),
                   ),
-                  color: Color.fromARGB(255, 73, 160, 19),
                 ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Icon(
-                    Icons.monetization_on,
-                    size: 22,
-                    color: greenPrimary,
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.02,
-                  )
-                ],
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.02,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    'Pendapatan ',
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xff000000),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Icon(
+                      Icons.monetization_on,
+                      size: 22,
+                      color: greenPrimary,
                     ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
+                    )
+                  ],
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.02,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        'Pendapatan ',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff000000),
+                        ),
+                      ),
+                      Text(
+                                      NumberFormat.currency(
+                          locale: 'id', symbol: 'Rp ', decimalDigits: 0)
+                      .format(totalHarga),
+                      overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff000000),
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    'Rp $totalHarga',
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xff000000),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
           Row(
             children: [

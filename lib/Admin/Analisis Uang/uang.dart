@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lji/Admin/Analisis%20Uang/listpendapatan.dart';
 import 'package:lji/Admin/HistoryAdmin/HistoryAdmin.dart';
 import '../Notifikasi/notifikasi.dart';
@@ -91,7 +92,9 @@ class _PendapatanState extends State<Pendapatan> {
                       return CircularProgressIndicator();
                     } else {
                       return Text(
-                        "Rp ${snapshot.data ?? 0}",
+                        NumberFormat.currency(
+                                locale: 'id', symbol: 'Rp ', decimalDigits: 0)
+                            .format(snapshot.data ?? 0),
                         style: GoogleFonts.poppins(
                             fontSize: 25, fontWeight: FontWeight.w500),
                       );
@@ -99,7 +102,7 @@ class _PendapatanState extends State<Pendapatan> {
                   },
                 ),
                 SizedBox(
-                  height: 80,
+                  height: 50,
                 ),
                 Align(
                     alignment: Alignment.centerLeft,
@@ -119,17 +122,22 @@ class _PendapatanState extends State<Pendapatan> {
                     } else {
                       List<Map<String, dynamic>> latestData =
                           snapshot.data ?? [];
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount:
-                            latestData.length > 3 ? 3 : latestData.length,
-                        itemBuilder: (context, index) {
-                          return ListPendapatan(
-                            tanggal: latestData[index]['tanggal'],
-                            totalHarga: latestData[index]['total_harga'],
-                          );
-                        },
-                      );
+                      if (latestData.isEmpty) {
+                        return Text('Pendapatan minggu sebelumnya kosong');
+                      } else {
+                        return ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount:
+                              latestData.length > 3 ? 3 : latestData.length,
+                          itemBuilder: (context, index) {
+                            return ListPendapatan(
+                              tanggal: latestData[index]['tanggal'],
+                              totalHarga: latestData[index]['total_harga'],
+                            );
+                          },
+                        );
+                      }
                     }
                   },
                 ),
@@ -158,6 +166,7 @@ class _PendapatanState extends State<Pendapatan> {
                         return Text('Pendapatan minggu sebelumnya kosong');
                       } else {
                         return ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: previousData.length,
                           itemBuilder: (context, index) {
@@ -219,27 +228,17 @@ class _PendapatanState extends State<Pendapatan> {
     }
   }
 
-    // TODO: Implement method to get previous pendapatan mingguan
+// TODO: Implement method to get previous pendapatan mingguan
   Future<List<Map<String, dynamic>>> getPreviousPendapatanMingguan() async {
     try {
-      // Mendapatkan tanggal awal minggu sebelumnya
+      // Mendapatkan tanggal awal minggu sekarang
       DateTime now = DateTime.now();
-      DateTime awalMingguSebelumnya =
-          now.subtract(Duration(days: now.weekday + 6));
-
-      // Mendapatkan tanggal akhir minggu sebelumnya
-      DateTime akhirMingguSebelumnya =
-          now.subtract(Duration(days: now.weekday));
-
-      // Membuat format string untuk tanggal awal dan akhir minggu sebelumnya
-      String awalMingguSebelumnyaStr = _formatTanggal(awalMingguSebelumnya);
-      String akhirMingguSebelumnyaStr = _formatTanggal(akhirMingguSebelumnya);
+      DateTime awalMingguIni = now.subtract(Duration(days: now.weekday + 6));
 
       // Mengambil data pendapatan mingguan sebelumnya dari Firestore
       final snapshots = await FirebaseFirestore.instance
           .collection('pendapatan_mingguan')
-          .where('awal_minggu', isGreaterThanOrEqualTo: awalMingguSebelumnyaStr)
-          .where('akhir_minggu', isLessThanOrEqualTo: akhirMingguSebelumnyaStr)
+          .where('awal_minggu', isLessThan: awalMingguIni)
           .orderBy('awal_minggu', descending: true)
           .get();
 

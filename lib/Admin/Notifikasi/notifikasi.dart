@@ -56,7 +56,7 @@ class _NotifikasiState extends State<Notifikasi> {
 
   Future<void> tambahkanPendapatanHarian(
       DateTime tanggal, int totalHarga, String tanggal_pendapatan) async {
-        DateTime now = DateTime.now();
+    DateTime now = DateTime.now();
     try {
       // Cek apakah dokumen pendapatan harian untuk tanggal ini sudah ada
       final snapshot = await FirebaseFirestore.instance
@@ -68,13 +68,17 @@ class _NotifikasiState extends State<Notifikasi> {
         // Jika dokumen sudah ada, tambahkan total harga baru ke total yang ada
         int totalSaatIni = snapshot['total_harga'];
         await snapshot.reference
-            .update({'total_harga': totalSaatIni + totalHarga,'tanggal': now});
+            .update({'total_harga': totalSaatIni + totalHarga, 'tanggal': now});
       } else {
         // Jika dokumen belum ada, buat dokumen baru dengan total harga pesanan
         await FirebaseFirestore.instance
             .collection('pendapatan_harian')
             .doc(_formatTanggal(tanggal))
-            .set({'tanggal': tanggal, 'total_harga': totalHarga, 'tanggal_pendapatan': tanggal_pendapatan});
+            .set({
+          'tanggal': tanggal,
+          'total_harga': totalHarga,
+          'tanggal_pendapatan': tanggal_pendapatan
+        });
       }
 
       print('Pendapatan harian berhasil ditambahkan!');
@@ -112,6 +116,9 @@ class _NotifikasiState extends State<Notifikasi> {
                 return Center(child: Text('Error: ${snapshot.error}'));
               }
               final pesananList = snapshot.data!.docs;
+              if (pesananList.isEmpty) {
+                return Center(child: Text('Belum ada notifikasi'));
+              }
               return ListView.builder(
                 itemCount: pesananList.length,
                 itemBuilder: (context, index) {
@@ -371,7 +378,10 @@ class _NotifikasiState extends State<Notifikasi> {
                                                                       .now(),
                                                               'hari':
                                                                   hariPesanan,
-                                                            }).then((_) => tambahkanPendapatanHarian(now, totalHarga, formattedDate));
+                                                            }).then((_) => tambahkanPendapatanHarian(
+                                                                    now,
+                                                                    totalHarga,
+                                                                    formattedDate));
                                                           });
                                                         } else {
                                                           // Jika stok tidak mencukupi, tampilkan pesan kesalahan atau lakukan tindakan yang sesuai

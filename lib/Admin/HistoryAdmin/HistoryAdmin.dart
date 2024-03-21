@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lji/FOR%20USER/HistoryUser/list_history.dart';
+import 'package:lji/styles/color.dart';
 
 class RiwayatAdmin extends StatefulWidget {
   const RiwayatAdmin({Key? key}) : super(key: key);
@@ -12,62 +14,82 @@ class RiwayatAdmin extends StatefulWidget {
 }
 
 class _RiwayatState extends State<RiwayatAdmin> {
-  late List<DocumentSnapshot> pesananList = [];
+  late Future<List<DocumentSnapshot>> _fetchDataPesanan;
 
+  @override
   void initState() {
     super.initState();
-    fetchDataPesanan();
+    _fetchDataPesanan = fetchDataPesanan();
   }
 
-  void fetchDataPesanan() {
-    FirebaseFirestore.instance
-        .collection('pesanan')
-        .where('status', isEqualTo: 'Diterima')
-        .orderBy('waktu_pesanan', descending: true)
-        .get()
-        .then((querySnapshot) {
-      setState(() {
-        pesananList = querySnapshot.docs;
-      });
-    }).catchError((error) {
+  Future<List<DocumentSnapshot>> fetchDataPesanan() async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('pesanan')
+          .where('status', isEqualTo: 'Diterima')
+          .orderBy('waktu_pesanan', descending: true)
+          .get();
+      return querySnapshot.docs;
+    } catch (error) {
       print("Error fetching pesanan: $error");
-    });
+      return [];
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          forceMaterialTransparency: true,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.arrow_back),
-          ),
-          centerTitle: true,
-          title: Text(
-            "Riwayat",
-            style:
-                GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w500),
-          ),
+      appBar: AppBar(
+        forceMaterialTransparency: true,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back),
         ),
-        body: Builder(builder: (context) {
-          if (pesananList.isEmpty) {
+        centerTitle: true,
+        title: Text(
+          "Riwayat",
+          style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w500),
+        ),
+      ),
+      body: FutureBuilder<List<DocumentSnapshot>>(
+        future: _fetchDataPesanan,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SpinKitWave(
+                    size: 43,
+                    color: greenPrimary,
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Text(
+                    'Loading',
+                    style: GoogleFonts.poppins(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                        color: greenPrimary),
+                  )
+                ]);
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Terjadi kesalahan saat mengambil data'));
+          } else if (snapshot.hasData && snapshot.data!.isEmpty) {
             return Center(
-              child: Text(
-                'Belum ada riwayat',
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
+                child: Text(
+              'Belum ada riwayat',
+              style: GoogleFonts.poppins(
+                fontSize: 15,
               ),
-            );
-          }
-          return ListView.builder(
-              itemCount: pesananList.length,
+            ));
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                DocumentSnapshot pesanan = pesananList[index];
+                DocumentSnapshot pesanan = snapshot.data![index];
                 String namaPembeli = pesanan['nama_pembeli'];
                 int totalHarga = pesanan['harga_total'];
                 String tanggal = pesanan['tanggal'];
@@ -223,7 +245,11 @@ class _RiwayatState extends State<RiwayatAdmin> {
                     ],
                   ),
                 );
-              });
-        }));
+              },
+            );
+          }
+        },
+      ),
+    );
   }
 }

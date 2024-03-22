@@ -37,10 +37,6 @@ class _RegisterState extends State<Register> {
   Future<void> _getFcmToken() async {
     String? fcmToken = await _firebaseMessaging.getToken();
     print('FCM Token: $fcmToken');
-    // Simpan token FCM ke dalam Firestore saat didapatkan
-    // Pastikan untuk menyimpannya bersama dengan data pengguna lainnya saat mendaftarkan pengguna
-    // Di sini, Anda dapat memanggil fungsi insertUserToFirebase dengan menambahkan parameter fcmToken
-    // Contoh: insertUserToFirebase(enteredEmail, enteredUsername, uid, fcmToken);
   }
 
   void insertUserToFirebase(

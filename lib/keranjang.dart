@@ -109,7 +109,7 @@ class _KeranjangState extends State<Keranjang> {
         body: json.encode(<String, dynamic>{
           'to': fcmToken,
           'priority': 'high',
-              'notification': <String,dynamic>{
+          'notification': <String, dynamic>{
             'title': 'Pesanan baru',
             'body': message,
           },
@@ -123,58 +123,58 @@ class _KeranjangState extends State<Keranjang> {
   }
 
   Future<void> _tampilkanNotifikasiLokal(String message) async {
-  // Inisialisasi FlutterLocalNotificationsPlugin
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+    // Inisialisasi FlutterLocalNotificationsPlugin
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
 
-  // Konfigurasi untuk Android
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('logoes');
+    // Konfigurasi untuk Android
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('logoes');
 
-  // Konfigurasi untuk platform
-  final InitializationSettings initializationSettings =
-      InitializationSettings(
-    android: initializationSettingsAndroid,
-  );
+    // Konfigurasi untuk platform
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
 
-  // Inisialisasi plugin
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    // Inisialisasi plugin
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
-  // Konstruksi pesan notifikasi
-  AndroidNotificationDetails androidPlatformChannelSpecifics =
-      AndroidNotificationDetails(
-    '1',
-    'Channel Name',
-    importance: Importance.max,
-    priority: Priority.high,
-    showWhen: true, // Menampilkan waktu notifikasi
-    enableLights: true,
-    enableVibration: true,
-    playSound: true,
-    styleInformation: BigTextStyleInformation(
-      message, // Pesan utama
-      contentTitle: 'Pesanan Baru', // Judul notifikasi
-      htmlFormatContent: true, // Mengizinkan konten dalam format HTML
-      htmlFormatTitle: true, // Mengizinkan judul dalam format HTML
-    ),
-  );
+    // Konstruksi pesan notifikasi
+    AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      '1',
+      'Channel Name',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: true, // Menampilkan waktu notifikasi
+      enableLights: true,
+      enableVibration: true,
+      playSound: true,
+      styleInformation: BigTextStyleInformation(
+        message, // Pesan utama
+        contentTitle: 'Pesanan Baru', // Judul notifikasi
+        htmlFormatContent: true, // Mengizinkan konten dalam format HTML
+        htmlFormatTitle: true, // Mengizinkan judul dalam format HTML
+      ),
+    );
 
-  NotificationDetails platformChannelSpecifics =
-      NotificationDetails(android: androidPlatformChannelSpecifics);
+    NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
 
-  // Mendapatkan tanggal dan waktu sekarang
-  DateTime now = DateTime.now();
+    // Mendapatkan tanggal dan waktu sekarang
+    DateTime now = DateTime.now();
 
-  // Tampilkan notifikasi
-  await flutterLocalNotificationsPlugin.show(
-    0, // ID notifikasi
-    'Pesanan Baru', // Judul notifikasi
-    message, // Pesan notifikasi
-    platformChannelSpecifics,
-    payload:
-        'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
-  );
-}
+    // Tampilkan notifikasi
+    await flutterLocalNotificationsPlugin.show(
+      0, // ID notifikasi
+      'Pesanan Baru', // Judul notifikasi
+      message, // Pesan notifikasi
+      platformChannelSpecifics,
+      payload:
+          'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
+    );
+  }
 
   void beliLangsung() async {
     try {

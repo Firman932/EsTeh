@@ -331,38 +331,21 @@ class KeranjangPage01 extends State<KeranjangPage02> {
 
     await showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          'Konfirmasi Hapus',
-          style: GoogleFonts.poppins(),
-        ),
-        content: Text(
-          'Apakah Anda yakin ingin menghapus produk ini?',
-          style: GoogleFonts.poppins(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              deleteConfirmed = false;
-              Navigator.pop(context);
-            },
-            child: Text(
-              'Tidak',
-              style: GoogleFonts.poppins(color: Colors.green),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              // Set deleteConfirmed menjadi false dan tutup dialog
-              deleteConfirmed = true;
-              Navigator.pop(context);
-            },
-            child: Text(
-              'Ya',
-              style: GoogleFonts.poppins(color: Colors.red),
-            ),
-          ),
-        ],
+      builder: (context) => DeleteDialog(
+        title: 'Peringatan',
+        content: 'Apakah Anda yakin ingin menghapus produk ini?',
+        buttonCancel: 'Tidak',
+        onButtonCancel: () {
+          // Set deleteConfirmed menjadi false dan tutup dialog
+          deleteConfirmed = false;
+          Navigator.pop(context);
+        },
+        buttonConfirm: 'Ya',
+        onButtonConfirm: () {
+          // Set deleteConfirmed menjadi true dan tutup dialog
+          deleteConfirmed = true;
+          Navigator.pop(context);
+        },
       ),
     );
 

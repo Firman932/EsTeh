@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/FOR%20USER/HistoryUser/HistoryUser.dart';
 import 'package:lji/FOR%20USER/NotifikasiUser.dart';
@@ -9,6 +10,8 @@ import 'package:lji/TampilanUserKeranjang.dart';
 import 'package:lji/filterUser.dart';
 import 'package:lji/FOR%20USER/listMenuUser.dart';
 import 'package:lji/styles/bottomlogout.dart';
+import 'package:lji/styles/color.dart';
+import 'package:lji/styles/dialog.dart';
 
 class MenuUser extends StatefulWidget {
   MenuUser({
@@ -50,20 +53,15 @@ class _MenuUserState extends State<MenuUser> {
         // Show exit confirmation dialog
         bool exitConfirmed = await showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Konfirmasi'),
-            content:
-                const Text('Apakah Anda yakin ingin keluar dari aplikasi?'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Tidak'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Ya'),
-              ),
-            ],
+          builder: (context) => DeleteDialog(
+            title: 'Peringatan',
+            content: 'Apakah Anda yakin ingin keluar dari aplikasi ?',
+            buttonConfirm: 'Ok',
+            onButtonConfirm: () =>
+                Navigator.of(context).pop(true), // Wrap this in a function
+            buttonCancel: 'Batal',
+            onButtonCancel: () =>
+                Navigator.of(context).pop(false), // Wrap this in a function
           ),
         );
 
@@ -225,8 +223,24 @@ class _MenuUserState extends State<MenuUser> {
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return Center(
-                        child: CircularProgressIndicator(),
-                      );
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                            SpinKitWave(
+                              size: 43,
+                              color: greenPrimary,
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Text(
+                              'Loading',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w600,
+                                  color: greenPrimary),
+                            )
+                          ]));
                     }
                     if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                       return Center(

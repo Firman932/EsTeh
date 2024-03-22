@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Create/create_produk.dart';
 import 'package:lji/Admin/HistoryAdmin/HistoryAdmin.dart';
@@ -9,6 +10,7 @@ import 'package:lji/Admin/Notifikasi/notifikasi.dart';
 import 'package:lji/Admin/Stok/list_produk.dart';
 import 'package:lji/filterUser.dart';
 import 'package:lji/styles/button.dart';
+import 'package:lji/styles/color.dart';
 import 'package:lji/styles/font.dart';
 
 import '../../styles/dialog.dart';
@@ -393,7 +395,7 @@ class _StokProdukState extends State<StokProduk> {
                 ),
               ),
               SizedBox(
-                width: 5,
+                width: 13,
               ),
               GestureDetector(
                 onTap: () {
@@ -411,7 +413,7 @@ class _StokProdukState extends State<StokProduk> {
                 ),
               ),
               SizedBox(
-                width: 13,
+                width: 16,
               )
             ],
             centerTitle: true,
@@ -581,7 +583,25 @@ class _StokProdukState extends State<StokProduk> {
                       }
 
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
+                        return Center(
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                              SpinKitWave(
+                                size: 43,
+                                color: greenPrimary,
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Text(
+                                'Loading',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w600,
+                                    color: greenPrimary),
+                              )
+                            ]));
                       }
 
                       // Ambil data produk dari snapshot

@@ -207,18 +207,13 @@ class _RegisterState extends State<Register> {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Gagal Membuat Akun'),
-                                      content: Text(
-                                          'Terjadi kesalahan saat membuat akun. Silakan coba lagi.'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text('OK'),
-                                        ),
-                                      ],
+                                    return WarningDialog(
+                                      title: 'Gagal Membuat Akun',
+                                      content:
+                                          'Terjadi kesalahan saat membuat akun. Silakan coba lagi.',
+                                      buttonConfirm: 'Ok',
+                                      onButtonConfirm: () =>
+                                          Navigator.of(context).pop(true),
                                     );
                                   },
                                 );

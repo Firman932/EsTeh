@@ -98,6 +98,7 @@ class _TambahProdukState extends State<TambahProduk> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
           appBar: AppBar(
+            forceMaterialTransparency: true,
             elevation: 0,
             centerTitle: true,
             title: Text(

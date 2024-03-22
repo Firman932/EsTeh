@@ -16,7 +16,6 @@ class Analisis extends StatefulWidget {
 class _AnalisisState extends State<Analisis> {
   late Stream<QuerySnapshot> produkStream;
 
-
   void initState() {
     super
         .initState(); // Panggil fungsi untuk mengambil data produk saat widget diinisialisasi
@@ -52,7 +51,7 @@ class _AnalisisState extends State<Analisis> {
                               BoxShadow(
                                 color: Color.fromRGBO(156, 156, 156, 0.29),
                                 offset: Offset(0, 0),
-                                blurRadius: 5,
+                                blurRadius: 3,
                               )
                             ]),
                         child: Padding(
@@ -60,12 +59,12 @@ class _AnalisisState extends State<Analisis> {
                           child: Align(
                             alignment: Alignment.bottomCenter,
                             child: StreamBuilder<int>(
-                              stream: getTotalPendapatanMingguan(),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return CircularProgressIndicator(color: greenPrimary,);
-                                } else {
+                                stream: getTotalPendapatanMingguan(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return SizedBox();
+                                  }
                                   return Text(
                                     NumberFormat.currency(
                                             locale: 'id',
@@ -76,9 +75,7 @@ class _AnalisisState extends State<Analisis> {
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500),
                                   );
-                                }
-                              },
-                            ),
+                                }),
                           ),
                         )),
                     Container(
@@ -129,7 +126,7 @@ class _AnalisisState extends State<Analisis> {
                           BoxShadow(
                             color: Color.fromRGBO(156, 156, 156, 0.29),
                             offset: Offset(0, 0),
-                            blurRadius: 5,
+                            blurRadius: 3,
                           )
                         ]),
                     child: Padding(
@@ -145,7 +142,7 @@ class _AnalisisState extends State<Analisis> {
 
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return CircularProgressIndicator();
+                              return SizedBox();
                             }
 
                             // Extract product data from the snapshot
@@ -202,6 +199,7 @@ class _AnalisisState extends State<Analisis> {
       ),
     );
   }
+
   // Ubah dari Future menjadi Stream
   Stream<int> getTotalPendapatanMingguan() async* {
     // Mengambil tanggal awal dan akhir minggu saat ini
@@ -242,7 +240,7 @@ class _AnalisisState extends State<Analisis> {
     }
   }
 
-    // Fungsi untuk memformat tanggal menjadi string (YYYY-MM-DD)
+  // Fungsi untuk memformat tanggal menjadi string (YYYY-MM-DD)
   String _formatTanggal(DateTime tanggal) {
     return '${tanggal.year}-${tanggal.month}-${tanggal.day}';
   }

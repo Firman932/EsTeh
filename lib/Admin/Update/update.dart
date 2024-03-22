@@ -135,6 +135,7 @@ class _UpdateProdukState extends State<UpdateProduk> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
+          forceMaterialTransparency: true,
           elevation: 0,
           centerTitle: true,
           title: Text(

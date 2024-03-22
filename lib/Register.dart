@@ -23,6 +23,7 @@ class _RegisterState extends State<Register> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
   final usernameController = TextEditingController();
 
   bool isPasswordVisible = false;

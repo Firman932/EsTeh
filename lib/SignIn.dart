@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,6 +21,8 @@ class _SignScreenState extends State<SignScreen> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final FirebaseMessaging _firebaseMessaging =
+      FirebaseMessaging.instance; // Tambahkan baris ini
 
   bool isPasswordVisible = false;
 
@@ -143,8 +146,7 @@ class _SignScreenState extends State<SignScreen> {
                             if (_formKey.currentState!.validate()) {
                               showDialog(
                                 context: context,
-                                barrierDismissible:
-                                    false, // prevents the dialog from being dismissed by tapping outside
+                                barrierDismissible: false,
                                 builder: (BuildContext context) {
                                   return Loading(
                                       title: 'Loading', isLoading: true);
@@ -164,8 +166,7 @@ class _SignScreenState extends State<SignScreen> {
                                     .get();
 
                                 if (userSnapshot.docs.isEmpty) {
-                                  Navigator.pop(
-                                      context); // Close the loading dialog
+                                  Navigator.pop(context);
                                   showDialog(
                                     context: context,
                                     builder: (context) => WarningDialog(
@@ -195,6 +196,22 @@ class _SignScreenState extends State<SignScreen> {
                                           .get();
 
                                   String role = userSnapshot['role'];
+                                  String storedFcmToken =
+                                      userSnapshot['fcmToken'];
+
+                                  // Get FCM token
+                                  String? fcmToken =
+                                      await _firebaseMessaging.getToken();
+
+                                  if (fcmToken != null &&
+                                      fcmToken != storedFcmToken) {
+                                    // Update the stored FCM token in Firestore
+                                    await FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(userCredential.user!.uid)
+                                        .update({'fcmToken': fcmToken});
+                                  }
+
                                   if (role == 'admin') {
                                     Navigator.push(
                                       context,
@@ -214,7 +231,6 @@ class _SignScreenState extends State<SignScreen> {
                               } catch (e) {
                                 print('Error: $e');
                                 Navigator.pop(context);
-                                // Close the loading dialog
                                 showDialog(
                                     context: context,
                                     builder: (context) => WarningDialog(

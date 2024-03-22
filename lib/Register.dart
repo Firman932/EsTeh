@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +18,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
@@ -24,6 +26,41 @@ class _RegisterState extends State<Register> {
   final usernameController = TextEditingController();
 
   bool isPasswordVisible = false;
+  @override
+  void initState() {
+    super.initState();
+    // Panggil fungsi untuk mendapatkan token FCM ketika widget pertama kali dibuat
+    _getFcmToken();
+  }
+
+  Future<void> _getFcmToken() async {
+    String? fcmToken = await _firebaseMessaging.getToken();
+    print('FCM Token: $fcmToken');
+    // Simpan token FCM ke dalam Firestore saat didapatkan
+    // Pastikan untuk menyimpannya bersama dengan data pengguna lainnya saat mendaftarkan pengguna
+    // Di sini, Anda dapat memanggil fungsi insertUserToFirebase dengan menambahkan parameter fcmToken
+    // Contoh: insertUserToFirebase(enteredEmail, enteredUsername, uid, fcmToken);
+  }
+
+  void insertUserToFirebase(
+      String email, String username, String uid, String fcmToken) {
+    // Implementasi penyimpanan pengguna ke Firebase
+    // Anda dapat menggunakan Firestore atau Realtime Database, tergantung pada preferensi Anda
+    // Di sini, saya akan memberikan contoh menggunakan Firestore
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .set({
+          'email': email,
+          'username': username,
+          'role': 'user',
+          'user_id': uid,
+          'fcmToken': fcmToken // Menambahkan fcmToken ke data pengguna
+        }) // Menambahkan username ke Firestore
+        .then((value) => print("User added to Firebase"))
+        .catchError((error) => print("Failed to add user: $error"));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -175,16 +212,35 @@ class _RegisterState extends State<Register> {
                                 // Check apakah pembuatan akun berhasil
                                 if (userCredential.user != null) {
                                   String uid = userCredential.user!.uid;
-                                  insertUserToFirebase(
-                                      enteredEmail, enteredUsername, uid);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => MenuUser(),
-                                    ),
-                                  );
+
+                                  // Get FCM token
+                                  String? fcmToken =
+                                      await _firebaseMessaging.getToken();
+
+                                  // Check if FCM token is available
+                                  if (fcmToken != null) {
+                                    // Call insertUserToFirebase with all required arguments
+                                    insertUserToFirebase(
+                                      enteredEmail,
+                                      enteredUsername,
+                                      uid,
+                                      fcmToken,
+                                    );
+
+                                    // Proceed with navigation
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => MenuUser(),
+                                      ),
+                                    );
+                                  } else {
+                                    // Handle case where FCM token is null
+                                    // You can show an error message or retry obtaining the token
+                                  }
                                 } else {
-                                  // Jika gagal, tampilkan pesan kesalahan
+                                  // Handle case where userCredential.user is null
+                                  // You may want to display an error message or handle the failure differently
                                 }
                               } catch (e) {
                                 showDialog(
@@ -275,23 +331,5 @@ class _RegisterState extends State<Register> {
         ),
       ),
     );
-  }
-
-  void insertUserToFirebase(String email, String username, String uid) {
-    // Implementasi penyimpanan pengguna ke Firebase
-    // Anda dapat menggunakan Firestore atau Realtime Database, tergantung pada preferensi Anda
-    // Di sini, saya akan memberikan contoh menggunakan Firestore
-
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .set({
-          'email': email,
-          'username': username,
-          'role': 'user',
-          'user_id': uid
-        }) // Add username to Firestore
-        .then((value) => print("User added to Firebase"))
-        .catchError((error) => print("Failed to add user: $error"));
   }
 }

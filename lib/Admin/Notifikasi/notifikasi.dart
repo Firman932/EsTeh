@@ -1,13 +1,17 @@
 // ignore_for_file: unused_local_variable
 
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lji/Admin/Notifikasi/listpesan.dart';
 import 'package:lji/styles/color.dart';
 import 'package:lji/styles/dialog.dart';
+import 'package:http/http.dart' as http;
 
 class Notifikasi extends StatefulWidget {
   const Notifikasi({
@@ -20,6 +24,7 @@ class Notifikasi extends StatefulWidget {
 
 class _NotifikasiState extends State<Notifikasi> {
   late Stream<QuerySnapshot> pesananStream;
+  bool hasNotifications = false; // Tambahkan variabel boolean
 
   @override
   void initState() {
@@ -29,6 +34,11 @@ class _NotifikasiState extends State<Notifikasi> {
         .where('status', isEqualTo: 'pending')
         .orderBy('waktu_pesanan', descending: false)
         .snapshots();
+    pesananStream.listen((snapshot) {
+      setState(() {
+        hasNotifications = snapshot.docs.isNotEmpty;
+      });
+    });
   }
 
   String getDayName(DateTime date) {
@@ -100,10 +110,12 @@ class _NotifikasiState extends State<Notifikasi> {
       DateTime akhirMinggu = awalMinggu.add(Duration(days: 6));
 
       // Menetapkan jam, menit, dan detik menjadi 00:00 untuk tanggal awal minggu
-      awalMinggu = DateTime(awalMinggu.year, awalMinggu.month, awalMinggu.day, 0, 0, 0);
+      awalMinggu =
+          DateTime(awalMinggu.year, awalMinggu.month, awalMinggu.day, 0, 0, 0);
 
       // Menetapkan jam, menit, dan detik menjadi 23:59 untuk tanggal akhir minggu
-      akhirMinggu = DateTime(akhirMinggu.year, akhirMinggu.month, akhirMinggu.day, 23, 59, 59);
+      akhirMinggu = DateTime(
+          akhirMinggu.year, akhirMinggu.month, akhirMinggu.day, 23, 59, 59);
 
       // Membuat format string untuk tanggal awal dan akhir minggu
       String awalMingguStr = _formatTanggal(awalMinggu);
@@ -202,6 +214,9 @@ class _NotifikasiState extends State<Notifikasi> {
                 itemCount: pesananList.length,
                 itemBuilder: (context, index) {
                   DocumentSnapshot pesanan = pesananList[index];
+                  String userId =
+                      pesanan['id_pembeli']; // Ambil user_id dari data pesanan
+
                   String namaPembeli = pesanan['nama_pembeli'];
                   String tanggal = pesanan['tanggal'];
                   String jam = pesanan['jam'];
@@ -349,7 +364,7 @@ class _NotifikasiState extends State<Notifikasi> {
                                               MainAxisAlignment.end,
                                           children: [
                                             ElevatedButton(
-                                              onPressed: () {
+                                              onPressed: () async {
                                                 // Mengatur waktu sekarang
                                                 DateTime now = DateTime.now();
                                                 String hariPesanan =
@@ -372,6 +387,18 @@ class _NotifikasiState extends State<Notifikasi> {
                                                       Timestamp.now(),
                                                   'hari': hariPesanan,
                                                 });
+                                                String? adminFcmToken =
+                                                    await getUserFcmToken(
+                                                        userId);
+                                                print(adminFcmToken);
+                                                if (adminFcmToken != null) {
+                                                  // Send a notification to the admin user
+                                                  await sendNotificationToUser(
+                                                    adminFcmToken,
+                                                    'Pesanan telah Ditolak',
+                                                  );
+                                                  print("berhasil");
+                                                }
                                               },
                                               style: ElevatedButton.styleFrom(
                                                 backgroundColor: Colors.red,
@@ -394,7 +421,7 @@ class _NotifikasiState extends State<Notifikasi> {
                                             if (statusPesanan ==
                                                 'pending') // Tampilkan tombol berdasarkan status pesanan
                                               ElevatedButton(
-                                                onPressed: () {
+                                                onPressed: () async {
                                                   DateTime now = DateTime.now();
                                                   String hariPesanan =
                                                       getDayName(now);
@@ -418,7 +445,8 @@ class _NotifikasiState extends State<Notifikasi> {
                                                         .collection('produk')
                                                         .doc(idProduk)
                                                         .get()
-                                                        .then((produkDoc) {
+                                                        .then(
+                                                            (produkDoc) async {
                                                       if (produkDoc.exists) {
                                                         int stokAwal =
                                                             produkDoc[
@@ -466,6 +494,20 @@ class _NotifikasiState extends State<Notifikasi> {
                                                                 totalHarga,
                                                                 formattedDate);
                                                           });
+                                                          String?
+                                                              adminFcmToken =
+                                                              await getUserFcmToken(
+                                                                  userId);
+                                                          print(adminFcmToken);
+                                                          if (adminFcmToken !=
+                                                              null) {
+                                                            // Send a notification to the admin user
+                                                            await sendNotificationToUser(
+                                                              adminFcmToken,
+                                                              'Pesanan telah diterima',
+                                                            );
+                                                            print("berhasil");
+                                                          }
                                                         } else {
                                                           // Jika stok tidak mencukupi, tampilkan pesan kesalahan atau lakukan tindakan yang sesuai
                                                           print(
@@ -536,5 +578,103 @@ class _NotifikasiState extends State<Notifikasi> {
                 },
               );
             }));
+  }
+
+  Future<String?> getUserFcmToken(String userId) async {
+    try {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (userSnapshot.exists) {
+        return userSnapshot['fcmToken'];
+      } else {
+        print('User not found');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching user data: $e');
+      return null;
+    }
+  }
+
+  Future<void> sendNotificationToUser(String fcmToken, String message) async {
+    try {
+      await http.post(
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization':
+              'key=AAAAoDVgzIg:APA91bF4qRUd_N2SI6yPjryYeKGf8AaobqILbdDNDqaLOzK12VNliot_bCIFtYKXnNX4EX-s0LNUMqM7d0vxveJyB2_Uzzmg-1VRbBmiN9g690tGSLjEFjct0Hx0y34Sftx2nTNT2JV5',
+        },
+        body: json.encode(<String, dynamic>{
+          'to': fcmToken,
+          'priority': 'high',
+          'notification': <String, dynamic>{
+            'title': 'Pesanan',
+            'body': message,
+          },
+        }),
+      );
+
+      await _tampilkanNotifikasiLokal(message);
+    } catch (e) {
+      print('Error sending notification: $e');
+    }
+  }
+
+  Future<void> _tampilkanNotifikasiLokal(String message) async {
+    // Inisialisasi FlutterLocalNotificationsPlugin
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+
+    // Konfigurasi untuk Android
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('logoes');
+
+    // Konfigurasi untuk platform
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+
+    // Inisialisasi plugin
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    // Konstruksi pesan notifikasi
+    AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      '1',
+      'Channel Name',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: true, // Menampilkan waktu notifikasi
+      enableLights: true,
+      enableVibration: true,
+      playSound: true,
+      styleInformation: BigTextStyleInformation(
+        message, // Pesan utama
+        contentTitle: 'Pesanan Baru', // Judul notifikasi
+        htmlFormatContent: true, // Mengizinkan konten dalam format HTML
+        htmlFormatTitle: true, // Mengizinkan judul dalam format HTML
+      ),
+    );
+
+    NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    // Mendapatkan tanggal dan waktu sekarang
+    DateTime now = DateTime.now();
+
+    // Tampilkan notifikasi
+    await flutterLocalNotificationsPlugin.show(
+      0, // ID notifikasi
+      'Pesanan Baru', // Judul notifikasi
+      message, // Pesan notifikasi
+      platformChannelSpecifics,
+      payload:
+          'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
+    );
   }
 }

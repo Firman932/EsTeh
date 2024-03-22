@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/FOR%20USER/NotifUser/CustomDonNotif.dart';
 import 'package:lji/FOR%20USER/NotifUser/CustomReqNotif.dart';
 import 'package:lji/FOR%20USER/NotifUser/CustomDelNotif.dart';
+import 'package:lji/styles/color.dart';
 
 class NotifUser extends StatefulWidget {
   final String userId;
@@ -59,7 +61,25 @@ class _NotifUserState extends State<NotifUser> {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SpinKitWave(
+                  size: 43,
+                  color: greenPrimary,
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  'Loading',
+                  style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
+                      color: greenPrimary),
+                )
+              ],
+            );
           }
 
           // List of pesanan

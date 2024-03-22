@@ -4,8 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lji/Admin/Stok/stok_produk.dart';
 import 'package:lji/Admin/Update/update.dart';
-
-import '../../styles/dialog.dart';
+import 'package:lji/styles/dialog.dart';
 
 class ListProduk extends StatefulWidget {
   final bool isChecklistMode;
@@ -66,7 +65,7 @@ class _ListProdukState extends State<ListProduk> {
             BoxShadow(
               color: Color.fromRGBO(156, 156, 156, 0.29),
               offset: Offset(0, 0),
-              blurRadius: 55.5,
+              blurRadius: 3,
             ),
           ],
           color: Colors.white,
@@ -187,34 +186,7 @@ class _ListProdukState extends State<ListProduk> {
       ),
       child: IconButton(
         onPressed: () async {
-          await showDialog(
-            context: context,
-            builder: (context) => DeleteDialog(
-              title: 'Peringatan',
-              content: 'Apakah anda yakin menghapus produk ini?',
-              buttonCancel: 'Batal',
-              onButtonCancel: () {
-                Navigator.pop(context);
-              },
-              buttonConfirm: 'Hapus',
-              onButtonConfirm: () async {
-                final String documentId = widget.produkData.id;
-                await deleteProduct(documentId, context);
-                setState(() {
-                  _deleteSuccess = true;
-                });
-                Navigator.pop(context);
-              },
-            ),
-          );
-          if (_deleteSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Produk berhasil dihapus'),
-                duration: Duration(seconds: 3),
-              ),
-            );
-          }
+          _showDeleteConfirmationDialog(context, documentId);
         },
         icon: Icon(
           icon,
@@ -226,15 +198,53 @@ class _ListProdukState extends State<ListProduk> {
     );
   }
 
-  Future<void> deleteProduct(String documentId, BuildContext context) async {
-    try {
-      final CollectionReference produkCollection =
-          FirebaseFirestore.instance.collection('produk');
+  Future<void> _showDeleteConfirmationDialog(
+      BuildContext context, String documentId) async {
+    showDialog(
+      context: context,
+      builder: (context) => DeleteDialog(
+        title: 'Peringatan',
+        content: 'Apakah Anda yakin ingin menghapus produk ini?',
+        buttonCancel: 'Batal',
+        onButtonCancel: () {
+          Navigator.of(context).pop();
+        },
+        buttonConfirm: 'Hapus',
+        onButtonConfirm: () async {
+          Navigator.of(context).pop();
+          await _deleteProduct(documentId, context);
+        },
+      ),
+    );
+  }
 
-      await produkCollection.doc(documentId).delete();
-      print('Produk berhasil dihapus');
+  Future<void> _deleteProduct(String documentId, BuildContext context) async {
+    // Tampilkan dialog loading sebagai dialog utama
+    showDialog(
+      context: context,
+      builder: (context) => SucessDialog(
+        title: "Sukses",
+        content: "Produk berhasil dihapus",
+        buttonConfirm: "Ok",
+        onButtonConfirm: () {
+          Navigator.pop(context); // Tutup dialog sukses
+        },
+      ),
+    );
+
+    try {
+      // Mulai proses penghapusan produk
+      await FirebaseFirestore.instance
+          .collection('produk')
+          .doc(documentId)
+          .delete();
+
+      // Tampilkan dialog sukses
     } catch (error) {
       print('Error deleting product: $error');
+
+      // Tangani kesalahan saat menghapus produk
+      Navigator.pop(context); // Tutup dialog loading
       showDialog(
         context: context,
         builder: (context) => WarningDialog(
@@ -242,7 +252,7 @@ class _ListProdukState extends State<ListProduk> {
           content: "Terjadi kesalahan saat menghapus produk",
           buttonConfirm: "Ok",
           onButtonConfirm: () {
-            Navigator.pop(context);
+            Navigator.pop(context); // Tutup dialog warning
           },
         ),
       );

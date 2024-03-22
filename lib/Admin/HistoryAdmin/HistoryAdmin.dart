@@ -57,24 +57,26 @@ class _RiwayatState extends State<RiwayatAdmin> {
         future: _fetchDataPesanan,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SpinKitWave(
-                    size: 43,
-                    color: greenPrimary,
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Text(
-                    'Loading',
-                    style: GoogleFonts.poppins(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                        color: greenPrimary),
-                  )
-                ]);
+            return Expanded(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SpinKitWave(
+                      size: 43,
+                      color: greenPrimary,
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      'Loading',
+                      style: GoogleFonts.poppins(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          color: greenPrimary),
+                    )
+                  ]),
+            );
           } else if (snapshot.hasError) {
             return Center(child: Text('Terjadi kesalahan saat mengambil data'));
           } else if (snapshot.hasData && snapshot.data!.isEmpty) {

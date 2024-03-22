@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/widgets.dart';
+import 'package:lji/styles/color.dart';
 import 'package:lji/styles/dialog.dart';
 
 class CartItem {
@@ -31,6 +33,12 @@ class CartItem {
   });
 }
 
+enum LoadingStatus {
+  Loading,
+  Loaded,
+  Empty,
+}
+
 class KeranjangPage02 extends StatefulWidget {
   KeranjangPage02({Key? key});
 
@@ -42,6 +50,8 @@ class KeranjangPage01 extends State<KeranjangPage02> {
   bool _isEditing = false;
   bool _isTotalDisabled = false;
   List<CartItem> cartItems = [];
+  LoadingStatus _loadingStatus =
+      LoadingStatus.Loading; // Inisialisasi status loading
 
   @override
   void initState() {
@@ -100,13 +110,16 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                 item.isChecked = false;
               }
             }
+            _loadingStatus = cartItems.isNotEmpty
+                ? LoadingStatus.Loaded
+                : LoadingStatus.Empty; // Ubah status loading
           });
         }
       } else {
-        Center(child: Text("Keranjang Kosong"));
-        // Tampilkan pesan "Keranjang Kosong" jika bidang "cart" tidak ada atau kosong
+        // Jika 'cart' tidak ditemukan
         setState(() {
           cartItems = []; // Kosongkan list cartItems
+          _loadingStatus = LoadingStatus.Empty; // Ubah status loading
         });
       }
     }
@@ -318,38 +331,21 @@ class KeranjangPage01 extends State<KeranjangPage02> {
 
     await showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          'Konfirmasi Hapus',
-          style: GoogleFonts.poppins(),
-        ),
-        content: Text(
-          'Apakah Anda yakin ingin menghapus produk ini?',
-          style: GoogleFonts.poppins(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              deleteConfirmed = false;
-              Navigator.pop(context);
-            },
-            child: Text(
-              'Tidak',
-              style: GoogleFonts.poppins(color: Colors.green),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              // Set deleteConfirmed menjadi false dan tutup dialog
-              deleteConfirmed = true;
-              Navigator.pop(context);
-            },
-            child: Text(
-              'Ya',
-              style: GoogleFonts.poppins(color: Colors.red),
-            ),
-          ),
-        ],
+      builder: (context) => DeleteDialog(
+        title: 'Peringatan',
+        content: 'Apakah Anda yakin ingin menghapus produk ini?',
+        buttonCancel: 'Tidak',
+        onButtonCancel: () {
+          // Set deleteConfirmed menjadi false dan tutup dialog
+          deleteConfirmed = false;
+          Navigator.pop(context);
+        },
+        buttonConfirm: 'Ya',
+        onButtonConfirm: () {
+          // Set deleteConfirmed menjadi true dan tutup dialog
+          deleteConfirmed = true;
+          Navigator.pop(context);
+        },
       ),
     );
 
@@ -546,7 +542,6 @@ class KeranjangPage01 extends State<KeranjangPage02> {
               child: BottomAppBar(
                 height: 70,
                 surfaceTintColor: Colors.white,
-                shape: CircularNotchedRectangle(),
                 color: Colors.white,
                 elevation: 1,
                 notchMargin: 8,
@@ -611,7 +606,6 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                 height: 70,
                 elevation: 1,
                 notchMargin: 8,
-                shape: CircularNotchedRectangle(),
                 color: Colors.white,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -660,224 +654,248 @@ class KeranjangPage01 extends State<KeranjangPage02> {
     return Scaffold(
       appBar: _buildAppBar(),
       body: Builder(builder: (context) {
-        if (cartItems.isEmpty) {
+        if (_loadingStatus == LoadingStatus.Loading) {
+          // Tampilkan dialog loading jika proses pemanggilan sedang berlangsung
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SpinKitWave(size: 43, color: greenPrimary),
+              SizedBox(
+                height: 30,
+              ),
+              Text(
+                'Loading',
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 17,
+                    color: greenPrimary),
+              )
+            ],
+          );
+        } else if (_loadingStatus == LoadingStatus.Empty) {
+          // Tampilkan pesan "Belum ada keranjang" jika keranjang kosong
           return Center(
             child: Text(
               'Belum ada keranjang',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 18,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.bold,
               ),
             ),
           );
-        }
-        return Container(
-          padding: EdgeInsets.all(6),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: EdgeInsets.all(8),
-                height: 60,
-                child: Row(
-                  children: [
-                    Checkbox(
-                      value: cartItems.isNotEmpty &&
-                          cartItems.every((item) => item.isChecked),
-                      onChanged: cartItems.isNotEmpty
-                          ? (value) {
-                              setState(() {
-                                cartItems.forEach((item) {
-                                  item.isChecked = value!;
+        } else {
+          return Container(
+            padding: EdgeInsets.all(6),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: EdgeInsets.all(8),
+                  height: 60,
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        value: cartItems.isNotEmpty &&
+                            cartItems.every((item) => item.isChecked),
+                        onChanged: cartItems.isNotEmpty
+                            ? (value) {
+                                setState(() {
+                                  cartItems.forEach((item) {
+                                    item.isChecked = value!;
+                                  });
+                                  _updateTotalPrice();
                                 });
-                                _updateTotalPrice();
-                              });
-                            }
-                          : null, // Nonaktifkan checkbox jika keranjang kosong
-                      visualDensity: VisualDensity(
-                        horizontal: -0.0,
-                        vertical: -0.0,
+                              }
+                            : null, // Nonaktifkan checkbox jika keranjang kosong
+                        visualDensity: VisualDensity(
+                          horizontal: -0.0,
+                          vertical: -0.0,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          side: BorderSide.none,
+                        ),
+                        activeColor:
+                            _isEditing ? Colors.red : Color(0xFF49A013),
+                        checkColor: Colors.white,
                       ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        side: BorderSide.none,
+                      Text(
+                        'Semua',
+                        style: GoogleFonts.poppins(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff000000),
+                        ),
                       ),
-                      activeColor: _isEditing ? Colors.red : Color(0xFF49A013),
-                      checkColor: Colors.white,
-                    ),
-                    Text(
-                      'Semua',
-                      style: GoogleFonts.poppins(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xff000000),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: cartItems.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    CartItem cartItem = cartItems[index];
-                    return Card(
-                      shadowColor: Color(0x499c9c9c),
-                      elevation: 5,
-                      color: Colors.white,
-                      surfaceTintColor: Colors.white,
-                      margin: EdgeInsets.only(
-                          right: 10, left: 10, bottom: 5, top: 5),
-                      child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  Checkbox(
-                                    value: cartItems[index].isChecked,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        cartItems[index].isChecked = value!;
-                                        _updateTotalPrice();
-                                      });
-                                    },
-                                    visualDensity: VisualDensity(
-                                      horizontal: -4.0,
-                                      vertical: -4.0,
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: cartItems.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      CartItem cartItem = cartItems[index];
+                      return Card(
+                        shadowColor: Color(0x499c9c9c),
+                        elevation: 5,
+                        color: Colors.white,
+                        surfaceTintColor: Colors.white,
+                        margin: EdgeInsets.only(
+                            right: 10, left: 10, bottom: 5, top: 5),
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Checkbox(
+                                      value: cartItems[index].isChecked,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          cartItems[index].isChecked = value!;
+                                          _updateTotalPrice();
+                                        });
+                                      },
+                                      visualDensity: VisualDensity(
+                                        horizontal: -4.0,
+                                        vertical: -4.0,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        side: BorderSide.none,
+                                      ),
+                                      activeColor: _isEditing
+                                          ? Colors.red
+                                          : Color(0xFF49A013),
+                                      checkColor: Colors.white,
                                     ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      side: BorderSide.none,
-                                    ),
-                                    activeColor: _isEditing
-                                        ? Colors.red
-                                        : Color(0xFF49A013),
-                                    checkColor: Colors.white,
-                                  ),
-                                  Container(
-                                    width: 60,
-                                    height: 60,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      image: DecorationImage(
-                                        image:
-                                            NetworkImage(cartItem.productImage),
-                                        fit: BoxFit.cover,
+                                    Container(
+                                      width: 60,
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                              cartItem.productImage),
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          cartItem.productName,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 14),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        ),
-                                        Text(
-                                          cartItem.productVariation,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 9),
-                                        ),
-                                        Text(
-                                          NumberFormat.currency(
-                                                  locale: 'id',
-                                                  symbol: 'Rp ',
-                                                  decimalDigits: 0)
-                                              .format(cartItem.price),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 12),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Row(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        IconButton(
-                                          highlightColor: Colors.transparent,
-                                          icon: Icon(
-                                              Icons.do_not_disturb_on_outlined),
-                                          iconSize: 22,
-                                          color: Color(0xFF49A013),
-                                          onPressed: () {
-                                            if (cartItems[index].quantity > 0) {
-                                              setState(() {
-                                                cartItems[index].quantity--;
-                                                _updateTotalPrice();
-                                              });
-                                            }
-                                          },
-                                        ),
-                                        IntrinsicWidth(
-                                          child: Text(
-                                            '${cartItems[index].quantity}',
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500,
-                                                color:
-                                                    cartItems[index].quantity <
-                                                            cartItems[index]
-                                                                .productStock
-                                                        ? Color(0xFF49A013)
-                                                        : Colors.grey[350]),
+                                    SizedBox(width: 8),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            cartItem.productName,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 14),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
                                           ),
-                                        ),
-                                        IconButton(
-                                          highlightColor: Colors.transparent,
-                                          icon: Icon(Icons.add_circle_outline),
-                                          iconSize: 22,
-                                          color: cartItems[index].quantity >=
-                                                  cartItems[index].productStock
-                                              ? Colors.grey[
-                                                  350] // Ubah warna menjadi abu-abu jika melebihi stok_produk
-                                              : Color(0xFF49A013),
-                                          onPressed: () {
-                                            setState(() {
-                                              if (cartItems[index].quantity <
-                                                  cartItems[index]
-                                                      .productStock) {
-                                                cartItems[index].quantity++;
-                                              }
-                                              _updateTotalPrice();
-                                            });
-                                          },
-                                        ),
-                                      ],
+                                          Text(
+                                            cartItem.productVariation,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 9),
+                                          ),
+                                          Text(
+                                            NumberFormat.currency(
+                                                    locale: 'id',
+                                                    symbol: 'Rp ',
+                                                    decimalDigits: 0)
+                                                .format(cartItem.price),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 12),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
-                          ],
+                              ),
+                              Row(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                            highlightColor: Colors.transparent,
+                                            icon: Icon(Icons
+                                                .do_not_disturb_on_outlined),
+                                            iconSize: 22,
+                                            color: Color(0xFF49A013),
+                                            onPressed: () {
+                                              if (cartItems[index].quantity >
+                                                  0) {
+                                                setState(() {
+                                                  cartItems[index].quantity--;
+                                                  _updateTotalPrice();
+                                                });
+                                              }
+                                            },
+                                          ),
+                                          IntrinsicWidth(
+                                            child: Text(
+                                              '${cartItems[index].quantity}',
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: cartItems[index]
+                                                              .quantity <
+                                                          cartItems[index]
+                                                              .productStock
+                                                      ? Color(0xFF49A013)
+                                                      : Colors.grey[350]),
+                                            ),
+                                          ),
+                                          IconButton(
+                                            highlightColor: Colors.transparent,
+                                            icon:
+                                                Icon(Icons.add_circle_outline),
+                                            iconSize: 22,
+                                            color: cartItems[index].quantity >=
+                                                    cartItems[index]
+                                                        .productStock
+                                                ? Colors.grey[
+                                                    350] // Ubah warna menjadi abu-abu jika melebihi stok_produk
+                                                : Color(0xFF49A013),
+                                            onPressed: () {
+                                              setState(() {
+                                                if (cartItems[index].quantity <
+                                                    cartItems[index]
+                                                        .productStock) {
+                                                  cartItems[index].quantity++;
+                                                }
+                                                _updateTotalPrice();
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-        );
+              ],
+            ),
+          );
+        }
       }),
       bottomNavigationBar: Visibility(
         visible: _calculateTotal() > 0,

@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -80,6 +83,98 @@ class _KeranjangState extends State<Keranjang> {
       Navigator.pop(context);
     });
   }
+
+  Future<String?> getAdminFcmToken() async {
+    QuerySnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('role', isEqualTo: 'admin')
+        .get();
+
+    if (userSnapshot.docs.isNotEmpty) {
+      return userSnapshot.docs[0]['fcmToken'];
+    }
+
+    return null;
+  }
+
+  Future<void> sendNotificationToAdmin(String fcmToken, String message) async {
+    try {
+      await http.post(
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization':
+              'key=AAAAoDVgzIg:APA91bF4qRUd_N2SI6yPjryYeKGf8AaobqILbdDNDqaLOzK12VNliot_bCIFtYKXnNX4EX-s0LNUMqM7d0vxveJyB2_Uzzmg-1VRbBmiN9g690tGSLjEFjct0Hx0y34Sftx2nTNT2JV5',
+        },
+        body: json.encode(<String, dynamic>{
+          'to': fcmToken,
+          'priority': 'high',
+              'notification': <String,dynamic>{
+            'title': 'Pesanan baru',
+            'body': message,
+          },
+        }),
+      );
+
+      await _tampilkanNotifikasiLokal(message);
+    } catch (e) {
+      print('Error sending notification: $e');
+    }
+  }
+
+  Future<void> _tampilkanNotifikasiLokal(String message) async {
+  // Inisialisasi FlutterLocalNotificationsPlugin
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  // Konfigurasi untuk Android
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('logoes');
+
+  // Konfigurasi untuk platform
+  final InitializationSettings initializationSettings =
+      InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  // Inisialisasi plugin
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+  // Konstruksi pesan notifikasi
+  AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+    '1',
+    'Channel Name',
+    importance: Importance.max,
+    priority: Priority.high,
+    showWhen: true, // Menampilkan waktu notifikasi
+    enableLights: true,
+    enableVibration: true,
+    playSound: true,
+    styleInformation: BigTextStyleInformation(
+      message, // Pesan utama
+      contentTitle: 'Pesanan Baru', // Judul notifikasi
+      htmlFormatContent: true, // Mengizinkan konten dalam format HTML
+      htmlFormatTitle: true, // Mengizinkan judul dalam format HTML
+    ),
+  );
+
+  NotificationDetails platformChannelSpecifics =
+      NotificationDetails(android: androidPlatformChannelSpecifics);
+
+  // Mendapatkan tanggal dan waktu sekarang
+  DateTime now = DateTime.now();
+
+  // Tampilkan notifikasi
+  await flutterLocalNotificationsPlugin.show(
+    0, // ID notifikasi
+    'Pesanan Baru', // Judul notifikasi
+    message, // Pesan notifikasi
+    platformChannelSpecifics,
+    payload:
+        'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
+  );
+}
 
   void beliLangsung() async {
     try {
@@ -196,7 +291,16 @@ class _KeranjangState extends State<Keranjang> {
           },
         ),
       );
-
+      String? adminFcmToken = await getAdminFcmToken();
+      print(adminFcmToken);
+      if (adminFcmToken != null) {
+        // Send a notification to the admin user
+        await sendNotificationToAdmin(
+          adminFcmToken,
+          'A new order has been placed with order ID ${pesananRef.id}',
+        );
+        print("berhasil");
+      }
       // Tampilkan notifikasi lokal
       await _tampilkanNotifikasi();
     } catch (error) {

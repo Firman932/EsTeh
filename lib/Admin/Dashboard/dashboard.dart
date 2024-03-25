@@ -229,10 +229,15 @@ class _DashboardState extends State<Dashboard> {
 
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return Center(
-                              child:
-                                  CircularProgressIndicator(), // Ganti dengan indikator loading yang sesuai
-                            );
+                            return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SpinKitWave(
+                                    size: 40,
+                                    color: greenPrimary,
+                                  ),
+                                ] // Ganti dengan indikator loading yang sesuai
+                                );
                           }
 
                           // Ambil semua dokumen produk dari snapshot
@@ -250,8 +255,7 @@ class _DashboardState extends State<Dashboard> {
                           // Jika tidak ada produk yang sesuai dengan kategori yang dipilih, tampilkan pesan
                           if (filteredProdukList.isEmpty) {
                             return Center(
-                              child:
-                                  Text('Tidak ada Produk'),
+                              child: Text('Tidak ada Produk'),
                             );
                           }
 

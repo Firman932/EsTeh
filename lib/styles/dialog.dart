@@ -42,7 +42,7 @@ class DeleteDialog extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10)),
-                  color: greenPrimary, // Ganti warna sesuai keinginan
+                  color: redPrimary, // Ganti warna sesuai keinginan
                 ),
                 child: Image.asset(
                   "assets/Warning.png",
@@ -58,7 +58,7 @@ class DeleteDialog extends StatelessWidget {
                       style: GoogleFonts.poppins(
                           fontSize: 22,
                           fontWeight: FontWeight.w700,
-                          color: greenPrimary)),
+                          color: redPrimary)),
                   SizedBox(height: 10),
                   Text(
                     content,
@@ -77,7 +77,7 @@ class DeleteDialog extends StatelessWidget {
                             buttonCancel,
                             style: textdialog,
                           ),
-                          style: greenButton),
+                          style: kuningButton),
                       ElevatedButton(
                         onPressed: onButtonConfirm,
                         child: Text(

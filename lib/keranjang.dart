@@ -299,7 +299,7 @@ class _KeranjangState extends State<Keranjang> {
         // Send a notification to the admin user
         await sendNotificationToAdmin(
           adminFcmToken,
-          'A new order has been placed with order ID ${pesananRef.id}',
+          '$namaPembeli telah memesan produk',
         );
         print("berhasil");
       }

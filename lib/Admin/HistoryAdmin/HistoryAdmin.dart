@@ -23,7 +23,7 @@ class _RiwayatState extends State<RiwayatAdmin> {
     _fetchDataPesanan = fetchDataPesanan();
   }
 
-Future<List<DocumentSnapshot>> fetchDataPesanan() async {
+  Future<List<DocumentSnapshot>> fetchDataPesanan() async {
     try {
       QuerySnapshot querySnapshot;
       if (_selectedFilter == null) {
@@ -51,7 +51,6 @@ Future<List<DocumentSnapshot>> fetchDataPesanan() async {
       _fetchDataPesanan = fetchDataPesanan();
     });
   }
-
 
   //   Future<void> hapusSemuaPesanan() async {
   //   try {
@@ -101,15 +100,54 @@ Future<List<DocumentSnapshot>> fetchDataPesanan() async {
       body: Column(
         children: [
           ToggleButtons(
+            splashColor: Colors.transparent,
+            fillColor: Colors.transparent,
+            renderBorder: false,
             children: [
-              Text('Diterima'),
-              Text('Ditolak'),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: _selectedFilter == 'Diterima'
+                      ? Colors.green
+                      : Colors.transparent,
+                ),
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Diterima',
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    color: _selectedFilter == 'Diterima'
+                        ? Colors.white
+                        : Colors.green,
+                  ),
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: _selectedFilter == 'Ditolak'
+                      ? Colors.red
+                      : Colors.transparent,
+                ),
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Ditolak',
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    color: _selectedFilter == 'Ditolak'
+                        ? Colors.white
+                        : Colors.red,
+                  ),
+                ),
+              ),
             ],
-                        isSelected: [_selectedFilter == 'Diterima', _selectedFilter == 'Ditolak'],
+            isSelected: [
+              _selectedFilter == 'Diterima',
+              _selectedFilter == 'Ditolak',
+            ],
             onPressed: (int index) {
               _onFilterChanged(index == 0 ? 'Diterima' : 'Ditolak');
             },
-
           ),
           Expanded(
             child: FutureBuilder<List<DocumentSnapshot>>(
@@ -192,8 +230,7 @@ Future<List<DocumentSnapshot>> fetchDataPesanan() async {
                                             child: Container(
                                               height: 20,
                                               width: 20,
-                                              color: Color.fromARGB(
-                                                  255, 73, 160, 19),
+                                              color: statusColor,
                                             ),
                                           ),
                                           Icon(

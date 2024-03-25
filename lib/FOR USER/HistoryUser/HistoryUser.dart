@@ -28,7 +28,7 @@ class _RiwayatUserState extends State<RiwayatUser> {
         .collection('pesanan')
         .where('id_pembeli', isEqualTo: widget.userId)
         .orderBy('waktu_pesanan', descending: true);
-    
+
     if (_selectedFilter != null) {
       query = query.where('status', isEqualTo: _selectedFilter);
     }
@@ -42,9 +42,6 @@ class _RiwayatUserState extends State<RiwayatUser> {
       _pesananStream = _fetchDataPesanan();
     });
   }
-
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -63,13 +60,49 @@ class _RiwayatUserState extends State<RiwayatUser> {
           style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w500),
         ),
       ),
-      body: 
-      Column(
+      body: Column(
         children: [
           ToggleButtons(
+            splashColor: Colors.transparent,
+            fillColor: Colors.transparent,
+            renderBorder: false,
             children: [
-              Text('Diterima'),
-              Text('Ditolak'),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: _selectedFilter == 'Diterima'
+                      ? Colors.green
+                      : Colors.transparent,
+                ),
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Diterima',
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    color: _selectedFilter == 'Diterima'
+                        ? Colors.white
+                        : Colors.green,
+                  ),
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: _selectedFilter == 'Ditolak'
+                      ? Colors.red
+                      : Colors.transparent,
+                ),
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Ditolak',
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    color: _selectedFilter == 'Ditolak'
+                        ? Colors.white
+                        : Colors.red,
+                  ),
+                ),
+              ),
             ],
             isSelected: [
               _selectedFilter == 'Diterima',
@@ -79,15 +112,15 @@ class _RiwayatUserState extends State<RiwayatUser> {
               _onFilterChanged(index == 0 ? 'Diterima' : 'Ditolak');
             },
           ),
-
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: _pesananStream,
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
-            
+
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -109,18 +142,19 @@ class _RiwayatUserState extends State<RiwayatUser> {
                     ],
                   );
                 }
-            
+
                 // List of pesanan
                 final List<DocumentSnapshot> pesananList = snapshot.data!.docs;
-            
+
                 if (pesananList.isEmpty) {
                   return Center(
                       child: Text(
                     'Tidak ada riwayat',
-                    style: GoogleFonts.poppins(color: Colors.black, fontSize: 15),
+                    style:
+                        GoogleFonts.poppins(color: Colors.black, fontSize: 15),
                   ));
                 }
-            
+
                 return ListView.builder(
                   itemCount: pesananList.length,
                   itemBuilder: (context, index) {
@@ -131,10 +165,11 @@ class _RiwayatUserState extends State<RiwayatUser> {
                     String status = pesanan['status'];
                     List<dynamic> produkList = pesanan['produk'];
                     Color statusColor = status == 'Diterima'
-                          ? Color.fromARGB(255, 73, 160, 19)
-                          : Colors.red;
+                        ? Color.fromARGB(255, 73, 160, 19)
+                        : Colors.red;
                     return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       child: Column(
                         children: [
                           Container(
@@ -160,11 +195,12 @@ class _RiwayatUserState extends State<RiwayatUser> {
                                     Stack(
                                       children: [
                                         ClipRRect(
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                           child: Container(
                                             height: 20,
                                             width: 20,
-                                            color: Color.fromARGB(255, 73, 160, 19),
+                                            color: statusColor,
                                           ),
                                         ),
                                         Icon(
@@ -178,7 +214,8 @@ class _RiwayatUserState extends State<RiwayatUser> {
                                     Text(
                                       "List Pesanan kamu",
                                       style: GoogleFonts.poppins(
-                                          fontSize: 12, fontWeight: FontWeight.w600),
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600),
                                     ),
                                   ],
                                 ),
@@ -192,7 +229,8 @@ class _RiwayatUserState extends State<RiwayatUser> {
                                       shrinkWrap: true,
                                       itemCount: produkList.length,
                                       physics: NeverScrollableScrollPhysics(),
-                                      itemBuilder: (context, index) => ListHistory(
+                                      itemBuilder: (context, index) =>
+                                          ListHistory(
                                         produk: produkList[index],
                                       ),
                                     ),
@@ -207,7 +245,8 @@ class _RiwayatUserState extends State<RiwayatUser> {
                                     color: Colors.white,
                                   ),
                                   child: Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 10),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
@@ -220,7 +259,8 @@ class _RiwayatUserState extends State<RiwayatUser> {
                                                 "Total :",
                                                 style: GoogleFonts.poppins(
                                                     fontSize: 12,
-                                                    fontWeight: FontWeight.w700),
+                                                    fontWeight:
+                                                        FontWeight.w700),
                                               ),
                                             ),
                                           ],
@@ -245,9 +285,11 @@ class _RiwayatUserState extends State<RiwayatUser> {
                                   children: [],
                                 ),
                                 Container(
-                                  margin: EdgeInsets.only(right: 10, bottom: 10),
+                                  margin:
+                                      EdgeInsets.only(right: 10, bottom: 10),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Row(
                                         children: [

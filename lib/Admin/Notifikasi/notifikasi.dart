@@ -370,12 +370,14 @@ class _NotifikasiState extends State<Notifikasi> {
                                                             title: "Peringatan",
                                                             content:
                                                                 "Pakah kamu yakin menolak barang ini",
-                                                            buttonCancel: "Batal",
+                                                            buttonCancel:
+                                                                "Batal",
                                                             onButtonCancel: () {
                                                               Navigator.pop(
                                                                   context);
                                                             },
-                                                            buttonConfirm: "Tolak",
+                                                            buttonConfirm:
+                                                                "Tolak",
                                                             onButtonConfirm:
                                                                 () async {
                                                               // Mengatur waktu sekarang
@@ -433,7 +435,9 @@ class _NotifikasiState extends State<Notifikasi> {
                                                                 );
                                                                 print(
                                                                     "berhasil");
-                                                              }Navigator.pop(context);
+                                                              }
+                                                              Navigator.pop(
+                                                                  context);
                                                             }));
                                               },
                                               style: ElevatedButton.styleFrom(
@@ -461,7 +465,7 @@ class _NotifikasiState extends State<Notifikasi> {
                                                   showDialog(
                                                       context: context,
                                                       builder: (context) =>
-                                                          TerimaDialog(
+                                                          ACC_ADMIN(
                                                               title:
                                                                   "Peringatan",
                                                               content:
@@ -610,7 +614,8 @@ class _NotifikasiState extends State<Notifikasi> {
                                                                         'Error fetching produk: $error');
                                                                   });
                                                                 }
-                                                                Navigator.pop(context);
+                                                                Navigator.pop(
+                                                                    context);
                                                               }));
                                                 },
                                                 style: ElevatedButton.styleFrom(

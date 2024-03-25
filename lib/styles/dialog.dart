@@ -137,11 +137,9 @@ class TerimaDialog extends StatelessWidget {
                       topRight: Radius.circular(10)),
                   color: greenPrimary // Ganti warna sesuai keinginan
                 ),
-                child: Icon(
-                Icons.check_circle,
-                color: Colors.white,
-                size: 70,
-              ),),
+                child: Image.asset(
+                  "assets/Warning.png",
+                ),),
             SizedBox(height: 16), // Spasi antara kotak atas dan bawah
             // Kotak bawah dengan konfirmasi dan deskripsi peringatan
             Padding(

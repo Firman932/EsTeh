@@ -782,9 +782,9 @@ class KeranjangPage01 extends State<KeranjangPage02> {
           return Center(
             child: Text(
               'Belum ada keranjang',
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 18,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
               ),
             ),
           );

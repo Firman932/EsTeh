@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -728,7 +730,7 @@ class _NotifikasiState extends State<Notifikasi> {
       playSound: true,
       styleInformation: BigTextStyleInformation(
         message, // Pesan utama
-        contentTitle: 'Pesanan Baru', // Judul notifikasi
+        contentTitle: 'Pesanan', // Judul notifikasi
         htmlFormatContent: true, // Mengizinkan konten dalam format HTML
         htmlFormatTitle: true, // Mengizinkan judul dalam format HTML
       ),

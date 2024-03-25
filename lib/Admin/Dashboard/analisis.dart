@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lji/Admin/Analisis%20Uang/uang.dart';
 import 'package:intl/intl.dart';
-import 'package:lji/styles/color.dart';
 
 class Analisis extends StatefulWidget {
   const Analisis({super.key});

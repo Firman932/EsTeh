@@ -230,48 +230,43 @@ class _DashboardState extends State<Dashboard> {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return Center(
-                                child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SpinKitWave(
-                                  size: 43,
-                                  color: greenPrimary,
-                                ),
-                                SizedBox(
-                                  height: 30,
-                                ),
-                                Text(
-                                  'Loading',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w500,
-                                      color: greenPrimary),
-                                )
-                              ],
-                            ));
+                              child:
+                                  CircularProgressIndicator(), // Ganti dengan indikator loading yang sesuai
+                            );
                           }
 
-                          if (produkList.isEmpty) {
-                            return Center(child: Text('Tidak ada produk.'));
-                          }
+                          // Ambil semua dokumen produk dari snapshot
+                          final List<DocumentSnapshot> allProdukList =
+                              snapshot.data!.docs;
 
-                          produkList = snapshot.data!.docs
+                          // Filter produk berdasarkan kategori yang dipilih
+                          final filteredProdukList = allProdukList
                               .where((produk) =>
                                   produk['kategori_produk'] ==
                                       selectedCategory &&
                                   produk['kategori_produk'] != null)
                               .toList();
 
-                          produkList.sort((a, b) {
+                          // Jika tidak ada produk yang sesuai dengan kategori yang dipilih, tampilkan pesan
+                          if (filteredProdukList.isEmpty) {
+                            return Center(
+                              child:
+                                  Text('Tidak ada Produk'),
+                            );
+                          }
+
+                          // Urutkan produk berdasarkan stok_produk
+                          filteredProdukList.sort((a, b) {
                             int stokA = a['stok_produk'] as int;
                             int stokB = b['stok_produk'] as int;
                             return stokA.compareTo(stokB);
                           });
 
+                          // Ambil tiga produk pertama setelah penyaringan dan pengurutan
                           final List<DocumentSnapshot> limitedProdukList =
-                              produkList.sublist(
-                                  0, produkList.length.clamp(0, 3));
+                              filteredProdukList.take(3).toList();
 
+                          // Tampilkan daftar produk yang telah difilter dan diurutkan
                           return ListView.builder(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),

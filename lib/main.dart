@@ -1,7 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lji/Register.dart';
@@ -54,27 +53,26 @@ Future<void> main() async {
   FirebaseNotification firebaseNotification = FirebaseNotification();
   await firebaseNotification.configure();
 
-
   final settings = await messaging.requestPermission(
     alert: true,
-    announcement: false,
+    announcement: true,
     badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
+    carPlay: true,
+    criticalAlert: true,
+    provisional: true,
     sound: true,
   );
 
   // It requests a registration token for sending messages to users from your App server or other trusted server environment.
-String? token = await messaging.getToken();
+  String? token = await messaging.getToken();
 
-if (kDebugMode) {
-  print('Registration Token=$token');
-}
+  if (kDebugMode) {
+    print('Registration Token=$token');
+  }
 
-    if (kDebugMode) {
-      print('Permission granted: ${settings.authorizationStatus}');
-    }
+  if (kDebugMode) {
+    print('Permission granted: ${settings.authorizationStatus}');
+  }
 
   runApp(MyApp());
   // Panggil fungsi untuk mengatur tampilan loading

@@ -1,6 +1,7 @@
 // ignore_for_file: unused_field
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -301,8 +302,16 @@ class _StokProdukState extends State<StokProduk> {
         }
       }
 
-      // Delete items from Firestore
+      // Delete items from Firestore and their respective images from Cloud Storage
       itemsToDelete.forEach((documentId) async {
+        // Get the URL of the image to be deleted
+        String imageUrl = produkList
+            .firstWhere((element) => element.id == documentId)['gambar_produk'];
+
+        // Delete the image from Cloud Storage
+        await FirebaseStorage.instance.refFromURL(imageUrl).delete();
+
+        // Delete the document from Firestore
         await FirebaseFirestore.instance
             .collection('produk')
             .doc(documentId)
@@ -311,7 +320,6 @@ class _StokProdukState extends State<StokProduk> {
 
       // Refresh the StreamBuilder
       setState(() {
-        // You may need to adjust this if your stream initialization depends on other conditions
         produkStream =
             FirebaseFirestore.instance.collection('produk').snapshots();
       });

@@ -1,5 +1,6 @@
 // ignore_for_file: unused_field
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -235,11 +236,17 @@ class _ListProdukState extends State<ListProduk> {
     );
 
     try {
+      // Dapatkan URL gambar produk yang akan dihapus
+      String imageUrl = widget.produkData['gambar_produk'];
+
       // Mulai proses penghapusan produk
       await FirebaseFirestore.instance
           .collection('produk')
           .doc(documentId)
           .delete();
+
+      // Hapus file gambar dari storage Firebase
+      await FirebaseStorage.instance.refFromURL(imageUrl).delete();
 
       // Tampilkan dialog sukses
     } catch (error) {

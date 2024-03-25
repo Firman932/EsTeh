@@ -252,7 +252,7 @@ class _DashboardState extends State<Dashboard> {
                           }
 
                           if (produkList.isEmpty) {
-                            return Text('Tidak ada produk.');
+                            return Center(child: Text('Tidak ada produk.'));
                           }
 
                           produkList = snapshot.data!.docs

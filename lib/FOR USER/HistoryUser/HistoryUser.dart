@@ -27,6 +27,7 @@ class _RiwayatUserState extends State<RiwayatUser> {
     Query query = FirebaseFirestore.instance
         .collection('pesanan')
         .where('id_pembeli', isEqualTo: widget.userId)
+        .where('status', whereIn: ["Diterima", "Ditolak"])
         .orderBy('waktu_pesanan', descending: true);
 
     if (_selectedFilter != null) {

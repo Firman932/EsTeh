@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:lji/FOR%20USER/NotifikasiUser.dart';
 import 'package:lji/Keranjang.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -21,6 +22,7 @@ class ListUser extends StatefulWidget {
 }
 
 class _ListUserState extends State<ListUser> {
+  User? user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -303,9 +305,6 @@ class _ListUserState extends State<ListUser> {
     NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
 
-    // Mendapatkan tanggal dan waktu sekarang
-    DateTime now = DateTime.now();
-
     // Tampilkan notifikasi
     await flutterLocalNotificationsPlugin.show(
       0, // ID notifikasi
@@ -515,8 +514,21 @@ class _ListUserState extends State<ListUser> {
       'Kamu telah checkout pesananmu, tunggu konfirmasi dari admin dulu ya........!!!!!!!\n\n${DateFormat('dd MMMM yyyy, HH:mm').format(now)}', // Pesan notifikasi dengan tanggal
       platformChannelSpecifics,
       payload:
-          'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
+          '/notifikasiUser', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
     );
+  }
+
+  Future<void> _handleNotification(String payload) async {
+    if (payload == '/notifikasiUser') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => NotifUser(
+            userId: user!.uid,
+          ),
+        ),
+      );
+    }
   }
 
   Future<String?> getUsernameFromUserID(String userID) async {

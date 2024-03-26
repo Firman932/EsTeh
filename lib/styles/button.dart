@@ -6,11 +6,12 @@ final ButtonStyle greenButton = ElevatedButton.styleFrom(
   minimumSize: const Size(82, 37),
 );
 
+final ButtonStyle redButton = ElevatedButton.styleFrom(
+  backgroundColor: redPrimary,
+  minimumSize: const Size(82, 37),
+);
+
 final ButtonStyle kuningButton = ElevatedButton.styleFrom(
   backgroundColor: KuningPrimary,
   minimumSize: const Size(82, 37),
 );
-
-final ButtonStyle redButton =
-    ElevatedButton.styleFrom(backgroundColor: redPrimary,
-    minimumSize: const Size(82, 37),);

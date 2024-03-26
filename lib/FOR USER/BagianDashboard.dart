@@ -44,6 +44,24 @@ class _MenuUserState extends State<MenuUser> {
     LogoutBottomSheet.show(context, AuthService());
   }
 
+  Future<void> updateAllPesananDibaca() async {
+    try {
+      // Mendapatkan referensi koleksi 'pesanan' dengan filter berdasarkan userID
+      CollectionReference pesananCollection =
+          FirebaseFirestore.instance.collection('pesanan');
+      QuerySnapshot pesananSnapshot = await pesananCollection
+          .where('id_pembeli', isEqualTo: user!.uid)
+          .get();
+
+      // Mengupdate nilai field 'dibacauser' menjadi true untuk semua dokumen yang terkait dengan userID saat ini
+      for (DocumentSnapshot doc in pesananSnapshot.docs) {
+        await doc.reference.update({'dibacauser': true});
+      }
+    } catch (error) {
+      print('Error updating pesanan: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -125,38 +143,77 @@ class _MenuUserState extends State<MenuUser> {
             SizedBox(
               width: 13,
             ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NotifUser(
-                      userId: user!.uid,
+            StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('pesanan')
+                  .where('id_pembeli',
+                      isEqualTo: user!.uid) // Filter berdasarkan idpembeli
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                }
+
+                // Cek setiap dokumen dalam koleksi pesanan
+                for (var doc in snapshot.data!.docs) {
+                  // Ambil nilai dari field dibaca untuk dokumen ini
+                  bool dibaca = doc['dibacauser'] ?? false;
+
+                  // Jika ada dokumen yang dibaca adalah false, maka tampilkan badge
+                  if (!dibaca) {
+                    return GestureDetector(
+                      onTap: () {
+                        updateAllPesananDibaca();
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NotifUser(
+                              userId: user!.uid,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Badge(
+                        isLabelVisible:
+                            true, // Tampilkan label jika ada pesanan yang belum dibaca
+                        child: Icon(
+                          Icons.notifications,
+                          size: 25,
+                          color: Colors.black,
+                        ),
+                      ),
+                    );
+                  }
+                }
+
+                // Jika tidak ada pesanan yang belum dibaca, tampilkan badge dengan isLabelVisible false
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NotifUser(
+                          userId: user!.uid,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Badge(
+                    isLabelVisible:
+                        false, // Tidak ada pesanan yang belum dibaca
+                    child: Icon(
+                      Icons.notifications,
+                      size: 25,
+                      color: Colors.black,
                     ),
                   ),
                 );
               },
-              child: Stack(
-                children: [
-                  Icon(
-                    Icons.notifications,
-                    size: 25,
-                    color: Colors.black,
-                  ),
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: Container(
-                      width: 10,
-                      height: 10,
-                      decoration: BoxDecoration(
-                        color: Colors.red, // Warna dot bisa disesuaikan
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
             ),
             SizedBox(
               width: 13,

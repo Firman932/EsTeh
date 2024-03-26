@@ -408,6 +408,9 @@ class _ListUserState extends State<ListUser> {
         'status': 'pending', // Status pesanan menunggu persetujuan admin
         'total_barang': totalBarang, // Menambahkan field total_barang
         'harga_total': hargaTotal, // Menambahkan field harga_total
+        'catatan': 'Kosong',
+        'dibaca': false,
+        'dibacauser': false
       });
       // Setelah dokumen ditambahkan, dapatkan ID transaksi yang dihasilkan
       String idTransaksi = pesananRef.id;

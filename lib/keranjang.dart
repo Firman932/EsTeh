@@ -277,6 +277,8 @@ class _KeranjangState extends State<Keranjang> {
         'total_barang': totalBarang,
         'harga_total': hargaTotal,
         'catatan': catatan, // Menggunakan catatan yang telah ditentukan
+        'dibaca' : false,
+        'dibacauser': false
       });
 
       String idTransaksi = pesananRef.id;

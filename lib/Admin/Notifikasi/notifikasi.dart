@@ -428,6 +428,8 @@ class _NotifikasiState extends State<Notifikasi> {
                                                                   .doc(pesanan
                                                                       .id)
                                                                   .update({
+                                                                'dibacauser':
+                                                                    false,
                                                                 'status':
                                                                     'Ditolak',
                                                                 'tanggal':
@@ -571,6 +573,8 @@ class _NotifikasiState extends State<Notifikasi> {
                                                                               .collection('pesanan')
                                                                               .doc(pesanan.id)
                                                                               .update({
+                                                                            'dibacauser':
+                                                                                false,
                                                                             'status':
                                                                                 'Diterima',
                                                                             'tanggal':

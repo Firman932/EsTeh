@@ -154,10 +154,6 @@ class _MenuUserState extends State<MenuUser> {
                   return Text('Error: ${snapshot.error}');
                 }
 
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                }
-
                 // Cek setiap dokumen dalam koleksi pesanan
                 for (var doc in snapshot.data!.docs) {
                   // Ambil nilai dari field dibaca untuk dokumen ini

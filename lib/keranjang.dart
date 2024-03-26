@@ -26,6 +26,14 @@ class _KeranjangState extends State<Keranjang> {
   String? namaPembeli;
   String? userID;
   int jumlah = 1;
+  TextEditingController catatanController = TextEditingController();
+  @override
+  void dispose() {
+    // Hapus controller saat widget di dispose
+    catatanController.dispose();
+    super.dispose();
+  }
+
   void tambahkanKeKeranjang() async {
     // Mendapatkan informasi pengguna yang sedang diotentikasi
     User? user = FirebaseAuth.instance.currentUser;
@@ -179,12 +187,14 @@ class _KeranjangState extends State<Keranjang> {
   }
 
   void beliLangsung() async {
+    String catatan =
+        catatanController.text.isEmpty ? "Kosong" : catatanController.text;
+
     try {
       // Tampilkan dialog "Loading"
       showDialog(
         context: context,
-        barrierDismissible:
-            false, // Mencegah dialog ditutup dengan mengetuk di luar area dialog
+        barrierDismissible: false,
         builder: (BuildContext context) {
           return Loading(
             isLoading: true,
@@ -216,10 +226,8 @@ class _KeranjangState extends State<Keranjang> {
           'total_harga': hargaProduk * jumlah
         }
       ]) {
-        totalBarang += (produk['jumlah'] as num)
-            .toInt(); // Tambahkan jumlah produk ke total_barang
-        hargaTotal += (produk['total_harga'] as num)
-            .toInt(); // Tambahkan total harga produk ke harga_total
+        totalBarang += (produk['jumlah'] as num).toInt();
+        hargaTotal += (produk['total_harga'] as num).toInt();
       }
 
       // Mendapatkan informasi pengguna yang sedang diotentikasi
@@ -240,23 +248,21 @@ class _KeranjangState extends State<Keranjang> {
       DateTime now = DateTime.now();
 
       // Format tanggal
-      String formattedDate =
-          DateFormat('d MMM, y').format(now); // Output: 1 Jan, 2024
+      String formattedDate = DateFormat('d MMM, y').format(now);
 
       // Format jam
-      String formattedTime = DateFormat('HH:mm').format(now); // Output: 09:15
+      String formattedTime = DateFormat('HH:mm').format(now);
 
       // Simpan pesanan ke Firebase
       DocumentReference pesananRef =
           await FirebaseFirestore.instance.collection('pesanan').add({
         'waktu_pesanan': Timestamp.now(),
-        'nama_pembeli': namaPembeli, // Menyimpan nama pembeli
-        'id_pembeli': userID, // Menyimpan ID pembeli
-        'id_transaksi': '', // ID transaksi dapat diisi jika diperlukan
-        'tanggal': formattedDate, // Menyimpan tanggal transaksi
+        'nama_pembeli': namaPembeli,
+        'id_pembeli': userID,
+        'id_transaksi': '',
+        'tanggal': formattedDate,
         'jam': formattedTime,
         'produk': FieldValue.arrayUnion([
-          // Menyimpan detail pesanan dalam bentuk array
           {
             'nama_produk': namaProduk,
             'variasi_rasa': variasiRasa,
@@ -267,21 +273,18 @@ class _KeranjangState extends State<Keranjang> {
             'total_harga': hargaProduk * jumlah
           }
         ]),
-        'status': 'pending', // Status pesanan menunggu persetujuan admin
-        'total_barang': totalBarang, // Menambahkan field total_barang
-        'harga_total': hargaTotal, // Menambahkan field harga_total
+        'status': 'pending',
+        'total_barang': totalBarang,
+        'harga_total': hargaTotal,
+        'catatan': catatan, // Menggunakan catatan yang telah ditentukan
       });
-      // Setelah dokumen ditambahkan, dapatkan ID transaksi yang dihasilkan
-      String idTransaksi = pesananRef.id;
 
-      // Kemudian, perbarui dokumen dengan ID transaksi yang dihasilkan
+      String idTransaksi = pesananRef.id;
       await pesananRef.update({'id_transaksi': idTransaksi});
 
       print('Pesanan berhasil diproses');
-      // Tutup dialog "Loading"
       Navigator.pop(context);
 
-      // Tampilkan dialog "Sukses"
       showDialog(
         context: context,
         builder: (context) => SucessDialog(
@@ -293,25 +296,22 @@ class _KeranjangState extends State<Keranjang> {
           },
         ),
       );
+
       String? adminFcmToken = await getAdminFcmToken();
       print(adminFcmToken);
       if (adminFcmToken != null) {
-        // Send a notification to the admin user
         await sendNotificationToAdmin(
           adminFcmToken,
           '$namaPembeli telah memesan produk',
         );
         print("berhasil");
       }
-      // Tampilkan notifikasi lokal
+
       await _tampilkanNotifikasi();
     } catch (error) {
       print('Error processing order: $error');
-      // Handle error, misalnya, menampilkan pesan kesalahan kepada pengguna
-      // Tutup dialog "Loading"
       Navigator.pop(context);
 
-      // Tampilkan dialog "Error"
       showDialog(
         context: context,
         builder: (context) => WarningDialog(
@@ -422,96 +422,133 @@ class _KeranjangState extends State<Keranjang> {
           },
         ),
       ),
-      body: ListView(children: [
-        Container(
-          padding: EdgeInsets.fromLTRB(20, 28, 20, 20),
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            color: Color(0xffffffff),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                margin: EdgeInsets.fromLTRB(5, 0, 5, 20),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context)
-                        .size
-                        .width, // Sesuaikan tinggi dengan lebar untuk membuat gambar persegi
-                    child: AspectRatio(
-                      aspectRatio:
-                          1, // Memastikan gambar tetap berbentuk persegi
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.network(
-                          gambarProduk,
-                          fit: BoxFit.cover,
+      body: ListView(
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(20, 28, 20, 20),
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              color: Color(0xffffffff),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: EdgeInsets.fromLTRB(5, 0, 5, 20),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context)
+                          .size
+                          .width, // Sesuaikan tinggi dengan lebar untuk membuat gambar persegi
+                      child: AspectRatio(
+                        aspectRatio:
+                            1, // Memastikan gambar tetap berbentuk persegi
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.network(
+                            gambarProduk,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: EdgeInsets.only(top: 3),
-                    child: Text(
-                      namaProduk,
-                      style: GoogleFonts.poppins(
-                        fontSize: 27,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xff030303),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: EdgeInsets.only(top: 3),
+                      child: Text(
+                        namaProduk,
+                        style: GoogleFonts.poppins(
+                          fontSize: 27,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xff030303),
+                        ),
                       ),
                     ),
-                  ),
-                  Text(
-                    variasiRasa,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xff000000),
+                    Text(
+                      variasiRasa,
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xff000000),
+                      ),
                     ),
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  "Stok: $stokProduk",
+                  style: GoogleFonts.poppins(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey,
                   ),
-                ],
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Text(
-                "Stok: $stokProduk",
-                style: GoogleFonts.poppins(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey,
                 ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                NumberFormat.currency(
-                        locale: 'id', symbol: 'Rp ', decimalDigits: 0)
-                    .format(hargaProduk),
-                textAlign: TextAlign.start,
-                style: GoogleFonts.poppins(
-                  fontSize: 21,
-                  fontWeight: FontWeight.w600,
-                  height: 1.5,
-                  color: Color(0xff49a013),
+                SizedBox(
+                  height: 10,
                 ),
-              ), //kedua
-              SizedBox(height: 20),
-            ],
+                Text(
+                  NumberFormat.currency(
+                          locale: 'id', symbol: 'Rp ', decimalDigits: 0)
+                      .format(hargaProduk),
+                  textAlign: TextAlign.start,
+                  style: GoogleFonts.poppins(
+                    fontSize: 21,
+                    fontWeight: FontWeight.w600,
+                    height: 1.5,
+                    color: Color(0xff49a013),
+                  ),
+                ), //kedua
+                SizedBox(height: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Catatan (Opsional)', // Add a title for the notes
+                      style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 10), // Add some spacing
+                    TextField(
+                      cursorColor: greenPrimary,
+                      controller:
+                          catatanController, // Tambahkan controller ke TextField
+                      style: GoogleFonts.poppins(),
+                      decoration: InputDecoration(
+                        hintStyle: GoogleFonts.poppins(),
+                        hintText: 'Tambahkan catatan...',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: greenPrimary),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: greenPrimary),
+                        ),
+                      ),
+                      maxLines: null,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(boxShadow: [
           BoxShadow(

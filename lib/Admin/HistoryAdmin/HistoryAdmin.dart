@@ -189,6 +189,7 @@ class _RiwayatState extends State<RiwayatAdmin> {
                     itemBuilder: (context, index) {
                       DocumentSnapshot pesanan = snapshot.data![index];
                       String namaPembeli = pesanan['nama_pembeli'];
+                      String catatan = pesanan['catatan'];
                       int totalHarga = pesanan['harga_total'];
                       String tanggal = pesanan['tanggal'];
                       String jam = pesanan['jam'];
@@ -219,6 +220,7 @@ class _RiwayatState extends State<RiwayatAdmin> {
                               ),
                               width: MediaQuery.of(context).size.width,
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
@@ -249,7 +251,34 @@ class _RiwayatState extends State<RiwayatAdmin> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 20),
+                                  SizedBox(height: 15),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 5,),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Catatan: ",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          maxLines: null,
+                                        ),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          "$catatan",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                          ),
+                                          maxLines: null,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 5),
                                   Container(
                                     color: Colors.white,
                                     child: Padding(

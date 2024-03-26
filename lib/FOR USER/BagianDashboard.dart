@@ -136,10 +136,26 @@ class _MenuUserState extends State<MenuUser> {
                   ),
                 );
               },
-              child: Icon(
-                Icons.notifications,
-                size: 25,
-                color: Colors.black,
+              child: Stack(
+                children: [
+                  Icon(
+                    Icons.notifications,
+                    size: 25,
+                    color: Colors.black,
+                  ),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: Colors.red, // Warna dot bisa disesuaikan
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             SizedBox(

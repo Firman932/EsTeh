@@ -216,6 +216,8 @@ class _NotifikasiState extends State<Notifikasi> {
                   DocumentSnapshot pesanan = pesananList[index];
                   String userId =
                       pesanan['id_pembeli']; // Ambil user_id dari data pesanan
+                  String catatan =
+                      pesanan['catatan']; // Ambil user_id dari data pesanan
 
                   String namaPembeli = pesanan['nama_pembeli'];
                   String tanggal = pesanan['tanggal'];
@@ -297,6 +299,23 @@ class _NotifikasiState extends State<Notifikasi> {
                                         style: GoogleFonts.poppins(
                                           fontSize: 12,
                                         ),
+                                      ),
+                                      SizedBox(height: 20),
+                                      Text(
+                                        "Catatan: ",
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        maxLines: null,
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        "$catatan",
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                        ),
+                                        maxLines: null,
                                       ),
                                       SizedBox(height: 20),
                                       Text(

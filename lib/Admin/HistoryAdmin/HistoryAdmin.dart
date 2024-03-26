@@ -254,7 +254,8 @@ class _RiwayatState extends State<RiwayatAdmin> {
                                   SizedBox(height: 15),
                                   Padding(
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: 5,),
+                                      horizontal: 5,
+                                    ),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,

@@ -4,7 +4,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lji/Admin/Analisis%20Uang/uang.dart';
-import 'package:lji/Admin/Dashboard/analisis.dart';
 import 'package:lji/Admin/HistoryAdmin/HistoryAdmin.dart';
 import 'package:lji/Admin/Notifikasi/notifikasi.dart';
 import 'package:lji/Admin/Dashboard/list_menu.dart';
@@ -44,6 +43,24 @@ class _DashboardState extends State<Dashboard> {
 
   void _showLogoutBottomSheet(BuildContext context) {
     LogoutBottomSheet.show(context, AuthService());
+  }
+
+  Future<void> updateAllPesananDibaca() async {
+    try {
+      // Mendapatkan referensi koleksi 'pesanan'
+      CollectionReference pesananCollection =
+          FirebaseFirestore.instance.collection('pesanan');
+
+      // Mendapatkan semua dokumen dalam koleksi 'pesanan'
+      QuerySnapshot pesananSnapshot = await pesananCollection.get();
+
+      // Mengupdate nilai field 'dibaca' menjadi true untuk semua dokumen
+      for (DocumentSnapshot doc in pesananSnapshot.docs) {
+        await doc.reference.update({'dibaca': true});
+      }
+    } catch (error) {
+      print('Error updating pesanan: $error');
+    }
   }
 
   @override
@@ -118,20 +135,71 @@ class _DashboardState extends State<Dashboard> {
               SizedBox(
                 width: 13,
               ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Notifikasi(),
+              StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('pesanan')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+
+                  // Cek setiap dokumen dalam koleksi pesanan
+                  for (var doc in snapshot.data!.docs) {
+                    // Ambil nilai dari field dibaca untuk dokumen ini
+                    bool dibaca = doc['dibaca'] ?? false;
+
+                    // Jika ada dokumen yang dibaca adalah false, maka tampilkan badge
+                    if (!dibaca) {
+                      return GestureDetector(
+                        onTap: () {
+                          updateAllPesananDibaca();
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Notifikasi(),
+                            ),
+                          );
+                        },
+                        child: Badge(
+                          isLabelVisible:
+                              true, // Tampilkan label jika ada pesanan yang belum dibaca
+                          child: Icon(
+                            Icons.notifications,
+                            size: 25,
+                            color: Colors.black,
+                          ),
+                        ),
+                      );
+                    }
+                  }
+
+                  // Jika tidak ada pesanan yang belum dibaca, tampilkan badge dengan isLabelVisible false
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Notifikasi(),
+                        ),
+                      );
+                    },
+                    child: Badge(
+                      isLabelVisible:
+                          false, // Tidak ada pesanan yang belum dibaca
+                      child: Icon(
+                        Icons.notifications,
+                        size: 25,
+                        color: Colors.black,
+                      ),
                     ),
                   );
                 },
-                child: Icon(
-                  Icons.notifications,
-                  size: 25,
-                  color: Colors.black,
-                ),
               ),
               SizedBox(
                 width: 16,

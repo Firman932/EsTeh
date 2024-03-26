@@ -218,7 +218,6 @@ class _NotifikasiState extends State<Notifikasi> {
                       pesanan['id_pembeli']; // Ambil user_id dari data pesanan
                   String catatan =
                       pesanan['catatan']; // Ambil user_id dari data pesanan
-
                   String namaPembeli = pesanan['nama_pembeli'];
                   String tanggal = pesanan['tanggal'];
                   String jam = pesanan['jam'];

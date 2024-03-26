@@ -10,6 +10,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/widgets.dart';
+import 'package:lji/Admin/Create/textField.dart';
 import 'package:lji/styles/color.dart';
 import 'package:lji/styles/dialog.dart';
 import 'dart:convert';
@@ -56,6 +57,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
   List<CartItem> cartItems = [];
   LoadingStatus _loadingStatus =
       LoadingStatus.Loading; // Inisialisasi status loading
+  TextEditingController catatanController = TextEditingController();
 
   @override
   void initState() {
@@ -708,45 +710,57 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                   topLeft: Radius.circular(10), topRight: Radius.circular(10)),
               child: BottomAppBar(
                 surfaceTintColor: Colors.white,
-                height: 70,
+                height: 160,
                 elevation: 1,
                 notchMargin: 8,
                 color: Colors.white,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
                   children: [
-                    Expanded(
-                      child: Text(
-                        'Total : ${NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(_calculateTotal())}',
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: _isTotalDisabled ? Colors.grey : Colors.black,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                    CustomTextField(
+                        labelText: "Catatan (Opsional) : ",
+                        hintText: "Tambahkan catatan",
+                        controller: catatanController),
+                    SizedBox(
+                      height: 10,
                     ),
-                    _isTotalDisabled
-                        ? SizedBox.shrink()
-                        : ElevatedButton(
-                            onPressed: () {
-                              _checkout();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xff4fb60e),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
-                              ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Total : ${NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(_calculateTotal())}',
+                            style: GoogleFonts.poppins(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color:
+                                  _isTotalDisabled ? Colors.grey : Colors.black,
                             ),
-                            child: Text(
-                              'Checkout',
-                              style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
+                        ),
+                        _isTotalDisabled
+                            ? SizedBox.shrink()
+                            : ElevatedButton(
+                                onPressed: () {
+                                  _checkout();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xff4fb60e),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Checkout',
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                      ],
+                    ),
                   ],
                 ),
               ),

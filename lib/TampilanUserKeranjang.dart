@@ -105,7 +105,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                 kategoriProduk: productDoc['kategori_produk'],
                 quantity: item['jumlah'],
                 price: productDoc['harga_produk'],
-                isChecked: false,
+                isChecked: true,
                 productImage: productDoc['gambar_produk'],
                 productStock: productDoc['stok_produk'],
                 dropdownValue: _getDropdownValue(productDoc['kategori_produk']),

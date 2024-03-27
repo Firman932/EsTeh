@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:lji/Admin/Notifikasi/notifikasi.dart';
 import 'package:lji/FOR%20USER/NotifikasiUser.dart';
 import 'package:lji/Keranjang.dart';
 import 'dart:convert';
@@ -265,6 +266,23 @@ class _ListUserState extends State<ListUser> {
       print('Error sending notification: $e');
     }
   }
+    Future<void> updateAdminPesananDibaca() async {
+    try {
+      // Mendapatkan referensi koleksi 'pesanan'
+      CollectionReference pesananCollection =
+          FirebaseFirestore.instance.collection('pesanan');
+
+      // Mendapatkan semua dokumen dalam koleksi 'pesanan'
+      QuerySnapshot pesananSnapshot = await pesananCollection.get();
+
+      // Mengupdate nilai field 'dibaca' menjadi true untuk semua dokumen
+      for (DocumentSnapshot doc in pesananSnapshot.docs) {
+        await doc.reference.update({'dibaca': true});
+      }
+    } catch (error) {
+      print('Error updating pesanan: $error');
+    }
+  }
 
   Future<void> _tampilkanNotifikasiLokal(String message) async {
     // Inisialisasi FlutterLocalNotificationsPlugin
@@ -315,6 +333,20 @@ class _ListUserState extends State<ListUser> {
       payload:
           'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
     );
+        await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse:
+            (NotificationResponse response) async {
+      // Tindakan saat notifikasi diterima oleh perangkat dan direspons oleh pengguna
+      if (response.payload != null) {
+        // Jika payload tidak null, maka kita navigasikan ke halaman NotifUser
+        updateAdminPesananDibaca();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Notifikasi()),
+        );
+      }
+    });
   }
 
   void beliLangsung() async {

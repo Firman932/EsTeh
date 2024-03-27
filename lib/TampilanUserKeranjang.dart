@@ -11,6 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lji/Admin/Create/textField.dart';
+import 'package:lji/FOR%20USER/NotifikasiUser.dart';
 import 'package:lji/styles/color.dart';
 import 'package:lji/styles/dialog.dart';
 import 'dart:convert';
@@ -56,6 +57,7 @@ class KeranjangPage02 extends StatefulWidget {
 }
 
 class KeranjangPage01 extends State<KeranjangPage02> {
+  String? userID;
   bool _isEditing = false;
   bool _isTotalDisabled = false;
   List<CartItem> cartItems = [];
@@ -73,7 +75,6 @@ class KeranjangPage01 extends State<KeranjangPage02> {
   }
 
   void _loadCartItems() async {
-    String? userID;
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
@@ -475,6 +476,23 @@ class KeranjangPage01 extends State<KeranjangPage02> {
     );
   }
 
+  Future<void> updateAllPesananDibaca() async {
+    try {
+      // Mendapatkan referensi koleksi 'pesanan' dengan filter berdasarkan userID
+      CollectionReference pesananCollection =
+          FirebaseFirestore.instance.collection('pesanan');
+      QuerySnapshot pesananSnapshot =
+          await pesananCollection.where('id_pembeli', isEqualTo: userID).get();
+
+      // Mengupdate nilai field 'dibacauser' menjadi true untuk semua dokumen yang terkait dengan userID saat ini
+      for (DocumentSnapshot doc in pesananSnapshot.docs) {
+        await doc.reference.update({'dibacauser': true});
+      }
+    } catch (error) {
+      print('Error updating pesanan: $error');
+    }
+  }
+
   Future<void> _tampilkanNotifikasi() async {
     // Inisialisasi FlutterLocalNotificationsPlugin
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -527,6 +545,23 @@ class KeranjangPage01 extends State<KeranjangPage02> {
       payload:
           'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
     );
+    // Tambahkan logika navigasi ke halaman NotifUser saat notifikasi ditekan
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse:
+            (NotificationResponse response) async {
+      // Tindakan saat notifikasi diterima oleh perangkat dan direspons oleh pengguna
+      if (response.payload != null) {
+        // Jika payload tidak null, maka kita navigasikan ke halaman NotifUser
+        updateAllPesananDibaca();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => NotifUser(
+                    userId: FirebaseAuth.instance.currentUser!.uid,
+                  )),
+        );
+      }
+    });
   }
 
   Future<void> _deleteProductsFromFirestore(List<String> productIds) async {

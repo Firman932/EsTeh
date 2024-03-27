@@ -468,6 +468,24 @@ class _ListUserState extends State<ListUser> {
     }
   }
 
+  Future<void> updateAllPesananDibaca() async {
+    try {
+      // Mendapatkan referensi koleksi 'pesanan' dengan filter berdasarkan userID
+      CollectionReference pesananCollection =
+          FirebaseFirestore.instance.collection('pesanan');
+      QuerySnapshot pesananSnapshot = await pesananCollection
+          .where('id_pembeli', isEqualTo: user!.uid)
+          .get();
+
+      // Mengupdate nilai field 'dibacauser' menjadi true untuk semua dokumen yang terkait dengan userID saat ini
+      for (DocumentSnapshot doc in pesananSnapshot.docs) {
+        await doc.reference.update({'dibacauser': true});
+      }
+    } catch (error) {
+      print('Error updating pesanan: $error');
+    }
+  }
+
   Future<void> _tampilkanNotifikasi() async {
     // Inisialisasi FlutterLocalNotificationsPlugin
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -520,22 +538,39 @@ class _ListUserState extends State<ListUser> {
       payload:
           'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
     );
-  }
-
-  Future<String?> getUsernameFromUserID(String userID) async {
-    try {
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
-      DocumentSnapshot userSnapshot =
-          await firestore.collection('users').doc(userID).get();
-
-      if (userSnapshot.exists) {
-        return userSnapshot['username'];
-      } else {
-        return ''; // Atau nilai default jika pengguna tidak ditemukan
+    // Tambahkan logika navigasi ke halaman NotifUser saat notifikasi ditekan
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse:
+            (NotificationResponse response) async {
+      // Tindakan saat notifikasi diterima oleh perangkat dan direspons oleh pengguna
+      if (response.payload != null) {
+        // Jika payload tidak null, maka kita navigasikan ke halaman NotifUser
+        updateAllPesananDibaca();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => NotifUser(
+                    userId: FirebaseAuth.instance.currentUser!.uid,
+                  )),
+        );
       }
-    } catch (error) {
-      print('Error getting owner name: $error');
-      return ''; // Atau nilai default jika terjadi kesalahan
+    });
+  }
+}
+
+Future<String?> getUsernameFromUserID(String userID) async {
+  try {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    DocumentSnapshot userSnapshot =
+        await firestore.collection('users').doc(userID).get();
+
+    if (userSnapshot.exists) {
+      return userSnapshot['username'];
+    } else {
+      return ''; // Atau nilai default jika pengguna tidak ditemukan
     }
+  } catch (error) {
+    print('Error getting owner name: $error');
+    return ''; // Atau nilai default jika terjadi kesalahan
   }
 }

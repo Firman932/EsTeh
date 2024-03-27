@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lji/FOR%20USER/NotifikasiUser.dart';
 import 'package:lji/styles/color.dart';
 import 'package:lji/styles/dialog.dart';
 import 'package:flutter/widgets.dart';
@@ -328,6 +329,24 @@ class _KeranjangState extends State<Keranjang> {
     }
   }
 
+    Future<void> updateAllPesananDibaca() async {
+    try {
+      // Mendapatkan referensi koleksi 'pesanan' dengan filter berdasarkan userID
+      CollectionReference pesananCollection =
+          FirebaseFirestore.instance.collection('pesanan');
+      QuerySnapshot pesananSnapshot = await pesananCollection
+          .where('id_pembeli', isEqualTo: userID)
+          .get();
+
+      // Mengupdate nilai field 'dibacauser' menjadi true untuk semua dokumen yang terkait dengan userID saat ini
+      for (DocumentSnapshot doc in pesananSnapshot.docs) {
+        await doc.reference.update({'dibacauser': true});
+      }
+    } catch (error) {
+      print('Error updating pesanan: $error');
+    }
+  }
+
   Future<void> _tampilkanNotifikasi() async {
     // Inisialisasi FlutterLocalNotificationsPlugin
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -380,6 +399,23 @@ class _KeranjangState extends State<Keranjang> {
       payload:
           'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
     );
+    // Tambahkan logika navigasi ke halaman NotifUser saat notifikasi ditekan
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse:
+            (NotificationResponse response) async {
+      // Tindakan saat notifikasi diterima oleh perangkat dan direspons oleh pengguna
+      if (response.payload != null) {
+        // Jika payload tidak null, maka kita navigasikan ke halaman NotifUser
+        updateAllPesananDibaca();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => NotifUser(
+                    userId: FirebaseAuth.instance.currentUser!.uid,
+                  )),
+        );
+      }
+    });
   }
 
   Future<String?> getUsernameFromUserID(String userID) async {

@@ -217,20 +217,87 @@ class _MenuUserState extends State<MenuUser> {
             SizedBox(
               width: 13,
             ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => KeranjangPage02(),
-                  ),
-                );
+            StreamBuilder<DocumentSnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(user!.uid)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData || snapshot.data!.data() == null) {
+                  return Icon(
+                    Icons.shopping_cart,
+                    size: 25,
+                    color: Colors.black,
+                  );
+                }
+
+                // Get the data from the snapshot
+                Map<String, dynamic>? userData =
+                    snapshot.data!.data() as Map<String, dynamic>?;
+
+                // Check if userData is null or if 'cart' key is not present
+                if (userData == null || !userData.containsKey('cart')) {
+                  // If userData is null or 'cart' key is not present, display the cart icon without badge
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => KeranjangPage02(),
+                        ),
+                      );
+                    },
+                    child: Icon(
+                      Icons.shopping_cart,
+                      size: 25,
+                      color: Colors.black,
+                    ),
+                  );
+                }
+
+                // Get the cart data
+                List<dynamic> cart = userData['cart'];
+
+                // Check if cart is not empty
+                if (cart.isNotEmpty) {
+                  // If cart is not empty, display the cart icon with badge
+                  return Badge(
+                    isLabelVisible: true,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => KeranjangPage02(),
+                          ),
+                        );
+                      },
+                      child: Icon(
+                        Icons.shopping_cart,
+                        size: 25,
+                        color: Colors.black,
+                      ),
+                    ),
+                  );
+                } else {
+                  // If cart is empty, display the cart icon without badge
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => KeranjangPage02(),
+                        ),
+                      );
+                    },
+                    child: Icon(
+                      Icons.shopping_cart,
+                      size: 25,
+                      color: Colors.black,
+                    ),
+                  );
+                }
               },
-              child: Icon(
-                Icons.shopping_cart,
-                size: 25,
-                color: Colors.black,
-              ),
             ),
             SizedBox(
               width: 16,

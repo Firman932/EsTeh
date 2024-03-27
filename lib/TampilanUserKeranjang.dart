@@ -1020,7 +1020,8 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                           Container(
                             margin: EdgeInsets.only(left: 10),
                             child: DropdownButton<String>(
-                              value: cartItem.dropdownValue,
+                              value:
+                                  cartItem.dropdownValue, // Nilai awal dropdown
                               onChanged: (String? newValue) {
                                 setState(() {
                                   cartItem.dropdownValue = newValue!;
@@ -1029,15 +1030,22 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                               items:
                                   _buildDropdownItems(cartItem.kategoriProduk),
                               style:
-                                  TextStyle(color: Colors.black), // Text color
+                                  TextStyle(color: Colors.black), // Warna teks
                               icon:
-                                  Icon(Icons.arrow_drop_down), // Dropdown icon
-                              underline: Container(), // Remove the underline
+                                  Icon(Icons.arrow_drop_down), // Ikona dropdown
+                              underline: Container(), // Hilangkan garis bawah
                               borderRadius:
-                                  BorderRadius.circular(10), // Border radius
-                              elevation: 8, // Border width
+                                  BorderRadius.circular(10), // Radius border
+                              elevation: 8, // Ketebalan border
                               dropdownColor:
-                                  Colors.white, // Dropdown background color
+                                  Colors.white, // Warna latar belakang dropdown
+                              hint: Text(
+                                cartItem.kategoriProduk == 'Minuman'
+                                    ? 'Pilih Suhu'
+                                    : 'Pilih Pedas',
+                                style: TextStyle(
+                                    color: Colors.grey), // Warna teks hint
+                              ),
                             ),
                           ),
                         ],

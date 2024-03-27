@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lji/styles/dialog.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -381,7 +382,7 @@ class _ListUserState extends State<ListUser> {
       String formattedDate =
           DateFormat('d MMM, y').format(now); // Output: 1 Jan, 2024
 
-      // Format jam
+      // Format jamA
       String formattedTime = DateFormat('HH:mm').format(now); // Output: 09:15
 
       // Simpan pesanan ke Firebase
@@ -517,21 +518,8 @@ class _ListUserState extends State<ListUser> {
       'Kamu telah checkout pesananmu, tunggu konfirmasi dari admin dulu ya........!!!!!!!\n\n${DateFormat('dd MMMM yyyy, HH:mm').format(now)}', // Pesan notifikasi dengan tanggal
       platformChannelSpecifics,
       payload:
-          '/notifikasiUser', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
+          'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
     );
-  }
-
-  Future<void> _handleNotification(String payload) async {
-    if (payload == '/notifikasiUser') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => NotifUser(
-            userId: user!.uid,
-          ),
-        ),
-      );
-    }
   }
 
   Future<String?> getUsernameFromUserID(String userID) async {

@@ -12,6 +12,7 @@ import 'package:lji/FOR%20USER/listMenuUser.dart';
 import 'package:lji/styles/bottomlogout.dart';
 import 'package:lji/styles/color.dart';
 import 'package:lji/styles/dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MenuUser extends StatefulWidget {
   MenuUser({
@@ -146,25 +147,29 @@ class _MenuUserState extends State<MenuUser> {
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('pesanan')
-                  .where('id_pembeli',
-                      isEqualTo: user!.uid) // Filter berdasarkan idpembeli
+                  .where('id_pembeli', isEqualTo: user!.uid)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 }
 
+                // Jika tidak ada dokumen yang cocok dengan query
+                if (snapshot.data!.docs.isEmpty) {
+                  return Text('Tidak ada pesanan');
+                }
+
                 // Cek setiap dokumen dalam koleksi pesanan
                 for (var doc in snapshot.data!.docs) {
-                  // Ambil nilai dari field dibaca untuk dokumen ini
-                  bool dibaca = doc['dibacauser'] ?? false;
-
-                  // Jika ada dokumen yang dibaca adalah false, maka tampilkan badge
+                  // Cek apakah field 'diif (doc.exists && doc.data() is Map<String, dynamic>) {
+                  var data = doc.data() as Map<String, dynamic>;
+                  bool dibaca = data.containsKey('dibacauser')
+                      ? data['dibacauser']
+                      : false;
                   if (!dibaca) {
                     return GestureDetector(
                       onTap: () {
                         updateAllPesananDibaca();
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -175,8 +180,7 @@ class _MenuUserState extends State<MenuUser> {
                         );
                       },
                       child: Badge(
-                        isLabelVisible:
-                            true, // Tampilkan label jika ada pesanan yang belum dibaca
+                        isLabelVisible: true,
                         child: Icon(
                           Icons.notifications,
                           size: 25,
@@ -186,7 +190,6 @@ class _MenuUserState extends State<MenuUser> {
                     );
                   }
                 }
-
                 // Jika tidak ada pesanan yang belum dibaca, tampilkan badge dengan isLabelVisible false
                 return GestureDetector(
                   onTap: () {

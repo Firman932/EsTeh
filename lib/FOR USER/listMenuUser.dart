@@ -261,7 +261,7 @@ class _ListUserState extends State<ListUser> {
         }),
       );
 
-      await _tampilkanNotifikasiLokal(message);
+      // await _tampilkanNotifikasiLokal(message);
     } catch (e) {
       print('Error sending notification: $e');
     }
@@ -284,70 +284,70 @@ class _ListUserState extends State<ListUser> {
     }
   }
 
-  Future<void> _tampilkanNotifikasiLokal(String message) async {
-    // Inisialisasi FlutterLocalNotificationsPlugin
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+  // Future<void> _tampilkanNotifikasiLokal(String message) async {
+  //   // Inisialisasi FlutterLocalNotificationsPlugin
+  //   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  //       FlutterLocalNotificationsPlugin();
 
-    // Konfigurasi untuk Android
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('logoes');
+  //   // Konfigurasi untuk Android
+  //   const AndroidInitializationSettings initializationSettingsAndroid =
+  //       AndroidInitializationSettings('logoes');
 
-    // Konfigurasi untuk platform
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: initializationSettingsAndroid,
-    );
+  //   // Konfigurasi untuk platform
+  //   final InitializationSettings initializationSettings =
+  //       InitializationSettings(
+  //     android: initializationSettingsAndroid,
+  //   );
 
-    // Inisialisasi plugin
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  //   // Inisialisasi plugin
+  //   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
-    // Konstruksi pesan notifikasi
-    AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      '1',
-      'Channel Name',
-      importance: Importance.max,
-      priority: Priority.high,
-      showWhen: true, // Menampilkan waktu notifikasi
-      enableLights: true,
-      enableVibration: true,
-      playSound: true,
-      styleInformation: BigTextStyleInformation(
-        message, // Pesan utama
-        contentTitle: 'Pesanan Baru', // Judul notifikasi
-        htmlFormatContent: true, // Mengizinkan konten dalam format HTML
-        htmlFormatTitle: true, // Mengizinkan judul dalam format HTML
-      ),
-    );
+  //   // Konstruksi pesan notifikasi
+  //   AndroidNotificationDetails androidPlatformChannelSpecifics =
+  //       AndroidNotificationDetails(
+  //     '1',
+  //     'Channel Name',
+  //     importance: Importance.max,
+  //     priority: Priority.high,
+  //     showWhen: true, // Menampilkan waktu notifikasi
+  //     enableLights: true,
+  //     enableVibration: true,
+  //     playSound: true,
+  //     styleInformation: BigTextStyleInformation(
+  //       message, // Pesan utama
+  //       contentTitle: 'Pesanan Baru', // Judul notifikasi
+  //       htmlFormatContent: true, // Mengizinkan konten dalam format HTML
+  //       htmlFormatTitle: true, // Mengizinkan judul dalam format HTML
+  //     ),
+  //   );
 
-    NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
+  //   NotificationDetails platformChannelSpecifics =
+  //       NotificationDetails(android: androidPlatformChannelSpecifics);
 
-    // Tampilkan notifikasi
-    await flutterLocalNotificationsPlugin.show(
-      0, // ID notifikasi
-      'Pesanan Baru', // Judul notifikasi
-      message, // Pesan notifikasi
-      platformChannelSpecifics,
-      payload:
-          'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
-    );
-        await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onDidReceiveNotificationResponse:
-            (NotificationResponse response) async {
-      // Tindakan saat notifikasi diterima oleh perangkat dan direspons oleh pengguna
-      if (response.payload != null) {
-        // Jika payload tidak null, maka kita navigasikan ke halaman NotifUser
-        updateAdminPesananDibaca();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => Notifikasi()),
-        );
-      }
-    });
-  }
+  //   // Tampilkan notifikasi
+  //   await flutterLocalNotificationsPlugin.show(
+  //     0, // ID notifikasi
+  //     'Pesanan Baru', // Judul notifikasi
+  //     message, // Pesan notifikasi
+  //     platformChannelSpecifics,
+  //     payload:
+  //         'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
+  //   );
+  //       await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+  //       onDidReceiveNotificationResponse:
+  //           (NotificationResponse response) async {
+  //     // Tindakan saat notifikasi diterima oleh perangkat dan direspons oleh pengguna
+  //     if (response.payload != null) {
+  //       // Jika payload tidak null, maka kita navigasikan ke halaman NotifUser
+  //       updateAdminPesananDibaca();
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //             builder: (context) => Notifikasi()),
+  //       );
+  //     }
+  //   });
+  // }
 
   void beliLangsung() async {
     try {

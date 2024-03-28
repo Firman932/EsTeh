@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lji/Admin/Analisis%20Uang/listpendapatan.dart';
 import 'package:lji/Admin/HistoryAdmin/HistoryAdmin.dart';
+import 'package:lji/styles/color.dart';
 import '../Notifikasi/notifikasi.dart';
 
 class Pendapatan extends StatefulWidget {
@@ -89,7 +90,7 @@ class _PendapatanState extends State<Pendapatan> {
                   future: getTotalPendapatanMingguan(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                      return CircularProgressIndicator(color: greenPrimary,);
                     } else {
                       return Text(
                         NumberFormat.currency(
@@ -118,7 +119,7 @@ class _PendapatanState extends State<Pendapatan> {
                   future: getLatestPendapatanHarian(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                      return CircularProgressIndicator(color: greenPrimary,);
                     } else {
                       List<Map<String, dynamic>> latestData =
                           snapshot.data ?? [];
@@ -158,7 +159,7 @@ class _PendapatanState extends State<Pendapatan> {
                   future: getPreviousPendapatanMingguan(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                      return CircularProgressIndicator(color: greenPrimary,);
                     } else {
                       List<Map<String, dynamic>> previousData =
                           snapshot.data ?? [];

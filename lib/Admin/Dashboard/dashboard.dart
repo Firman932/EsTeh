@@ -743,7 +743,7 @@ class _DashboardState extends State<Dashboard> {
                             if (pesananList.isEmpty) {
                               return Center(
                                   child: Text(
-                                'Belum ada notifikasi',
+                                'Belum ada Pesanan',
                                 style: GoogleFonts.poppins(
                                   fontSize: 15,
                                 ),

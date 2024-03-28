@@ -153,12 +153,6 @@ class _MenuUserState extends State<MenuUser> {
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 }
-
-                // Jika tidak ada dokumen yang cocok dengan query
-                if (snapshot.data!.docs.isEmpty) {
-                  return Text('Tidak ada pesanan');
-                }
-
                 // Cek setiap dokumen dalam koleksi pesanan
                 for (var doc in snapshot.data!.docs) {
                   // Cek apakah field 'diif (doc.exists && doc.data() is Map<String, dynamic>) {

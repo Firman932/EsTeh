@@ -670,6 +670,142 @@ class _NotifikasiState extends State<Notifikasi> {
                                                   ),
                                                 ),
                                               ),
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                DateTime now = DateTime.now();
+                                                String hariPesanan =
+                                                    getDayName(now);
+                                                String formattedDate =
+                                                    DateFormat('d MMM, y')
+                                                        .format(now);
+                                                String formattedTime =
+                                                    DateFormat('HH:mm')
+                                                        .format(now);
+
+                                                // Variabel untuk menandai apakah ada stok yang tidak mencukupi
+                                                bool insufficientStock = false;
+
+                                                // Iterasi melalui daftar produk untuk pesanan ini
+                                                for (var produk in produkList) {
+                                                  String idProduk =
+                                                      produk['id_produk'];
+                                                  int jumlahDipesan =
+                                                      produk['jumlah'];
+
+                                                  // Mengambil stok produk dari Firestore
+                                                  await FirebaseFirestore
+                                                      .instance
+                                                      .collection('produk')
+                                                      .doc(idProduk)
+                                                      .get()
+                                                      .then((produkDoc) async {
+                                                    if (produkDoc.exists) {
+                                                      int stokAwal = produkDoc[
+                                                          'stok_produk'];
+                                                      int stokSisa = stokAwal -
+                                                          jumlahDipesan;
+
+                                                      if (stokSisa >= 0) {
+                                                        // Kurangi stok produk
+                                                        await FirebaseFirestore
+                                                            .instance
+                                                            .collection(
+                                                                'produk')
+                                                            .doc(idProduk)
+                                                            .update({
+                                                          'stok_produk':
+                                                              stokSisa
+                                                        }).then((_) {
+                                                          // Jika berhasil mengurangi stok, lanjutkan dengan memperbarui status pesanan
+                                                          FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'pesanan')
+                                                              .doc(pesanan.id)
+                                                              .update({
+                                                            'dibacauser': false,
+                                                            'status':
+                                                                'Diterima',
+                                                            'tanggal':
+                                                                formattedDate,
+                                                            'jam':
+                                                                formattedTime,
+                                                            'waktu_pesanan':
+                                                                DateTime.now(),
+                                                            'hari': hariPesanan,
+                                                          }).then((_) =>
+                                                                  tambahkanPendapatanHarian(
+                                                                      now,
+                                                                      totalHarga,
+                                                                      formattedDate));
+                                                          tambahkanPendapatanMingguan(
+                                                              DateTime.now(),
+                                                              totalHarga,
+                                                              formattedDate);
+                                                        });
+                                                        String? adminFcmToken =
+                                                            await getUserFcmToken(
+                                                                userId);
+                                                        if (adminFcmToken !=
+                                                            null) {
+                                                          // Kirim notifikasi ke pengguna admin
+                                                          await sendNotificationToUser(
+                                                              adminFcmToken,
+                                                              'Pesanan telah diterima');
+                                                        }
+                                                      } else {
+                                                        // Jika stok tidak mencukupi, tandai flag dan lanjutkan ke produk berikutnya
+                                                        insufficientStock =
+                                                            true;
+                                                      }
+                                                    } else {
+                                                      print(
+                                                          'Produk tidak ditemukan');
+                                                    }
+                                                  }).catchError((error) {
+                                                    print(
+                                                        'Error fetching produk: $error');
+                                                  });
+                                                }
+
+                                                // Jika ada stok yang tidak mencukupi, tampilkan snackbar
+                                                if (insufficientStock) {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return WarningDialog(
+                                                        title: "Peringatan",
+                                                        content:
+                                                            "Stok tidak mencukupi",
+                                                        buttonConfirm: "Ok",
+                                                        onButtonConfirm: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                      );
+                                                    },
+                                                  );
+                                                }
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 73, 160, 19),
+                                                minimumSize: Size(0, 40),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                              child: Text(
+                                                "Terima",
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            )
                                           ],
                                         ),
                                     ]),

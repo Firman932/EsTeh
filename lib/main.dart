@@ -7,7 +7,6 @@ import 'package:lji/Register.dart';
 import 'package:lji/SignIn.dart';
 import 'package:lji/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase/firebase_notification.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {

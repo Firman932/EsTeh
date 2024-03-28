@@ -449,12 +449,14 @@ class ACC_ADMIN extends StatelessWidget {
               padding: const EdgeInsets.only(
                   top: 8, left: 20, right: 20, bottom: 16),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(title,
                       style: GoogleFonts.poppins(
                           fontSize: 22,
                           fontWeight: FontWeight.w700,
-                          color: greenPrimary)),
+                          color: greenPrimary),
+                          textAlign: TextAlign.center,),
                   SizedBox(height: 10),
                   Text(
                     content,

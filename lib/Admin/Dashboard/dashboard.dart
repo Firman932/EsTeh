@@ -583,7 +583,7 @@ class _DashboardState extends State<Dashboard> {
                                   Text(
                                     "Tampilkan Semua",
                                     style: GoogleFonts.poppins(
-                                      fontSize: 13,
+                                      fontSize: 11,
                                       fontWeight: FontWeight.w600,
                                       color: greenPrimary,
                                     ),
@@ -724,7 +724,7 @@ class _DashboardState extends State<Dashboard> {
                                   Text(
                                     "Tampilkan Semua",
                                     style: GoogleFonts.poppins(
-                                      fontSize: 13,
+                                      fontSize: 11,
                                       fontWeight: FontWeight.w600,
                                       color: greenPrimary,
                                     ),
@@ -771,7 +771,7 @@ class _DashboardState extends State<Dashboard> {
                             if (pesananList.isEmpty) {
                               return Center(
                                   child: Text(
-                                'Belum ada notifikasi',
+                                'Belum ada Pesanan',
                                 style: GoogleFonts.poppins(
                                   fontSize: 15,
                                 ),

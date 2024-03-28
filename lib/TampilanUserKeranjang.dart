@@ -11,7 +11,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lji/Admin/Create/textField.dart';
-import 'package:lji/FOR%20USER/NotifikasiUser.dart';
 import 'package:lji/styles/color.dart';
 import 'package:lji/styles/dialog.dart';
 import 'dart:convert';
@@ -57,8 +56,8 @@ class KeranjangPage02 extends StatefulWidget {
 }
 
 class KeranjangPage01 extends State<KeranjangPage02> {
-  String? userID;
   bool _isEditing = false;
+  bool _isKeyBoard = true;
   bool _isTotalDisabled = false;
   List<CartItem> cartItems = [];
   LoadingStatus _loadingStatus =
@@ -75,6 +74,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
   }
 
   void _loadCartItems() async {
+    String? userID;
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
@@ -476,23 +476,6 @@ class KeranjangPage01 extends State<KeranjangPage02> {
     );
   }
 
-  Future<void> updateAllPesananDibaca() async {
-    try {
-      // Mendapatkan referensi koleksi 'pesanan' dengan filter berdasarkan userID
-      CollectionReference pesananCollection =
-          FirebaseFirestore.instance.collection('pesanan');
-      QuerySnapshot pesananSnapshot =
-          await pesananCollection.where('id_pembeli', isEqualTo: userID).get();
-
-      // Mengupdate nilai field 'dibacauser' menjadi true untuk semua dokumen yang terkait dengan userID saat ini
-      for (DocumentSnapshot doc in pesananSnapshot.docs) {
-        await doc.reference.update({'dibacauser': true});
-      }
-    } catch (error) {
-      print('Error updating pesanan: $error');
-    }
-  }
-
   Future<void> _tampilkanNotifikasi() async {
     // Inisialisasi FlutterLocalNotificationsPlugin
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -545,23 +528,6 @@ class KeranjangPage01 extends State<KeranjangPage02> {
       payload:
           'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
     );
-    // Tambahkan logika navigasi ke halaman NotifUser saat notifikasi ditekan
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onDidReceiveNotificationResponse:
-            (NotificationResponse response) async {
-      // Tindakan saat notifikasi diterima oleh perangkat dan direspons oleh pengguna
-      if (response.payload != null) {
-        // Jika payload tidak null, maka kita navigasikan ke halaman NotifUser
-        updateAllPesananDibaca();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => NotifUser(
-                    userId: FirebaseAuth.instance.currentUser!.uid,
-                  )),
-        );
-      }
-    });
   }
 
   Future<void> _deleteProductsFromFirestore(List<String> productIds) async {
@@ -685,131 +651,140 @@ class KeranjangPage01 extends State<KeranjangPage02> {
 
   Widget _buildBottomNavigationBar() {
     return _isEditing
-        ? Container(
-            // Bottom navigation bar when editing
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                color: Color(0x499c9c9c),
-                offset: Offset(0, 0),
-                blurRadius: 2,
-              ),
-            ]),
-            child: ClipRRect(
-              borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(10), topLeft: Radius.circular(10)),
-              child: BottomAppBar(
-                height: 70,
-                surfaceTintColor: Colors.white,
-                color: Colors.white,
-                elevation: 1,
-                notchMargin: 8,
-                clipBehavior: Clip.antiAlias,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => DeleteDialog(
-                            title: 'Peringatan',
-                            content:
-                                'Apakah kamu yakin ingin menghapus list keranjangmu ?',
-                            buttonConfirm: 'Ok',
-                            onButtonConfirm: () {
-                              _deleteSelectedProducts();
-                              Navigator.pop(context);
-                            },
-                            buttonCancel: 'Cancel',
-                            onButtonCancel: () {
-                              Navigator.pop(context);
-                            },
+        ? SingleChildScrollView(
+            reverse: true,
+            child: Container(
+              // Bottom navigation bar when editing
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                  color: Color(0x499c9c9c),
+                  offset: Offset(0, 0),
+                  blurRadius: 2,
+                ),
+              ]),
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    topLeft: Radius.circular(10)),
+                child: BottomAppBar(
+                  height: 70,
+                  surfaceTintColor: Colors.white,
+                  color: Colors.white,
+                  elevation: 1,
+                  notchMargin: 8,
+                  clipBehavior: Clip.antiAlias,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => DeleteDialog(
+                              title: 'Peringatan',
+                              content:
+                                  'Apakah kamu yakin ingin menghapus list keranjangmu ?',
+                              buttonConfirm: 'Ok',
+                              onButtonConfirm: () {
+                                _deleteSelectedProducts();
+                                Navigator.pop(context);
+                              },
+                              buttonCancel: 'Cancel',
+                              onButtonCancel: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
                           ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Text(
+                          'Hapus',
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
-                      child: Text(
-                        'Hapus',
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           )
-        : Container(
-            // Bottom navigation bar when not editing
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                color: Color(0x499c9c9c),
-                offset: Offset(0, 0),
-                blurRadius: 2,
-              ),
-            ]),
-            child: ClipRRect(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-              child: BottomAppBar(
-                surfaceTintColor: Colors.white,
-                height: 160,
-                elevation: 1,
-                notchMargin: 8,
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    CustomTextField(
+        : SingleChildScrollView(
+            reverse: true,
+            child: Container(
+              // Bottom navigation bar when not editing
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                  color: Color(0x499c9c9c),
+                  offset: Offset(0, 0),
+                  blurRadius: 2,
+                ),
+              ]),
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10)),
+                child: BottomAppBar(
+                  surfaceTintColor: Colors.white,
+                  height: 160,
+                  elevation: 1,
+                  notchMargin: 8,
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      CustomTextField(
                         labelText: "Catatan (Opsional) : ",
                         hintText: "Tambahkan catatan",
-                        controller: catatanController),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Total : ${NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(_calculateTotal())}',
-                            style: GoogleFonts.poppins(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            _checkout();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xff4fb60e),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
+                        controller: catatanController,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Total : ${NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(_calculateTotal())}',
+                              style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          child: Text(
-                            'Checkout',
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
+                          ElevatedButton(
+                            onPressed: () {
+                              _checkout();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xff4fb60e),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                            ),
+                            child: Text(
+                              'Checkout',
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -907,12 +882,14 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                         children: [
                           Card(
                             shadowColor: Color(0x499c9c9c),
-                            elevation: 5,
+                            elevation: 3,
                             color: Colors.white,
                             surfaceTintColor: Colors.white,
                             margin: EdgeInsets.only(
                               right: 10,
                               left: 10,
+                              bottom: 5,
+                              top: 5,
                             ),
                             child: Padding(
                               padding: EdgeInsets.all(8),
@@ -1052,37 +1029,6 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                               ),
                             ),
                           ),
-                          Container(
-                            margin: EdgeInsets.only(left: 10),
-                            child: DropdownButton<String>(
-                              value:
-                                  cartItem.dropdownValue, // Nilai awal dropdown
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  cartItem.dropdownValue = newValue!;
-                                });
-                              },
-                              items:
-                                  _buildDropdownItems(cartItem.kategoriProduk),
-                              style:
-                                  TextStyle(color: Colors.black), // Warna teks
-                              icon:
-                                  Icon(Icons.arrow_drop_down), // Ikona dropdown
-                              underline: Container(), // Hilangkan garis bawah
-                              borderRadius:
-                                  BorderRadius.circular(10), // Radius border
-                              elevation: 8, // Ketebalan border
-                              dropdownColor:
-                                  Colors.white, // Warna latar belakang dropdown
-                              hint: Text(
-                                cartItem.kategoriProduk == 'Minuman'
-                                    ? 'Pilih Suhu'
-                                    : 'Pilih Pedas',
-                                style: TextStyle(
-                                    color: Colors.grey), // Warna teks hint
-                              ),
-                            ),
-                          ),
                         ],
                       );
                     },
@@ -1097,6 +1043,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
         visible: _calculateTotal() > 0,
         child: _buildBottomNavigationBar(),
       ),
+      resizeToAvoidBottomInset: false,
     );
   }
 

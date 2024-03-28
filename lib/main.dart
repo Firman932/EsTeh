@@ -49,8 +49,6 @@ Future<void> main() async {
   );
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  // Inisialisasi FirebaseNotification setelah Firebase selesai diinisialisasi
-  FirebaseNotification firebaseNotification = FirebaseNotification();
 
 
   final settings = await messaging.requestPermission(

@@ -8,6 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:lji/Admin/HistoryAdmin/HistoryAdmin.dart';
 import 'package:lji/Admin/Notifikasi/listpesan.dart';
 import 'package:lji/styles/color.dart';
 import 'package:lji/styles/dialog.dart';
@@ -715,63 +716,129 @@ class _NotifikasiState extends State<Notifikasi> {
         }),
       );
 
-      // await _tampilkanNotifikasiLokal(message);
+      await _tampilkanNotifikasi();
     } catch (e) {
       print('Error sending notification: $e');
     }
   }
 
-//   Future<void> _tampilkanNotifikasiLokal(String message) async {
-//     // Inisialisasi FlutterLocalNotificationsPlugin
-//     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-//         FlutterLocalNotificationsPlugin();
+  Future<void> _tampilkanNotifikasiLokal(String message) async {
+    // Inisialisasi FlutterLocalNotificationsPlugin
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
 
-//     // Konfigurasi untuk Android
-//     const AndroidInitializationSettings initializationSettingsAndroid =
-//         AndroidInitializationSettings('logoes');
+    // Konfigurasi untuk Android
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('logoes');
 
-//     // Konfigurasi untuk platform
-//     final InitializationSettings initializationSettings =
-//         InitializationSettings(
-//       android: initializationSettingsAndroid,
-//     );
+    // Konfigurasi untuk platform
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
 
-//     // Inisialisasi plugin
-//     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    // Inisialisasi plugin
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
-//     // Konstruksi pesan notifikasi
-//     AndroidNotificationDetails androidPlatformChannelSpecifics =
-//         AndroidNotificationDetails(
-//       '1',
-//       'Channel Name',
-//       importance: Importance.max,
-//       priority: Priority.high,
-//       showWhen: true, // Menampilkan waktu notifikasi
-//       enableLights: true,
-//       enableVibration: true,
-//       playSound: true,
-//       styleInformation: BigTextStyleInformation(
-//         message, // Pesan utama
-//         contentTitle: 'Pesanan', // Judul notifikasi
-//         htmlFormatContent: true, // Mengizinkan konten dalam format HTML
-//         htmlFormatTitle: true, // Mengizinkan judul dalam format HTML
-//       ),
-//     );
+    // Konstruksi pesan notifikasi
+    AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      '1',
+      'Channel Name',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: true, // Menampilkan waktu notifikasi
+      enableLights: true,
+      enableVibration: true,
+      playSound: true,
+      styleInformation: BigTextStyleInformation(
+        message, // Pesan utama
+        contentTitle: 'Pesanan', // Judul notifikasi
+        htmlFormatContent: true, // Mengizinkan konten dalam format HTML
+        htmlFormatTitle: true, // Mengizinkan judul dalam format HTML
+      ),
+    );
 
-//     NotificationDetails platformChannelSpecifics =
-//         NotificationDetails(android: androidPlatformChannelSpecifics);
+    NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
 
-//     // Mendapatkan tanggal dan waktu sekarang
-//     DateTime now = DateTime.now();
+    // Mendapatkan tanggal dan waktu sekarang
+    DateTime now = DateTime.now();
 
-//     // Tampilkan notifikasi
-//     await flutterLocalNotificationsPlugin.show(
-//       0, // ID notifikasi
-//       'Pesanan Baru', // Judul notifikasi
-//       message, // Pesan notifikasi
-//       platformChannelSpecifics,
-//       payload:
-//           'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
-//     );
-//   }
+    // Tampilkan notifikasi
+    await flutterLocalNotificationsPlugin.show(
+      0, // ID notifikasi
+      'Pesanan Baru', // Judul notifikasi
+      message, // Pesan notifikasi
+      platformChannelSpecifics,
+      payload:
+          'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
+    );
+  }
+  Future<void> _tampilkanNotifikasi() async {
+    // Inisialisasi FlutterLocalNotificationsPlugin
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+
+    // Konfigurasi untuk Android
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('logoes');
+
+    // Konfigurasi untuk platform
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+
+    // Inisialisasi plugin
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    // Konstruksi pesan notifikasi
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      '1',
+      'Channel Name',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: true, // Menampilkan waktu notifikasi
+      enableLights: true,
+      enableVibration: true,
+      playSound: true,
+      styleInformation: BigTextStyleInformation(
+        'Berhasil konfirmasi pesanan', // Pesan utama
+        contentTitle: 'Konfirmasi pesanan', // Judul notifikasi
+        htmlFormatContent: true, // Mengizinkan konten dalam format HTML
+        htmlFormatTitle: true, // Mengizinkan judul dalam format HTML
+      ),
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    // Mendapatkan tanggal dan waktu sekarang
+    DateTime now = DateTime.now();
+
+    // Tampilkan notifikasi
+    await flutterLocalNotificationsPlugin.show(
+      0, // ID notifikasi
+      'Checkout pesanan', // Judul notifikasi
+      'Kamu telah checkout pesananmu, tunggu konfirmasi dari admin dulu ya........!!!!!!!\n\n${DateFormat('dd MMMM yyyy, HH:mm').format(now)}', // Pesan notifikasi dengan tanggal
+      platformChannelSpecifics,
+      payload:
+          'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
+    );
+    // Tambahkan logika navigasi ke halaman NotifUser saat notifikasi ditekan
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse:
+            (NotificationResponse response) async {
+      // Tindakan saat notifikasi diterima oleh perangkat dan direspons oleh pengguna
+      if (response.payload != null) {
+        // Jika payload tidak null, maka kita navigasikan ke halaman NotifUser
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => RiwayatAdmin()),
+        );
+      }
+    });
+  }
 }

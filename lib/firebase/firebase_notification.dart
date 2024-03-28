@@ -21,7 +21,8 @@ class FirebaseNotification {
       print("Menerima pesan: ${message.notification?.title}");
       // Tampilkan notifikasi menggunakan flutter_local_notifications
       _showNotification(message);
-      redirectToPageBasedOnRole(context, token);
+      // Periksa payload dan arahkan pengguna berdasarkan payload
+      redirectToPageBasedOnPayload(context, message);
     });
   }
 
@@ -64,55 +65,55 @@ class FirebaseNotification {
     );
   }
 
-  // Fungsi untuk mengarahkan pengguna ke halaman yang sesuai berdasarkan peran
-  Future<void> redirectToPageBasedOnRole(
-      BuildContext context, String? fcmToken) async {
+  // Fungsi untuk mengarahkan pengguna ke halaman yang sesuai berdasarkan payload
+  Future<void> redirectToPageBasedOnPayload(
+      BuildContext context, RemoteMessage message) async {
     try {
-      if (fcmToken != null) {
-        // Dapatkan data pengguna dari database berdasarkan FCM token
-        DocumentSnapshot? userSnapshot = await FirebaseFirestore.instance
-            .collection('users')
-            .where('fcmToken', isEqualTo: fcmToken)
-            .get()
-            .then((snapshot) {
-          // Ambil dokumen pertama (harusnya hanya ada satu hasil)
-          if (snapshot.docs.isNotEmpty) {
-            return snapshot.docs.first;
-          } else {
-            return null;
-          }
-        });
+      // Dapatkan data payload dari pesan
+      Map<String, dynamic>? data = message.data;
 
-        if (userSnapshot != null && userSnapshot.exists) {
-          // Dapatkan role dan user ID dari dokumen pengguna
-          String role = userSnapshot['role'];
-          String userId = userSnapshot['user_id'];
+      if (data != null && data.containsKey('redirect')) {
+        String redirectPage = data['redirect'];
 
-          // Redirect ke halaman berdasarkan role
-          if (role == 'admin') {
-            // Redirect ke halaman Notifikasi untuk admin
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Notifikasi()),
-            );
-          } else {
+        if (redirectPage == 'admin') {
+          // Redirect ke halaman Notifikasi untuk admin
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Notifikasi()),
+          );
+        } else {
+          // Dapatkan data pengguna dari database berdasarkan FCM token
+          String? fcmToken = await FirebaseMessaging.instance.getToken();
+          DocumentSnapshot? userSnapshot = await FirebaseFirestore.instance
+              .collection('users')
+              .where('fcmToken', isEqualTo: fcmToken)
+              .get()
+              .then((snapshot) {
+            if (snapshot.docs.isNotEmpty) {
+              return snapshot.docs.first;
+            } else {
+              return null;
+            }
+          });
+
+          if (userSnapshot != null && userSnapshot.exists) {
+            // Dapatkan user ID dari dokumen pengguna
+            String userId = userSnapshot['user_id'];
             // Redirect ke halaman Riwayat untuk pengguna
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => RiwayatUser(userId: userId)),
+              MaterialPageRoute(
+                  builder: (context) => RiwayatUser(userId: userId)),
             );
+          } else {
+            print('User tidak ditemukan');
+            // Handle case di mana user tidak ditemukan
           }
-        } else {
-          print('User tidak ditemukan');
-          // Handle case di mana user tidak ditemukan
         }
-      } else {
-        print('FCM token tidak valid');
-        // Handle case jika FCM token tidak valid
       }
     } catch (e) {
       print('Error: $e');
-      // Handle error jika terjadi kesalahan saat mengambil data pengguna dari database
+      // Handle error jika terjadi kesalahan saat mengolah payload
     }
   }
 }

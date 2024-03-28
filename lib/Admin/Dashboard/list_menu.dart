@@ -114,11 +114,23 @@ class ListMenu extends StatelessWidget {
   }
 
   Widget _buildActions(BuildContext context) {
+    String stokText = produkData['stok_produk'] == 0
+        ? "Habis"
+        : "${produkData['stok_produk']}";
+    Color textColor =
+        produkData['stok_produk'] == 0 ? Colors.red : Colors.black;
+
     return Align(
       alignment: Alignment.topCenter,
-      child: Text("Stok: ${produkData['stok_produk']}",
-          style:
-              GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 12)),
+      child: Text(
+        "Stok: $stokText",
+        style: GoogleFonts.poppins(
+          fontWeight: FontWeight.w500,
+          fontSize: 12,
+          color:
+              textColor, // Menggunakan warna yang telah ditentukan berdasarkan kondisi
+        ),
+      ),
     );
   }
 }

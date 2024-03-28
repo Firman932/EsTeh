@@ -802,24 +802,21 @@ class _DashboardState extends State<Dashboard> {
                                       decoration: BoxDecoration(
                                         boxShadow: [
                                           BoxShadow(
-                                            color: Color.fromRGBO(156, 156,
-                                                156, 0.28999999165534972),
+                                            color: Color.fromRGBO(156, 156, 156,
+                                                0.28999999165534972),
                                             offset: Offset(0, 0),
                                             blurRadius: 3,
                                           ),
                                         ],
-                                        borderRadius:
-                                            BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(10),
                                         color: Colors.white,
                                       ),
-                                      width:
-                                          MediaQuery.of(context).size.width,
+                                      width: MediaQuery.of(context).size.width,
                                       child: Column(
                                         children: [
                                           Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               Expanded(
                                                 child: Row(
@@ -839,8 +836,8 @@ class _DashboardState extends State<Dashboard> {
                                                         "Dari $namaPembeli",
                                                         overflow: TextOverflow
                                                             .ellipsis,
-                                                        style: GoogleFonts
-                                                            .poppins(
+                                                        style:
+                                                            GoogleFonts.poppins(
                                                           fontSize: 12,
                                                           fontWeight:
                                                               FontWeight.w600,
@@ -861,9 +858,8 @@ class _DashboardState extends State<Dashboard> {
                                             ],
                                           ),
                                           Padding(
-                                            padding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 10),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10),
                                             child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -871,22 +867,21 @@ class _DashboardState extends State<Dashboard> {
                                                   Container(
                                                     color: Colors.white,
                                                     child: Padding(
-                                                      padding:
-                                                          const EdgeInsets
-                                                              .symmetric(
-                                                              horizontal: 5,
-                                                              vertical: 5),
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 5,
+                                                          vertical: 5),
                                                       child: ListView.builder(
                                                         shrinkWrap: true,
                                                         itemCount:
                                                             produkList.length,
                                                         physics:
                                                             NeverScrollableScrollPhysics(),
-                                                        itemBuilder: (context,
-                                                                index) =>
-                                                            ListPesan(
-                                                          produk: produkList[
-                                                              index],
+                                                        itemBuilder:
+                                                            (context, index) =>
+                                                                ListPesan(
+                                                          produk:
+                                                              produkList[index],
                                                         ),
                                                       ),
                                                     ),
@@ -900,8 +895,8 @@ class _DashboardState extends State<Dashboard> {
                                                     height: 30,
                                                     decoration: BoxDecoration(
                                                       borderRadius:
-                                                          BorderRadius
-                                                              .circular(10),
+                                                          BorderRadius.circular(
+                                                              10),
                                                       color: Colors.white,
                                                     ),
                                                     child: Row(
@@ -912,16 +907,13 @@ class _DashboardState extends State<Dashboard> {
                                                               .poppins(
                                                             fontSize: 12,
                                                             fontWeight:
-                                                                FontWeight
-                                                                    .w500,
+                                                                FontWeight.w500,
                                                           ),
                                                         ),
                                                         Text(
                                                           NumberFormat.currency(
-                                                                  locale:
-                                                                      'id',
-                                                                  symbol:
-                                                                      'Rp ',
+                                                                  locale: 'id',
+                                                                  symbol: 'Rp ',
                                                                   decimalDigits:
                                                                       0)
                                                               .format(
@@ -930,8 +922,7 @@ class _DashboardState extends State<Dashboard> {
                                                               .poppins(
                                                             fontSize: 12,
                                                             fontWeight:
-                                                                FontWeight
-                                                                    .w500,
+                                                                FontWeight.w500,
                                                           ),
                                                         ),
                                                       ],
@@ -942,12 +933,10 @@ class _DashboardState extends State<Dashboard> {
                                                       'pending')
                                                     Row(
                                                       mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .end,
+                                                          MainAxisAlignment.end,
                                                       children: [
                                                         ElevatedButton(
-                                                          onPressed:
-                                                              () async {
+                                                          onPressed: () async {
                                                             showDialog(
                                                                 context:
                                                                     context,
@@ -961,7 +950,8 @@ class _DashboardState extends State<Dashboard> {
                                                                             "Batal",
                                                                         onButtonCancel:
                                                                             () {
-                                                                          Navigator.pop(context);
+                                                                          Navigator.pop(
+                                                                              context);
                                                                         },
                                                                         buttonConfirm:
                                                                             "Tolak",
@@ -981,18 +971,29 @@ class _DashboardState extends State<Dashboard> {
                                                                           String
                                                                               formattedTime =
                                                                               DateFormat('HH:mm').format(now);
-                                                                          FirebaseFirestore.instance.collection('pesanan').doc(pesanan.id).update({
-                                                                            'dibacauser': false,
-                                                                            'status': 'Ditolak',
-                                                                            'tanggal': formattedDate,
-                                                                            'jam': formattedTime,
-                                                                            'waktu_pesanan': Timestamp.now(),
-                                                                            'hari': hariPesanan,
+                                                                          FirebaseFirestore
+                                                                              .instance
+                                                                              .collection('pesanan')
+                                                                              .doc(pesanan.id)
+                                                                              .update({
+                                                                            'dibacauser':
+                                                                                false,
+                                                                            'status':
+                                                                                'Ditolak',
+                                                                            'tanggal':
+                                                                                formattedDate,
+                                                                            'jam':
+                                                                                formattedTime,
+                                                                            'waktu_pesanan':
+                                                                                Timestamp.now(),
+                                                                            'hari':
+                                                                                hariPesanan,
                                                                           });
                                                                           String?
                                                                               adminFcmToken =
                                                                               await getUserFcmToken(userId);
-                                                                          print(adminFcmToken);
+                                                                          print(
+                                                                              adminFcmToken);
                                                                           if (adminFcmToken !=
                                                                               null) {
                                                                             // Send a notification to the admin user
@@ -1002,12 +1003,12 @@ class _DashboardState extends State<Dashboard> {
                                                                             );
                                                                             print("berhasil");
                                                                           }
-                                                                          Navigator.pop(context);
+                                                                          Navigator.pop(
+                                                                              context);
                                                                         }));
                                                           },
-                                                          style:
-                                                              ElevatedButton
-                                                                  .styleFrom(
+                                                          style: ElevatedButton
+                                                              .styleFrom(
                                                             backgroundColor:
                                                                 Colors.red,
                                                             minimumSize:
@@ -1028,8 +1029,8 @@ class _DashboardState extends State<Dashboard> {
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w600,
-                                                              color: Colors
-                                                                  .white,
+                                                              color:
+                                                                  Colors.white,
                                                             ),
                                                           ),
                                                         ),
@@ -1042,100 +1043,102 @@ class _DashboardState extends State<Dashboard> {
                                                               showDialog(
                                                                   context:
                                                                       context,
-                                                                  builder: (context) => ACC_ADMIN(
-                                                                      title: "Peringatan",
-                                                                      content: "Apakah kamu yakin untuk menerima pesanan berikut?",
-                                                                      buttonCancel: "Batal",
-                                                                      onButtonCancel: () {
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                      },
-                                                                      buttonConfirm: "Iya",
-                                                                      onButtonConfirm: () async {
-                                                                        DateTime
-                                                                            now =
-                                                                            DateTime.now();
-                                                                        String
-                                                                            hariPesanan =
-                                                                            getDayName(now);
-                                                                        // Format tanggal dan waktu
-                                                                        String
-                                                                            formattedDate =
-                                                                            DateFormat('d MMM, y').format(now);
-                                                                        String
-                                                                            formattedTime =
-                                                                            DateFormat('HH:mm').format(now);
-                                                                        // Iterasi melalui daftar produk untuk pesanan ini
-                                                                        for (var produk
-                                                                            in produkList) {
-                                                                          String
-                                                                              idProduk =
-                                                                              produk['id_produk'];
-                                                                          int jumlahDipesan =
-                                                                              produk['jumlah']; // Menggunakan jumlah barang dari pesanan
-                                
-                                                                          // Mengambil stok produk dari Firestore
-                                                                          FirebaseFirestore.instance.collection('produk').doc(idProduk).get().then((produkDoc) async {
-                                                                            if (produkDoc.exists) {
-                                                                              int stokAwal = produkDoc['stok_produk'];
-                                                                              int stokSisa = stokAwal - jumlahDipesan;
-                                
-                                                                              // Pastikan stok tidak negatif
-                                                                              if (stokSisa >= 0) {
-                                                                                // Kurangi stok produk
-                                                                                FirebaseFirestore.instance.collection('produk').doc(idProduk).update({
-                                                                                  'stok_produk': stokSisa
-                                                                                }).then((_) {
-                                                                                  // Jika berhasil mengurangi stok, lanjutkan dengan memperbarui status pesanan
-                                                                                  FirebaseFirestore.instance.collection('pesanan').doc(pesanan.id).update({
-                                                                                    'dibacauser': false,
-                                                                                    'status': 'Diterima',
-                                                                                    'tanggal': formattedDate,
-                                                                                    'jam': formattedTime,
-                                                                                    'waktu_pesanan': DateTime.now(),
-                                                                                    'hari': hariPesanan,
-                                                                                  }).then((_) => tambahkanPendapatanHarian(now, totalHarga, formattedDate));
-                                                                                  tambahkanPendapatanMingguan(DateTime.now(), totalHarga, formattedDate);
-                                                                                });
-                                                                                String? adminFcmToken = await getUserFcmToken(userId);
-                                                                                print(adminFcmToken);
-                                                                                if (adminFcmToken != null) {
-                                                                                  // Send a notification to the admin user
-                                                                                  await sendNotificationToUser(
-                                                                                    adminFcmToken,
-                                                                                    'Pesanan telah diterima',
-                                                                                  );
-                                                                                  print("berhasil");
-                                                                                }
-                                                                              } else {
-                                                                                // Jika stok tidak mencukupi, tampilkan pesan kesalahan atau lakukan tindakan yang sesuai
-                                                                                print('Stok produk tidak mencukupi');
-                                                                                showDialog(
-                                                                                  context: context,
-                                                                                  builder: (BuildContext context) {
-                                                                                    return WarningDialog(
-                                                                                      title: "Peringatan",
-                                                                                      content: "Stok tidak mencukupi",
-                                                                                      buttonConfirm: "Ok",
-                                                                                      onButtonConfirm: () {
-                                                                                        Navigator.pop(context);
+                                                                  builder: (context) =>
+                                                                      ACC_ADMIN(
+                                                                          title:
+                                                                              "Peringatan",
+                                                                          content:
+                                                                              "Apakah kamu yakin untuk menerima pesanan berikut?",
+                                                                          buttonCancel:
+                                                                              "Batal",
+                                                                          onButtonCancel:
+                                                                              () {
+                                                                            Navigator.pop(context);
+                                                                          },
+                                                                          buttonConfirm:
+                                                                              "Iya",
+                                                                          onButtonConfirm:
+                                                                              () async {
+                                                                            DateTime
+                                                                                now =
+                                                                                DateTime.now();
+                                                                            String
+                                                                                hariPesanan =
+                                                                                getDayName(now);
+                                                                            // Format tanggal dan waktu
+                                                                            String
+                                                                                formattedDate =
+                                                                                DateFormat('d MMM, y').format(now);
+                                                                            String
+                                                                                formattedTime =
+                                                                                DateFormat('HH:mm').format(now);
+                                                                            // Iterasi melalui daftar produk untuk pesanan ini
+                                                                            for (var produk
+                                                                                in produkList) {
+                                                                              String idProduk = produk['id_produk'];
+                                                                              int jumlahDipesan = produk['jumlah']; // Menggunakan jumlah barang dari pesanan
+
+                                                                              // Mengambil stok produk dari Firestore
+                                                                              FirebaseFirestore.instance.collection('produk').doc(idProduk).get().then((produkDoc) async {
+                                                                                if (produkDoc.exists) {
+                                                                                  int stokAwal = produkDoc['stok_produk'];
+                                                                                  int stokSisa = stokAwal - jumlahDipesan;
+
+                                                                                  // Pastikan stok tidak negatif
+                                                                                  if (stokSisa >= 0) {
+                                                                                    // Kurangi stok produk
+                                                                                    FirebaseFirestore.instance.collection('produk').doc(idProduk).update({
+                                                                                      'stok_produk': stokSisa
+                                                                                    }).then((_) {
+                                                                                      // Jika berhasil mengurangi stok, lanjutkan dengan memperbarui status pesanan
+                                                                                      FirebaseFirestore.instance.collection('pesanan').doc(pesanan.id).update({
+                                                                                        'dibacauser': false,
+                                                                                        'status': 'Diterima',
+                                                                                        'tanggal': formattedDate,
+                                                                                        'jam': formattedTime,
+                                                                                        'waktu_pesanan': DateTime.now(),
+                                                                                        'hari': hariPesanan,
+                                                                                      }).then((_) => tambahkanPendapatanHarian(now, totalHarga, formattedDate));
+                                                                                      tambahkanPendapatanMingguan(DateTime.now(), totalHarga, formattedDate);
+                                                                                    });
+                                                                                    String? adminFcmToken = await getUserFcmToken(userId);
+                                                                                    print(adminFcmToken);
+                                                                                    if (adminFcmToken != null) {
+                                                                                      // Send a notification to the admin user
+                                                                                      await sendNotificationToUser(
+                                                                                        adminFcmToken,
+                                                                                        'Pesanan telah diterima',
+                                                                                      );
+                                                                                      print("berhasil");
+                                                                                    }
+                                                                                  } else {
+                                                                                    // Jika stok tidak mencukupi, tampilkan pesan kesalahan atau lakukan tindakan yang sesuai
+                                                                                    print('Stok produk tidak mencukupi');
+                                                                                    showDialog(
+                                                                                      context: context,
+                                                                                      builder: (BuildContext context) {
+                                                                                        return WarningDialog(
+                                                                                          title: "Peringatan",
+                                                                                          content: "Stok tidak mencukupi",
+                                                                                          buttonConfirm: "Ok",
+                                                                                          onButtonConfirm: () {
+                                                                                            Navigator.pop(context);
+                                                                                          },
+                                                                                        );
                                                                                       },
                                                                                     );
-                                                                                  },
-                                                                                );
-                                                                              }
-                                                                            } else {
-                                                                              // Jika dokumen produk tidak ditemukan, tampilkan pesan kesalahan atau lakukan tindakan yang sesuai
-                                                                              print('Produk tidak ditemukan');
+                                                                                  }
+                                                                                } else {
+                                                                                  // Jika dokumen produk tidak ditemukan, tampilkan pesan kesalahan atau lakukan tindakan yang sesuai
+                                                                                  print('Produk tidak ditemukan');
+                                                                                }
+                                                                              }).catchError((error) {
+                                                                                // Tangani kesalahan saat mengambil dokumen produk
+                                                                                print('Error fetching produk: $error');
+                                                                              });
                                                                             }
-                                                                          }).catchError((error) {
-                                                                            // Tangani kesalahan saat mengambil dokumen produk
-                                                                            print('Error fetching produk: $error');
-                                                                          });
-                                                                        }
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                      }));
+                                                                            Navigator.pop(context);
+                                                                          }));
                                                             },
                                                             style:
                                                                 ElevatedButton
@@ -1159,9 +1162,8 @@ class _DashboardState extends State<Dashboard> {
                                                             ),
                                                             child: Text(
                                                               "Terima",
-                                                              style:
-                                                                  GoogleFonts
-                                                                      .poppins(
+                                                              style: GoogleFonts
+                                                                  .poppins(
                                                                 fontSize: 12,
                                                                 fontWeight:
                                                                     FontWeight
@@ -1296,7 +1298,7 @@ class _DashboardState extends State<Dashboard> {
         }),
       );
 
-      await _tampilkanNotifikasiLokal(message);
+      await _tampilkanNotifikasi();
     } catch (e) {
       print('Error sending notification: $e');
     }
@@ -1354,5 +1356,72 @@ class _DashboardState extends State<Dashboard> {
       payload:
           'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
     );
+  }
+
+  Future<void> _tampilkanNotifikasi() async {
+    // Inisialisasi FlutterLocalNotificationsPlugin
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+
+    // Konfigurasi untuk Android
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('logoes');
+
+    // Konfigurasi untuk platform
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+
+    // Inisialisasi plugin
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    // Konstruksi pesan notifikasi
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      '1',
+      'Channel Name',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: true, // Menampilkan waktu notifikasi
+      enableLights: true,
+      enableVibration: true,
+      playSound: true,
+      styleInformation: BigTextStyleInformation(
+        'Berhasil konfirmasi pesanan', // Pesan utama
+        contentTitle: 'Konfirmasi pesanan', // Judul notifikasi
+        htmlFormatContent: true, // Mengizinkan konten dalam format HTML
+        htmlFormatTitle: true, // Mengizinkan judul dalam format HTML
+      ),
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    // Mendapatkan tanggal dan waktu sekarang
+    DateTime now = DateTime.now();
+
+    // Tampilkan notifikasi
+    await flutterLocalNotificationsPlugin.show(
+      0, // ID notifikasi
+      'Checkout pesanan', // Judul notifikasi
+      'Kamu telah checkout pesananmu, tunggu konfirmasi dari admin dulu ya........!!!!!!!\n\n${DateFormat('dd MMMM yyyy, HH:mm').format(now)}', // Pesan notifikasi dengan tanggal
+      platformChannelSpecifics,
+      payload:
+          'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
+    );
+    // Tambahkan logika navigasi ke halaman NotifUser saat notifikasi ditekan
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse:
+            (NotificationResponse response) async {
+      // Tindakan saat notifikasi diterima oleh perangkat dan direspons oleh pengguna
+      if (response.payload != null) {
+        // Jika payload tidak null, maka kita navigasikan ke halaman NotifUser
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => RiwayatAdmin()),
+        );
+      }
+    });
   }
 }

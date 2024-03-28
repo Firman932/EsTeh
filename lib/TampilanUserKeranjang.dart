@@ -23,7 +23,6 @@ class CartItem {
   String productName;
   String productVariation;
   String kategoriProduk;
-  String dropdownValue;
   int quantity;
   int price;
   int productStock;
@@ -35,7 +34,6 @@ class CartItem {
     required this.productName,
     required this.productVariation,
     required this.kategoriProduk,
-    required this.dropdownValue,
     required this.quantity,
     required this.price,
     required this.productStock,
@@ -68,9 +66,6 @@ class KeranjangPage01 extends State<KeranjangPage02> {
   void initState() {
     super.initState();
     _loadCartItems();
-    for (var cartItem in cartItems) {
-      cartItem.dropdownValue = _getDropdownValue(cartItem.kategoriProduk);
-    }
   }
 
   void _loadCartItems() async {
@@ -109,7 +104,6 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                 isChecked: true,
                 productImage: productDoc['gambar_produk'],
                 productStock: productDoc['stok_produk'],
-                dropdownValue: _getDropdownValue(productDoc['kategori_produk']),
               ));
             } else {
               // Handle the case where the product has been deleted
@@ -251,7 +245,6 @@ class KeranjangPage01 extends State<KeranjangPage02> {
               'id_produk': item.productId,
               'gambar_produk': item.productImage,
               'total_harga': item.price * item.quantity,
-              'variasi': item.dropdownValue
             });
           }
         }
@@ -717,74 +710,72 @@ class KeranjangPage01 extends State<KeranjangPage02> {
               ),
             ),
           )
-        : SingleChildScrollView(
-            reverse: true,
-            child: Container(
-              // Bottom navigation bar when not editing
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                  color: Color(0x499c9c9c),
-                  offset: Offset(0, 0),
-                  blurRadius: 2,
-                ),
-              ]),
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10)),
-                child: BottomAppBar(
-                  surfaceTintColor: Colors.white,
-                  height: 160,
-                  elevation: 1,
-                  notchMargin: 8,
-                  color: Colors.white,
-                  child: Column(
-                    children: [
-                      CustomTextField(
+        : Container(
+                    padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+            // Bottom navigation bar when not editing
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Color(0x499c9c9c),
+                offset: Offset(0, 0),
+                blurRadius: 2,
+              ),
+            ]),
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+              child: BottomAppBar(
+                surfaceTintColor: Colors.white,
+                height: 160,
+                elevation: 1,
+                notchMargin: 8,
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    CustomTextField(
                         labelText: "Catatan (Opsional) : ",
                         hintText: "Tambahkan catatan",
-                        controller: catatanController,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Total : ${NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(_calculateTotal())}',
-                              style: GoogleFonts.poppins(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                              ),
-                              overflow: TextOverflow.ellipsis,
+                        controller: catatanController),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Total : ${NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(_calculateTotal())}',
+                            style: GoogleFonts.poppins(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            _checkout();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xff4fb60e),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              _checkout();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xff4fb60e),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                            ),
-                            child: Text(
-                              'Checkout',
-                              style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                              ),
+                          child: Text(
+                            'Checkout',
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -885,12 +876,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                             elevation: 3,
                             color: Colors.white,
                             surfaceTintColor: Colors.white,
-                            margin: EdgeInsets.only(
-                              right: 10,
-                              left: 10,
-                              bottom: 5,
-                              top: 5,
-                            ),
+                            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                             child: Padding(
                               padding: EdgeInsets.all(8),
                               child: Row(
@@ -1043,42 +1029,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
         visible: _calculateTotal() > 0,
         child: _buildBottomNavigationBar(),
       ),
-      resizeToAvoidBottomInset: false,
     );
-  }
-
-  String _getDropdownValue(String kategoriProduk) {
-    if (kategoriProduk == 'Minuman') {
-      // Jika kategori_produk adalah Minuman
-      return 'Dingin'; // Default value untuk kategori Minuman
-    } else if (kategoriProduk == 'Makanan') {
-      // Jika kategori_produk adalah Makanan
-      return 'Tidak Pedas'; // Default value untuk kategori Makanan
-    } else {
-      return ''; // Default value untuk kategori lainnya
-    }
-  }
-
-  List<DropdownMenuItem<String>> _buildDropdownItems(String kategoriProduk) {
-    List<DropdownMenuItem<String>> items = [];
-    if (kategoriProduk == 'Minuman') {
-      // Jika kategori_produk adalah Minuman
-      items = ['Dingin', 'Sedang', 'Hangat', 'Panas']
-          .map((String value) => DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              ))
-          .toList();
-    } else if (kategoriProduk == 'Makanan') {
-      // Jika kategori_produk adalah Makanan
-      items = ['Tidak Pedas', 'Pedas']
-          .map((String value) => DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              ))
-          .toList();
-    }
-    return items;
   }
 
   int _calculateTotal() {

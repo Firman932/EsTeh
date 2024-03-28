@@ -25,19 +25,23 @@ class ListUser extends StatefulWidget {
 
 class _ListUserState extends State<ListUser> {
   User? user = FirebaseAuth.instance.currentUser;
+  
   @override
   Widget build(BuildContext context) {
+        bool stockEmpty = widget.produkData['stok_produk'] == 0;
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Keranjang(
-              produkData: widget.produkData,
-            ),
-          ),
-        );
-      },
+      onTap: stockEmpty
+          ? null
+          : () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Keranjang(
+                    produkData: widget.produkData,
+                  ),
+                ),
+              );
+            },
       child: Container(
         margin: EdgeInsets.only(top: 15),
         padding: EdgeInsets.symmetric(vertical: 15),
@@ -266,7 +270,8 @@ class _ListUserState extends State<ListUser> {
       print('Error sending notification: $e');
     }
   }
-    Future<void> updateAdminPesananDibaca() async {
+
+  Future<void> updateAdminPesananDibaca() async {
     try {
       // Mendapatkan referensi koleksi 'pesanan'
       CollectionReference pesananCollection =

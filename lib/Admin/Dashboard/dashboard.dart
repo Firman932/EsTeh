@@ -564,18 +564,10 @@ class _DashboardState extends State<Dashboard> {
                                 });
                               });
                             },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 20),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Icon(
-                                Icons.view_list,
-                                color: greenPrimary,
-                                size: 25,
-                              ),
+                            child: Icon(
+                              Icons.view_list,
+                              color: greenPrimary,
+                              size: 27,
                             ),
                           ),
                         ],
@@ -691,18 +683,10 @@ class _DashboardState extends State<Dashboard> {
                                 });
                               });
                             },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 20),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Icon(
-                                Icons.view_list,
-                                color: greenPrimary,
-                                size: 25,
-                              ),
+                            child: Icon(
+                              Icons.view_list,
+                              color: greenPrimary,
+                              size: 27,
                             ),
                           ),
                         ],

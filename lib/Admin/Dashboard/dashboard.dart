@@ -1253,7 +1253,7 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Stream<int> getTotalPendapatanMingguan() async* {
+  Stream<int> getTotalPendapatanMingguan() {
     // Mengambil tanggal awal dan akhir minggu saat ini
     DateTime now = DateTime.now();
     DateTime awalMinggu = now.subtract(Duration(days: now.weekday - 1));
@@ -1272,23 +1272,29 @@ class _DashboardState extends State<Dashboard> {
     String akhirMingguStr = _formatTanggal(akhirMinggu);
 
     try {
-      // Mengambil data pendapatan mingguan dari Firestore
-      final snapshot = await FirebaseFirestore.instance
+      // Mengambil stream query pendapatan mingguan dari Firestore
+      return FirebaseFirestore.instance
           .collection('pendapatan_mingguan')
           .doc('$awalMingguStr-$akhirMingguStr')
-          .get();
-
-      if (snapshot.exists) {
-        // Jika dokumen ditemukan, kembalikan nilai total_harga
-        yield snapshot['total_harga'];
-      } else {
-        // Jika dokumen tidak ditemukan, kembalikan nilai 0
-        yield 0;
-      }
+          .snapshots()
+          .map<int>((snapshot) {
+        // Menambahkan tipe int di sini
+        if (snapshot.exists) {
+          // Jika dokumen ditemukan, kembalikan nilai total_harga
+          return snapshot['total_harga'];
+        } else {
+          // Jika dokumen tidak ditemukan, kembalikan nilai 0
+          return 0;
+        }
+      }).handleError((error) {
+        // Tangani kesalahan
+        print('Error: $error');
+        return 0;
+      });
     } catch (e) {
       // Jika terjadi kesalahan, tangani kesalahan
       print('Error: $e');
-      yield 0;
+      return Stream<int>.empty();
     }
   }
 

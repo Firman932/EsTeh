@@ -25,10 +25,10 @@ class ListUser extends StatefulWidget {
 
 class _ListUserState extends State<ListUser> {
   User? user = FirebaseAuth.instance.currentUser;
-  
+
   @override
   Widget build(BuildContext context) {
-        bool stockEmpty = widget.produkData['stok_produk'] == 0;
+    bool stockEmpty = widget.produkData['stok_produk'] == 0;
     return GestureDetector(
       onTap: stockEmpty
           ? null
@@ -148,9 +148,24 @@ class _ListUserState extends State<ListUser> {
       // Jika stok tersedia, tampilkan tombol keranjang
       return GestureDetector(
         onTap: () {
-          // Memanggil fungsi untuk membeli langsung produk
-          beliLangsung();
-          print('Membeli langsung ${widget.produkData["nama_produk"]}');
+          showDialog(
+            context: context,
+            builder: (context) => ACC_ADMIN(
+              title: "Konfirmasi Pembelian",
+              content: "Apakah benar untuk checkout pesanan ini?.",
+              buttonConfirm: "Benar",
+              onButtonConfirm: () async {
+                // Memanggil fungsi untuk membeli langsung produk
+                beliLangsung();
+                print('Membeli langsung ${widget.produkData["nama_produk"]}');
+                Navigator.pop(context);
+              },
+              buttonCancel: 'Batal',
+              onButtonCancel: () {
+                Navigator.pop(context);
+              },
+            ),
+          );
         },
         child: Container(
           constraints: BoxConstraints(

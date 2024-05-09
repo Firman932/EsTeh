@@ -278,7 +278,7 @@ class _KeranjangState extends State<Keranjang> {
         'total_barang': totalBarang,
         'harga_total': hargaTotal,
         'catatan': catatan, // Menggunakan catatan yang telah ditentukan
-        'dibaca' : false,
+        'dibaca': false,
         'dibacauser': false
       });
 
@@ -329,14 +329,13 @@ class _KeranjangState extends State<Keranjang> {
     }
   }
 
-    Future<void> updateAllPesananDibaca() async {
+  Future<void> updateAllPesananDibaca() async {
     try {
       // Mendapatkan referensi koleksi 'pesanan' dengan filter berdasarkan userID
       CollectionReference pesananCollection =
           FirebaseFirestore.instance.collection('pesanan');
-      QuerySnapshot pesananSnapshot = await pesananCollection
-          .where('id_pembeli', isEqualTo: userID)
-          .get();
+      QuerySnapshot pesananSnapshot =
+          await pesananCollection.where('id_pembeli', isEqualTo: userID).get();
 
       // Mengupdate nilai field 'dibacauser' menjadi true untuk semua dokumen yang terkait dengan userID saat ini
       for (DocumentSnapshot doc in pesananSnapshot.docs) {
@@ -633,10 +632,25 @@ class _KeranjangState extends State<Keranjang> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      // Memanggil fungsi untuk membeli langsung produk
-                      beliLangsung();
-                      print(
-                          'Membeli langsung ${widget.produkData["nama_produk"]}');
+                      showDialog(
+                        context: context,
+                        builder: (context) => ACC_ADMIN(
+                          title: "Konfirmasi Pembelian",
+                          content: "Apakah benar untuk checkout pesanan ini?.",
+                          buttonConfirm: "Benar",
+                          onButtonConfirm: () async {
+                            // Memanggil fungsi untuk membeli langsung produk
+                            beliLangsung();
+                            print(
+                                'Membeli langsung ${widget.produkData["nama_produk"]}');
+                            Navigator.pop(context);
+                          },
+                          buttonCancel: 'Batal',
+                          onButtonCancel: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.minPositive, 50),

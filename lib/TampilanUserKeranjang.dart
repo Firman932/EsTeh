@@ -55,7 +55,7 @@ class KeranjangPage02 extends StatefulWidget {
 }
 
 class KeranjangPage01 extends State<KeranjangPage02> {
-    User? user = FirebaseAuth.instance.currentUser;
+  User? user = FirebaseAuth.instance.currentUser;
   bool _isEditing = false;
   bool _isKeyBoard = true;
   bool _isTotalDisabled = false;
@@ -471,14 +471,13 @@ class KeranjangPage01 extends State<KeranjangPage02> {
     );
   }
 
-    Future<void> updateAllPesananDibaca() async {
+  Future<void> updateAllPesananDibaca() async {
     try {
       // Mendapatkan referensi koleksi 'pesanan' dengan filter berdasarkan userID
       CollectionReference pesananCollection =
           FirebaseFirestore.instance.collection('pesanan');
-      QuerySnapshot pesananSnapshot = await pesananCollection
-          .where('id_pembeli', isEqualTo: user)
-          .get();
+      QuerySnapshot pesananSnapshot =
+          await pesananCollection.where('id_pembeli', isEqualTo: user).get();
 
       // Mengupdate nilai field 'dibacauser' menjadi true untuk semua dokumen yang terkait dengan userID saat ini
       for (DocumentSnapshot doc in pesananSnapshot.docs) {
@@ -541,7 +540,7 @@ class KeranjangPage01 extends State<KeranjangPage02> {
       payload:
           'item x', // Payload notifikasi, bisa diisi dengan informasi tambahan jika diperlukan
     );
-        await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse:
             (NotificationResponse response) async {
       // Tindakan saat notifikasi diterima oleh perangkat dan direspons oleh pengguna
@@ -747,9 +746,9 @@ class KeranjangPage01 extends State<KeranjangPage02> {
             ),
           )
         : Container(
-                    padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
             // Bottom navigation bar when not editing
             decoration: BoxDecoration(boxShadow: [
               BoxShadow(
@@ -792,7 +791,23 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            _checkout();
+                            showDialog(
+                              context: context,
+                              builder: (context) => ACC_ADMIN(
+                                title: "Konfirmasi Pembelian",
+                                content:
+                                    "Apakah benar untuk checkout pesanan ini?.",
+                                buttonConfirm: "Benar",
+                                onButtonConfirm: () async {
+                                  _checkout();
+                                  Navigator.pop(context);
+                                },
+                                buttonCancel: 'Batal',
+                                onButtonCancel: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xff4fb60e),
@@ -912,7 +927,8 @@ class KeranjangPage01 extends State<KeranjangPage02> {
                             elevation: 3,
                             color: Colors.white,
                             surfaceTintColor: Colors.white,
-                            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
                             child: Padding(
                               padding: EdgeInsets.all(8),
                               child: Row(
